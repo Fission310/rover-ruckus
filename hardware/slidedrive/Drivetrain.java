@@ -363,4 +363,10 @@ public class Drivetrain extends Mechanism {
         slideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
+    public double getHeading() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.firstAngle;
+    }
+
 }

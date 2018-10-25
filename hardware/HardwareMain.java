@@ -38,7 +38,7 @@ public class HardwareMain extends Mechanism {
     /**
      * Instance variable containing robot's servo arm.
      */
-    public ServoArm servoArm;
+    public Arm servoArm;
 
     /* Miscellaneous mechanisms */
 
@@ -50,7 +50,7 @@ public class HardwareMain extends Mechanism {
         acquirer = new Acquirer();
         lift = new Lift();
         tape = new Tape();
-        servoArm = new ServoArm();
+        servoArm = new Arm();
     }
     /**
      * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
@@ -64,7 +64,7 @@ public class HardwareMain extends Mechanism {
         acquirer = new Acquirer(opMode);
         lift = new Lift(opMode);
         tape = new Tape(opMode);
-        servoArm = new ServoArm(opMode);
+        servoArm = new Arm(opMode);
     }
 
     /**
