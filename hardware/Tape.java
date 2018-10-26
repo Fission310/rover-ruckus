@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -17,7 +18,8 @@ public class Tape extends Mechanism {
     /* CONSTANTS */
 
     /* Hardware members */
-    private DcMotor tape;
+    private CRServo leftTape;
+    private CRServo rightTape;
 
     /**
      * Default constructor for Acquirer.
@@ -40,32 +42,32 @@ public class Tape extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
-
-        // Retrieve motor from hardware map and assign to instance vars
-        tape = hwMap.dcMotor.get(RCConstants.LIFT);
-
-        // Set braking behavior
-        tape.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftTape = hwMap.crservo.get(RCConstants.LEFT_TAPE);
+        rightTape = hwMap.crservo.get(RCConstants.RIGHT_TAPE);
 
         // Set polarity
-        tape.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftTape.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightTape.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set initial power
-        tape.setPower(0);
+        leftTape.setPower(0);
+        rightTape.setPower(0);
     }
 
     /**
      * Sets power for lift motor.
      */
     public void setTapePower(double power) {
-        tape.setPower(power);
+        leftTape.setPower(power);
+        rightTape.setPower(power);
     }
 
     /**
      * Sets power for lift motor based on encoder values.
      */
     public void liftTapePos(double power) {
-        tape.setPower(power);
+        leftTape.setPower(power);
+        rightTape.setPower(power);
     }
 
 }
