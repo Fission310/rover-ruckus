@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -19,7 +20,7 @@ public class Acquirer extends Mechanism {
 
     /* Hardware members */
     private CRServo intakeMotor;
-    private CRServo acquirerFloor;
+    private Servo acquirerFloor;
     /**
      * Default constructor for Acquirer.
      */

@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
@@ -20,6 +21,8 @@ public class Tape extends Mechanism {
     /* Hardware members */
     private CRServo leftTape;
     private CRServo rightTape;
+    private DcMotor winch;
+    private DigitalChannel limitSwitch;
 
     /**
      * Default constructor for Acquirer.
@@ -44,14 +47,19 @@ public class Tape extends Mechanism {
         // Retrieve servos from hardware map and assign to instance vars
         leftTape = hwMap.crservo.get(RCConstants.LEFT_TAPE);
         rightTape = hwMap.crservo.get(RCConstants.RIGHT_TAPE);
+        winch = hwMap.dcMotor.get(RCConstants.WINCH);
+        limitSwitch = hwMap.digitalChannel.get(RCConstants.LIMIT_SWITCH);
 
         // Set polarity
-        leftTape.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightTape.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftTape.setDirection(CRServo.Direction.FORWARD);
+        rightTape.setDirection(CRServo.Direction.REVERSE);
+        winch.setDirection(DcMotor.Direction.FORWARD);
+
 
         // Set initial power
         leftTape.setPower(0);
         rightTape.setPower(0);
+        winch.setPower(0);
     }
 
     /**
@@ -60,6 +68,7 @@ public class Tape extends Mechanism {
     public void setTapePower(double power) {
         leftTape.setPower(power);
         rightTape.setPower(power);
+        winch.setPower(-power);
     }
 
     /**
@@ -68,6 +77,7 @@ public class Tape extends Mechanism {
     public void liftTapePos(double power) {
         leftTape.setPower(power);
         rightTape.setPower(power);
+        winch.setPower(-power);
     }
 
 }

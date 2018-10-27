@@ -17,7 +17,7 @@ All autonomous OpMode Java files should be named as such
 Auton<Alliance><Target1><Target2><Target...>.java
 ```
 
-#### Alliance 
+#### Alliance
 - one of Blue, Red, or Both
 - each alliance should specify in which side of the cargo hold the robot starts in
 

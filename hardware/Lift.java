@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 
 /**
@@ -20,7 +19,6 @@ public class Lift extends Mechanism {
     /* Hardware members */
     private DcMotor leftLift;
     private DcMotor rightLift;
-    private DigitalChannel limitSwitch;
     /**
      * Default constructor for Acquirer.
      */
@@ -46,7 +44,6 @@ public class Lift extends Mechanism {
         // Retrieve motor from hardware map and assign to instance vars
         leftLift = hwMap.dcMotor.get(RCConstants.LEFT_LIFT);
         rightLift = hwMap.dcMotor.get(RCConstants.RIGHT_LIFT);
-        limitSwitch = hwMap.digitalChannel.get(RCConstants.LIMIT_SWITCH);
 
         // Set braking behavior
         leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
