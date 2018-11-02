@@ -48,8 +48,8 @@ public class Arm extends Mechanism {
         // sensorColor = hwMap.colorSensor.get("sensor_color");
 
         // Retrieve arm from hardware map and set to initial position
-        arm = hwMap.servo.get(RCConstants.ARM);
-        sweeper = hwMap.servo.get(RCConstants.SWEEPER);
+        arm = hwMap.servo.get(RCConfig.ARM);
+        sweeper = hwMap.servo.get(RCConfig.SWEEPER);
         armInit();
         sweeperNeutral();
     }

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -44,7 +43,7 @@ public class Acquirer extends Mechanism {
         // Retrieve servos from hardware map and assign to instance vars
 
         // Retrieve motor from hardware map and assign to instance vars
-        intakeMotor = hwMap.crservo.get(RCConstants.ACQUIRER_INTAKE);
+        intakeMotor = hwMap.crservo.get(RCConfig.ACQUIRER_INTAKE);
 
         // Set polarity
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);

@@ -16,9 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
-import org.firstinspires.ftc.teamcode.hardware.RCConstants;
-
-import java.lang.Math.*;
+import org.firstinspires.ftc.teamcode.hardware.RCConfig;
 
 /**
  * Drivetrain is the class that is used to define all of the hardware for a robot's drivetrain.
@@ -93,11 +91,11 @@ public class Drivetrain extends Mechanism {
     public void init(HardwareMap hwMap) {
 
         // Retrieve motors from hardware map and assign to instance vars
-        leftFront = hwMap.dcMotor.get(RCConstants.LEFT_FRONT);
-        leftBack = hwMap.dcMotor.get(RCConstants.LEFT_BACK);
-        rightFront = hwMap.dcMotor.get(RCConstants.RIGHT_FRONT);
-        rightBack = hwMap.dcMotor.get(RCConstants.RIGHT_BACK);
-        slideDrive = hwMap.dcMotor.get(RCConstants.SLIDE_DRIVE);
+        leftFront = hwMap.dcMotor.get(RCConfig.LEFT_FRONT);
+        leftBack = hwMap.dcMotor.get(RCConfig.LEFT_BACK);
+        rightFront = hwMap.dcMotor.get(RCConfig.RIGHT_FRONT);
+        rightBack = hwMap.dcMotor.get(RCConfig.RIGHT_BACK);
+        slideDrive = hwMap.dcMotor.get(RCConfig.SLIDE_DRIVE);
 
         // Set motor direction (AndyMark configuration)
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);

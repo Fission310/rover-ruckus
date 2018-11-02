@@ -42,8 +42,8 @@ public class Lift extends Mechanism {
         // Retrieve servos from hardware map and assign to instance vars
 
         // Retrieve motor from hardware map and assign to instance vars
-        leftLift = hwMap.dcMotor.get(RCConstants.LEFT_LIFT);
-        rightLift = hwMap.dcMotor.get(RCConstants.RIGHT_LIFT);
+        leftLift = hwMap.dcMotor.get(RCConfig.LEFT_LIFT);
+        rightLift = hwMap.dcMotor.get(RCConfig.RIGHT_LIFT);
 
         // Set braking behavior
         leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

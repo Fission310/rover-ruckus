@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -45,10 +44,10 @@ public class Tape extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
-        leftTape = hwMap.crservo.get(RCConstants.LEFT_TAPE);
-        rightTape = hwMap.crservo.get(RCConstants.RIGHT_TAPE);
-        winch = hwMap.dcMotor.get(RCConstants.WINCH);
-        limitSwitch = hwMap.digitalChannel.get(RCConstants.LIMIT_SWITCH);
+        leftTape = hwMap.crservo.get(RCConfig.LEFT_TAPE);
+        rightTape = hwMap.crservo.get(RCConfig.RIGHT_TAPE);
+        winch = hwMap.dcMotor.get(RCConfig.WINCH);
+        limitSwitch = hwMap.digitalChannel.get(RCConfig.LIMIT_SWITCH);
 
         // Set polarity
         leftTape.setDirection(CRServo.Direction.FORWARD);

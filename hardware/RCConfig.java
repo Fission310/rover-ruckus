@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 /**
  * Contains the constants for configuring hardware on the robot controller.
  */
-public class RCConstants {
+public class RCConfig {
 
     // Motors
     public static final String LEFT_FRONT = "leftFront";
