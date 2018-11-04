@@ -11,6 +11,10 @@ public class Constants {
      */
     public static final double     COUNTS_PER_MOTOR_REV    = 1120;
     /**
+     * Ticks per revolution for a VEX EDR 393.
+     */
+    public static final double     COUNTS_PER_SERVO_VEX    = 627.2;
+    /**
      * Drivetrain gear ratio (< 1.0 if geared up).
      */
     public static final double     DRIVE_GEAR_REDUCTION    = 1.0;

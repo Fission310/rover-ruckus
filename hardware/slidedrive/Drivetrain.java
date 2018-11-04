@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.RCConfig;
+import org.firstinspires.ftc.teamcode.hardware.Constants;
 
 /**
  * Drivetrain is the class that is used to define all of the hardware for a robot's drivetrain.
@@ -29,41 +30,9 @@ import org.firstinspires.ftc.teamcode.hardware.RCConfig;
  */
 public class Drivetrain extends Mechanism {
 
-    /* CONSTANTS */
-    /**
-     * Ticks per revolution for a NeverRest 40.
-     */
-    private static final double     COUNTS_PER_MOTOR_REV    = 1120;
-    /**
-     * Drivetrain gear ratio (< 1.0 if geared up).
-     */
-    private static final double     DRIVE_GEAR_REDUCTION    = 1.0;
-    /**
-     * Diameter of wheel in inches.
-     */
-    private static final double     WHEEL_DIAMETER_INCHES   = 4.0;
-    /**
-     * Calculated ticks per inch.
-     */
-    private static final double     COUNTS_PER_INCH         =
-            (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
-    /**
-     * Drive speed when using encoders.
-     */
-    private static final double     DRIVE_SPEED             = 0.4;
-    /**
-     * Turn speed when using encoders.
-     */
-    private static final double     TURN_SPEED              = 0.3;
-
-    // Constant adjusting value for encoder driving
-    private static final double     PCONSTANT               = 0.1;
-
     /* Hardware members */
     private DcMotor leftFront;
-    private DcMotor leftBack;
     private DcMotor rightFront;
-    private DcMotor rightBack;
     private DcMotor slideDrive;
 
     private BNO055IMU imu;
@@ -92,30 +61,22 @@ public class Drivetrain extends Mechanism {
 
         // Retrieve motors from hardware map and assign to instance vars
         leftFront = hwMap.dcMotor.get(RCConfig.LEFT_FRONT);
-        leftBack = hwMap.dcMotor.get(RCConfig.LEFT_BACK);
         rightFront = hwMap.dcMotor.get(RCConfig.RIGHT_FRONT);
-        rightBack = hwMap.dcMotor.get(RCConfig.RIGHT_BACK);
         slideDrive = hwMap.dcMotor.get(RCConfig.SLIDE_DRIVE);
 
         // Set motor direction (AndyMark configuration)
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
         slideDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set motor brake behavior
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
         leftFront.setPower(0);
-        leftBack.setPower(0);
         rightFront.setPower(0);
-        rightBack.setPower(0);
         slideDrive.setPower(0);
 
         // Initialize IMU with parameters
@@ -156,11 +117,14 @@ public class Drivetrain extends Mechanism {
      * @param left      power for left side of drivetrain (-1 to 1)
      * @param right     power for right side of drivetrain (-1 to 1)
      */
-    public void drive(double left, double right) {
-        leftFront.setPower(left);
-        leftBack.setPower(left);
-        rightBack.setPower(right);
-        rightFront.setPower(right);
+    public void drive(double left, double right, double turn) {
+        double r = Math.hypot(left, right);
+        double robotAngle = Math.atan2(right, left) - Math.PI / 4;
+        double v3 = r * Math.sin(robotAngle) + turn;
+        double v4 = r * Math.cos(robotAngle) - turn;
+
+        leftFront.setPower(v3);
+        rightFront.setPower(v4);
     }
 
     /**
@@ -188,8 +152,8 @@ public class Drivetrain extends Mechanism {
         double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         // Determine new target position, and pass to motor controller
-        newLeftTarget = leftFront.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-        newRightTarget = rightFront.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+        newLeftTarget = leftFront.getCurrentPosition() + (int) (leftInches * Constants.COUNTS_PER_INCH);
+        newRightTarget = rightFront.getCurrentPosition() + (int) (rightInches * Constants.COUNTS_PER_INCH);
         leftFront.setTargetPosition(newLeftTarget);
         rightFront.setTargetPosition(newRightTarget);
 
@@ -213,7 +177,7 @@ public class Drivetrain extends Mechanism {
             double gyroAngle = angles.firstAngle;
 
             // Adjustment factor for heading
-            double p = (gyroAngle - currentAngle) * PCONSTANT;
+            double p = (gyroAngle - currentAngle) * Constants.PCONSTANT;
 
             // Set power of drivetrain motors accounting for adjustment
             leftFront.setPower(Math.abs(speed) + p);
@@ -287,8 +251,6 @@ public class Drivetrain extends Mechanism {
             // Set motor power according to calculated angle to turn
             leftFront.setPower(-Math.signum(angleToTurn) * speed);
             rightFront.setPower(Math.signum(angleToTurn) * speed);
-            leftBack.setPower(-Math.signum(angleToTurn) * speed);
-            rightBack.setPower(Math.signum(angleToTurn) * speed);
             slideDrive.setPower(Math.signum(angleToTurn) * speed);
 
             // Display heading for the driver
@@ -299,8 +261,6 @@ public class Drivetrain extends Mechanism {
         // Stop motor movement
         leftFront.setPower(0);
         rightFront.setPower(0);
-        leftBack.setPower(0);
-        rightBack.setPower(0);
         slideDrive.setPower(0);
     }
 
@@ -317,7 +277,7 @@ public class Drivetrain extends Mechanism {
         double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         // Determine new target position, and pass to motor controller
-        newTarget = slideDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        newTarget = slideDrive.getCurrentPosition() + (int) (inches * Constants.COUNTS_PER_INCH);
         slideDrive.setTargetPosition(newTarget);
 
         // Turn On RUN_TO_POSITION
@@ -339,7 +299,7 @@ public class Drivetrain extends Mechanism {
             double gyroAngle = angles.firstAngle;
 
             // Adjustment factor for heading
-            double p = (gyroAngle - currentAngle) * PCONSTANT;
+            double p = (gyroAngle - currentAngle) * Constants.PCONSTANT;
 
             // Set power of drivetrain motors accounting for adjustment
             slideDrive.setPower(p);
@@ -365,6 +325,14 @@ public class Drivetrain extends Mechanism {
     public double getHeading() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return angles.firstAngle;
+    }
+
+    public double[] getPositions() {
+        double[] positions = new double[4];
+        positions[0] = leftFront.getCurrentPosition() / Constants.COUNTS_PER_INCH;
+        positions[1] = rightFront.getCurrentPosition() / Constants.COUNTS_PER_INCH;
+
+        return positions;
     }
 
 }
