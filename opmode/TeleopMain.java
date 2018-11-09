@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
 import static java.lang.Math.abs;
 
@@ -51,7 +52,7 @@ import static java.lang.Math.abs;
  * BACK:            N/A
  *
  */
-@TeleOp(name = "Teleop: Main", group = "Teleop")
+@TeleOp(name = "Teleop: Mains", group = "Teleop")
 public class TeleopMain extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.2;
@@ -66,6 +67,7 @@ public class TeleopMain extends OpMode {
 
     @Override
     public void init() {
+        robot.init(hardwareMap);
     }
 
     /**
@@ -82,7 +84,6 @@ public class TeleopMain extends OpMode {
      */
     @Override
     public void start() {
-        robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
 
         robot.servoArm.armUp();
@@ -102,15 +103,17 @@ public class TeleopMain extends OpMode {
         // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
+        double yInput = Range.clip(gamepad1.left_stick_y, -1.0, 1.0);
+        double xInput = Range.clip(gamepad1.left_stick_x, -1.0, 1.0);
+
         // Threshold for strafing, makes horizontal strafing easier
-        double yInput = gamepad1.left_stick_y;
         if (abs(gamepad1.left_stick_y) < ANALOG_THRESHOLD) {
             yInput = 0;
         }
 
         // Drives the robot based on driver joystick input, check for slow mode
         if (gamepad1.left_bumper) {
-            robot.drivetrain.drive(gamepad1.left_stick_y * SLOW_MULTIPLIER, yInput * SLOW_MULTIPLIER, gamepad1.right_stick_y * SLOW_MULTIPLIER);
+            robot.drivetrain.drive(yInput * SLOW_MULTIPLIER, yInput * SLOW_MULTIPLIER, xInput * SLOW_MULTIPLIER);
         } else {
             robot.drivetrain.drive(gamepad1.left_stick_y, yInput, gamepad1.right_stick_x);
         }
@@ -130,6 +133,10 @@ public class TeleopMain extends OpMode {
         telemetry.addData("Path2", "Running at %.2f :%.2f",
                 positions[0],
                 positions[1]);
+    }
 
+    @Override
+    public void stop()
+    {
     }
 }

@@ -7,9 +7,9 @@ public class RCConfig {
 
     // Motors
     public static final String LEFT_FRONT = "left_front";
-//    public static final String LEFT_BACK = "left_back";
+    public static final String LEFT_BACK = "left_back";
     public static final String RIGHT_FRONT = "right_front";
-//    public static final String RIGHT_BACK = "right_back";
+    public static final String RIGHT_BACK = "right_back";
     public static final String SLIDE_DRIVE = "slide_drive";
     public static final String RIGHT_LIFT = "left_lift";
     public static final String LEFT_LIFT = "right_lift";

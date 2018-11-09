@@ -194,6 +194,10 @@ public class VisionManager {
         vuforia.start();
     }
 
+    public void vuforiaStop() {
+        vuforia.stop();
+    }
+
     public void getCubeDetails() {
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
