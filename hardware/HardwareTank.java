@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.hardware.slidedrive.Drivetrain;
+import org.firstinspires.ftc.teamcode.hardware.tankdrive.Drivetrain;
 
 import java.util.ArrayList;
 
@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * This class contains autonomous actions involving multiple mechanisms. These actions
  * may be common to more than one routine.
  */
-public class HardwareMain extends Mechanism {
+public class HardwareTank extends Mechanism {
 
     /* Mechanisms */
     /**
@@ -45,7 +45,7 @@ public class HardwareMain extends Mechanism {
     /**
      * Default constructor for HardwareMain. Instantiates public mechanism instance variables.
      */
-    public HardwareMain(){
+    public HardwareTank(){
         drivetrain = new Drivetrain();
         acquirer = new Acquirer();
         lift = new Lift();
@@ -58,7 +58,7 @@ public class HardwareMain extends Mechanism {
      *
      * @param opMode    the LinearOpMode that is currently running
      */
-    public HardwareMain(LinearOpMode opMode){
+    public HardwareTank(LinearOpMode opMode){
         this.opMode = opMode;
         drivetrain = new Drivetrain(opMode);
         acquirer = new Acquirer(opMode);

@@ -4,11 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
+import org.firstinspires.ftc.teamcode.hardware.HardwareTank;
 import static java.lang.Math.abs;
 
 /**
- * TeleopMain is the primary TeleOp OpMode for Relic Recovery. All driver-controlled actions should
+ * TeleopTankMain is the primary TeleOp OpMode for Relic Recovery. All driver-controlled actions should
  * be defined in this class.
  *
  * Gamepad1 BUTTON MAPPINGS:
@@ -53,7 +53,7 @@ import static java.lang.Math.abs;
  *
  */
 @TeleOp(name = "Teleop: Mains", group = "Teleop")
-public class TeleopMain extends OpMode {
+public class TeleopTankMain extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.2;
     private static final double SLOW_MULTIPLIER = 0.5;
@@ -63,7 +63,7 @@ public class TeleopMain extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     /* Robot hardware map */
-    private HardwareMain robot = new HardwareMain();
+    private HardwareTank robot = new HardwareTank();
 
     @Override
     public void init() {
@@ -113,9 +113,9 @@ public class TeleopMain extends OpMode {
 
         // Drives the robot based on driver joystick input, check for slow mode
         if (gamepad1.left_bumper) {
-            robot.drivetrain.drive(yInput * SLOW_MULTIPLIER, yInput * SLOW_MULTIPLIER, xInput * SLOW_MULTIPLIER);
+            robot.drivetrain.drive(yInput * SLOW_MULTIPLIER, yInput * SLOW_MULTIPLIER);
         } else {
-            robot.drivetrain.drive(yInput, yInput, xInput);
+            robot.drivetrain.drive(yInput, yInput);
         }
 
         // Set arms position
