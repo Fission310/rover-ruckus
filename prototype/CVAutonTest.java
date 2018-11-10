@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
-import org.firstinspires.ftc.teamcode.util.VisionManager;
+import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 /*
     This autonomous program is used to test CV methods without the availability of a robot

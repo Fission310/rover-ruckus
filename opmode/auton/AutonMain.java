@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
-import org.firstinspires.ftc.teamcode.util.VisionManager;
+import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 @Autonomous(name="Auton: Hanging + Sampling + Marker + Crater", group="Auton")
 public class AutonMain extends LinearOpMode {
