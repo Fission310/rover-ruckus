@@ -20,6 +20,7 @@ public class RCConfig {
     // Servos
     public static final String ARM = "arm";
     public static final String SWEEPER = "sweeper";
+    public static final String MARKERARM = "marker_arm";
     public static final String ACQUIRER_INTAKE = "acquirer_intake";
     public static final String ACQUIRER_FLOOR = "acquirer_floor";
     public static final String LEFT_TAPE = "left_tape";

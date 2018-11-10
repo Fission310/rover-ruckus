@@ -12,10 +12,10 @@ import static java.lang.Math.abs;
  * be defined in this class.
  *
  * Gamepad1 BUTTON MAPPINGS:
- * Left stick x:      Control robot's velocity and direction (stafe)
- * Left stick y:      Control robot's velocity and direction
+ * Left stick x:      N/A
+ * Left stick y:      N/A
  * Right stick x:     Turn Robot
- * Right stick y:   N/A
+ * Right stick y:   Control robot's velocity and direction
  * X:               Un-extends sweeper arm
  * Y:               Extends sweeper arm
  * A:               Un-extends drop arm
