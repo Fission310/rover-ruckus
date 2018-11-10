@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.util.VisionManager;
 /*
     This autonomous program is used to test CV methods without the availability of a robot
  */
-@Autonomous(name="Auton: Hanging + Sampling", group="Auton")
+@Autonomous(name="Auton: CV Test", group="Auton")
 public class CVAutonTest extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
