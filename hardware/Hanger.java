@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 /**
- * Acquirer is the class that is used to define all of the hardware for a robot's acquirer.
- * Acquirer must be instantiated, then initialized using <code>init()</code> before being used.
+ * Hanger is the class that is used to define all of the hardware for a robot's hanger.
+ * Hanger must be instantiated, then initialized using <code>init()</code> before being used.
  *
- * This class also contains autonomous actions involving the acquirer.
+ * This class also contains autonomous actions involving the hanger.
  */
 public class Hanger extends Mechanism {
 
@@ -19,13 +19,13 @@ public class Hanger extends Mechanism {
     /* Hardware members */
     private DcMotor hanger;
     /**
-     * Default constructor for Acquirer.
+     * Default constructor for Hanger.
      */
     public Hanger(){
 
     }
     /**
-     * Overloaded constructor for Lift. Sets the OpMode context.
+     * Overloaded constructor for hanger. Sets the OpMode context.
      *
      * @param opMode    the LinearOpMode that is currently running
      */
@@ -34,14 +34,14 @@ public class Hanger extends Mechanism {
     }
 
     /**
-     * Initializes lift hardware.
+     * Initializes hanger hardware.
      * @param hwMap        robot's hardware map
      */
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
 
         // Retrieve motor from hardware map and assign to instance vars
-        hanger = hwMap.dcMotor.get(RCConfig.LEFT_LIFT);
+        hanger = hwMap.dcMotor.get(RCConfig.Hanger);
 
         // Set braking behavior
         hanger.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -54,16 +54,16 @@ public class Hanger extends Mechanism {
     }
 
     /**
-     * Sets power for lift motor.
+     * Sets power for hanger motor.
      */
-    public void setLiftPower(double power) {
+    public void setHangerPower(double power) {
         hanger.setPower(power);
     }
 
     /**
-     * Sets power for lift motor based on encoder values.
+     * Sets power for hanger motor based on encoder values.
      */
-    public void liftToPos(double power) {
+    public void hangerToPos(double power) {
         hanger.setPower(power);
     }
 
