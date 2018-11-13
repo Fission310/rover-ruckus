@@ -152,8 +152,8 @@ public class Drivetrain extends Mechanism {
         double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         // Determine new target position, and pass to motor controller
-        newLeftTarget = leftFront.getCurrentPosition() + (int) (leftInches * Constants.COUNTS_PER_INCH);
-        newRightTarget = rightFront.getCurrentPosition() + (int) (rightInches * Constants.COUNTS_PER_INCH);
+        newLeftTarget = leftFront.getCurrentPosition() + (int) (leftInches * Constants.TICKS_PER_INCH);
+        newRightTarget = rightFront.getCurrentPosition() + (int) (rightInches * Constants.TICKS_PER_INCH);
         leftFront.setTargetPosition(newLeftTarget);
         rightFront.setTargetPosition(newRightTarget);
 
@@ -277,7 +277,7 @@ public class Drivetrain extends Mechanism {
         double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         // Determine new target position, and pass to motor controller
-        newTarget = slideDrive.getCurrentPosition() + (int) (inches * Constants.COUNTS_PER_INCH);
+        newTarget = slideDrive.getCurrentPosition() + (int) (inches * Constants.TICKS_PER_INCH);
         slideDrive.setTargetPosition(newTarget);
 
         // Turn On RUN_TO_POSITION
@@ -329,8 +329,8 @@ public class Drivetrain extends Mechanism {
 
     public double[] getPositions() {
         double[] positions = new double[4];
-        positions[0] = leftFront.getCurrentPosition() / Constants.COUNTS_PER_INCH;
-        positions[1] = rightFront.getCurrentPosition() / Constants.COUNTS_PER_INCH;
+        positions[0] = leftFront.getCurrentPosition() / Constants.TICKS_PER_INCH;
+        positions[1] = rightFront.getCurrentPosition() / Constants.TICKS_PER_INCH;
 
         return positions;
     }

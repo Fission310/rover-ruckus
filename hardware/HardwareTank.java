@@ -7,8 +7,6 @@ import org.firstinspires.ftc.teamcode.hardware.tankdrive.Drivetrain;
 
 import java.util.ArrayList;
 
-
-
 /**
  * HardwareTank is the class that is used to define all of the hardware for a single robot. In this
  * case, the robot is: Rover Ruckus.
@@ -24,21 +22,13 @@ public class HardwareTank extends Mechanism {
      */
     public Drivetrain drivetrain;
     /**
-     * Instance variable containing robot's acquirer.
+     * Instance variable containing robot's Hanger.
      */
-    public Acquirer acquirer;
+    public Hanger hanger;
     /**
-     * Instance variable containing robot's lift.
+     * Instance variable containing robot's arms.
      */
-    public Lift lift;
-    /**
-     * Instance variable containing robot's tape measure.
-     */
-    public Tape tape;
-    /**
-     * Instance variable containing robot's servo arm.
-     */
-    public Arm servoArm;
+//    public Arm servoArm;
 
     /* Miscellaneous mechanisms */
 
@@ -47,10 +37,7 @@ public class HardwareTank extends Mechanism {
      */
     public HardwareTank(){
         drivetrain = new Drivetrain();
-        acquirer = new Acquirer();
-        lift = new Lift();
-        tape = new Tape();
-        servoArm = new Arm();
+        hanger = new Hanger();
     }
     /**
      * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
@@ -61,10 +48,7 @@ public class HardwareTank extends Mechanism {
     public HardwareTank(LinearOpMode opMode){
         this.opMode = opMode;
         drivetrain = new Drivetrain(opMode);
-        acquirer = new Acquirer(opMode);
-        lift = new Lift(opMode);
-        tape = new Tape(opMode);
-        servoArm = new Arm(opMode);
+        hanger = new Hanger(opMode);
     }
 
     /**
@@ -73,10 +57,7 @@ public class HardwareTank extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         drivetrain.init(hwMap);
-        acquirer.init(hwMap);
-        lift.init(hwMap);
-        tape.init(hwMap);
-        servoArm.init(hwMap);
+        hanger.init(hwMap);
     }
 
     /**
@@ -87,6 +68,19 @@ public class HardwareTank extends Mechanism {
             opMode.telemetry.addData("Heading:", drivetrain.getHeading());
             opMode.telemetry.update();
         }
+    }
+
+    public void land(){
+        hanger.hangeToPos(7);
+    }
+//    public void driveStraight(){
+//        drivetrain.driveToPos();
+//    }
+    public void sample(){
+        hanger.hangeToPos(7);
+    }
+    public void park(){
+        drivetrain.driveToPos(0.75,120,120,10);
     }
 
     /**

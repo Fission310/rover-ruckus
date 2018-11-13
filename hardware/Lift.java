@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 /**
- * Acquirer is the class that is used to define all of the hardware for a robot's acquirer.
- * Acquirer must be instantiated, then initialized using <code>init()</code> before being used.
+ * Lift is the class that is used to define all of the hardware for a robot's loft.
+ * Lift must be instantiated, then initialized using <code>init()</code> before being used.
  *
- * This class also contains autonomous actions involving the acquirer.
+ * This class also contains autonomous actions involving the lift.
  */
 public class Lift extends Mechanism {
 

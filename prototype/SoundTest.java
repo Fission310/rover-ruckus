@@ -52,6 +52,8 @@ public class SoundTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            telemetry.addData(">", "works.");
+            telemetry.update();
             // say Silver each time gamepad X is pressed (This sound is a resource)
             if (silverFound && (isX = gamepad1.x) && !wasX) {
                 soundManager.playSound(hardwareMap.appContext, silverSoundID);

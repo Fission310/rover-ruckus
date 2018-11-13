@@ -58,7 +58,7 @@ public class TeleopTankMain extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.2;
     private static final double SLOW_MULTIPLIER = 0.5;
-    private static final double FAST_MULTIPLIER = 0.5;
+    private static final double FAST_MULTIPLIER = 1.5;
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -66,9 +66,11 @@ public class TeleopTankMain extends OpMode {
     /* Robot hardware map */
     private HardwareTank robot = new HardwareTank();
 
+    double yInput, xInput;
+
     @Override
     public void init() {
-        robot.init(hardwareMap);
+
     }
 
     /**
@@ -85,10 +87,11 @@ public class TeleopTankMain extends OpMode {
      */
     @Override
     public void start() {
+        robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
 
-        robot.servoArm.armUp();
-        robot.servoArm.sweeperNeutral();
+//        robot.servoArm.armUp();
+//        robot.servoArm.sweeperNeutral();
 
         runtime.reset();
 
@@ -104,8 +107,10 @@ public class TeleopTankMain extends OpMode {
         // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
-        double yInput = Range.clip(gamepad1.left_stick_y, -1.0, 1.0);
-        double xInput = Range.clip(gamepad1.left_stick_x, -1.0, 1.0);
+        yInput = gamepad1.left_stick_y;
+        xInput = gamepad1.left_stick_x;
+        telemetry.addData("Status", "yinput: " + yInput);
+
 
         // Threshold for strafing, makes horizontal strafing easier
         if (abs(gamepad1.left_stick_y) < ANALOG_THRESHOLD) {
@@ -114,21 +119,27 @@ public class TeleopTankMain extends OpMode {
 
         // Drives the robot based on driver joystick input, check for slow mode
         if (gamepad1.left_bumper) {
-            robot.drivetrain.drive(yInput * SLOW_MULTIPLIER, yInput * SLOW_MULTIPLIER);
+            robot.drivetrain.drive(yInput * SLOW_MULTIPLIER, xInput * SLOW_MULTIPLIER);
+        } else if (gamepad1.right_bumper ) {
+            robot.drivetrain.drive(yInput * FAST_MULTIPLIER, xInput * FAST_MULTIPLIER);
         } else {
-            robot.drivetrain.drive(yInput, yInput);
+            robot.drivetrain.drive(yInput, xInput);
+        }
+
+        if (gamepad1.x || gamepad2.x) {
+            telemetry.addData("test", "test");
         }
 
         // Set arms position
-        if (gamepad1.x || gamepad2.x) {
-            robot.servoArm.sweeperLeft();
-        } else if (gamepad1.y || gamepad2.y) {
-            robot.servoArm.sweeperRight();
-        } else if (gamepad1.a || gamepad2.a) {
-            robot.servoArm.armDown();
-        } else if (gamepad1.b || gamepad2.b) {
-            robot.servoArm.armUp();
-        }
+//        if (gamepad1.x || gamepad2.x) {
+//            robot.servoArm.sweeperLeft();
+//        } else if (gamepad1.y || gamepad2.y) {
+//            robot.servoArm.sweeperRight();
+//        } else if (gamepad1.a || gamepad2.a) {
+//            robot.servoArm.armDown();
+//        } else if (gamepad1.b || gamepad2.b) {
+//            robot.servoArm.armUp();
+//        }
 
         double[] positions = robot.drivetrain.getPositions();
         telemetry.addData("Path2", "Running at %.2f :%.2f",

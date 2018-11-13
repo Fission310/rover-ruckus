@@ -41,13 +41,13 @@ public class Hanger extends Mechanism {
         // Retrieve servos from hardware map and assign to instance vars
 
         // Retrieve motor from hardware map and assign to instance vars
-        hanger = hwMap.dcMotor.get(RCConfig.Hanger);
+        hanger = hwMap.dcMotor.get(RCConfig.HANGER);
 
         // Set braking behavior
         hanger.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set polarity
-        hanger.setDirection(DcMotorSimple.Direction.FORWARD);
+        hanger.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set initial power
         hanger.setPower(0);
@@ -63,8 +63,16 @@ public class Hanger extends Mechanism {
     /**
      * Sets power for hanger motor based on encoder values.
      */
-    public void hangerToPos(double power) {
-        hanger.setPower(power);
+    public void hangeToPos(double inches) {
+        // Target position variables
+        int newTarget = hanger.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH);
+
+        // Determine new target position, and pass to motor controller
+        hanger.setTargetPosition(newTarget);
+
+        // Turn On RUN_TO_POSITION
+        hanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+
 
 }

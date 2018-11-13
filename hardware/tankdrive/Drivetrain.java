@@ -38,6 +38,9 @@ public class Drivetrain extends Mechanism {
 
     private BNO055IMU imu;
 
+    double left;
+    double right;
+    double max;
 
     /**
      * Default constructor for Drivetrain.
@@ -108,26 +111,38 @@ public class Drivetrain extends Mechanism {
     public void encoderInit() {
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
 
     /**
      * Set drivetrain motor power based on input.
      *
-     * @param left      power for left side of drivetrain (-1 to 1)
-     * @param right     power for right side of drivetrain (-1 to 1)
+     * @param y_value      power for left side of drivetrain (-1 to 1)
+     * @param x_value     power for right side of drivetrain (-1 to 1)
      */
-    public void drive(double left, double right) {
+    public void drive(double y_value, double x_value) {
+        // Combine drive and turn for blended motion.
+        left  = y_value + x_value;
+        right = y_value - x_value;
+
+        // Normalize the values so neither exceed +/- 1.0
+        max = Math.max(Math.abs(left), Math.abs(right));
+        if (max > 1.0) {
+            left /= max;
+            right /= max;
+        }
+
         leftFront.setPower(left);
         leftBack.setPower(left);
         rightBack.setPower(right);
         rightFront.setPower(right);
-    }
-    public void driveParametric(double v_y, double v_x, double v_rot) {
-        drive(v_y-v_rot,v_y+v_rot);
     }
 
     /**
@@ -155,14 +170,19 @@ public class Drivetrain extends Mechanism {
         double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         // Determine new target position, and pass to motor controller
-        newLeftTarget = leftFront.getCurrentPosition() + (int) (leftInches * Constants.COUNTS_PER_INCH);
-        newRightTarget = rightFront.getCurrentPosition() + (int) (rightInches * Constants.COUNTS_PER_INCH);
+        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH);
+        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH);
+
         leftFront.setTargetPosition(newLeftTarget);
         rightFront.setTargetPosition(newRightTarget);
+        leftBack.setTargetPosition(newLeftTarget);
+        rightBack.setTargetPosition(newRightTarget);
 
         // Turn On RUN_TO_POSITION
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Reset the timeout time
         ElapsedTime runtime = new ElapsedTime();
@@ -185,6 +205,8 @@ public class Drivetrain extends Mechanism {
             // Set power of drivetrain motors accounting for adjustment
             leftFront.setPower(Math.abs(speed) + p);
             rightFront.setPower(Math.abs(speed) - p);
+            leftBack.setPower(Math.abs(speed) + p);
+            rightBack.setPower(Math.abs(speed) - p);
 
                 /*
                 if (leftInches < 0) {
@@ -212,11 +234,18 @@ public class Drivetrain extends Mechanism {
         // Stop all motion
         leftFront.setPower(0);
         rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
 
         // Turn off RUN_TO_POSITION
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
@@ -276,8 +305,8 @@ public class Drivetrain extends Mechanism {
 
     public double[] getPositions() {
         double[] positions = new double[4];
-        positions[0] = leftFront.getCurrentPosition() / Constants.COUNTS_PER_INCH;
-        positions[1] = rightFront.getCurrentPosition() / Constants.COUNTS_PER_INCH;
+        positions[0] = leftFront.getCurrentPosition() / Constants.TICKS_PER_INCH;
+        positions[1] = rightFront.getCurrentPosition() / Constants.TICKS_PER_INCH;
 
         return positions;
     }
