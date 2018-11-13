@@ -66,7 +66,7 @@ public class TeleopTankMain extends OpMode {
     /* Robot hardware map */
     private HardwareTank robot = new HardwareTank();
 
-    double yInput, xInput;
+    double yInput, xInput, hangingXInput;
 
     @Override
     public void init() {
@@ -107,8 +107,10 @@ public class TeleopTankMain extends OpMode {
         // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
-        yInput = gamepad1.left_stick_y;
+        yInput = -gamepad1.left_stick_y;
         xInput = gamepad1.left_stick_x;
+        hangingXInput = gamepad2.left_stick_x;
+
         telemetry.addData("Status", "yinput: " + yInput);
 
 
@@ -124,6 +126,21 @@ public class TeleopTankMain extends OpMode {
             robot.drivetrain.drive(yInput * FAST_MULTIPLIER, xInput * FAST_MULTIPLIER);
         } else {
             robot.drivetrain.drive(yInput, xInput);
+        }
+
+
+        // Threshold for hanger, makes hanging easier
+        if (abs(gamepad2.left_stick_x) < ANALOG_THRESHOLD) {
+            hangingXInput = 0;
+        }
+
+        // Controls the hanging mechanism, check for slow mode
+        if (gamepad2.left_bumper) {
+            robot.hanger.setHangerPower(hangingXInput * SLOW_MULTIPLIER);
+        } else if (gamepad2.right_bumper ) {
+            robot.hanger.setHangerPower(hangingXInput * FAST_MULTIPLIER);
+        } else {
+            robot.hanger.setHangerPower(hangingXInput);
         }
 
         if (gamepad1.x || gamepad2.x) {

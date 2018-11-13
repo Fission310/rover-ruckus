@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.hardware.tankdrive.Drivetrain;
+import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 import java.util.ArrayList;
 
@@ -73,11 +74,19 @@ public class HardwareTank extends Mechanism {
     public void land(){
         hanger.hangeToPos(7);
     }
-//    public void driveStraight(){
-//        drivetrain.driveToPos();
-//    }
-    public void sample(){
-        hanger.hangeToPos(7);
+
+    public void sample(VisionManager visionManager){
+        if (opMode.opModeIsActive()) {
+            while (!visionManager.isGoldAligned()) {
+                drivetrain.drive(0.3, 0.0);
+            }
+            if (visionManager.isGoldAligned()) {
+                drivetrain.turn(0.3, 90.0, 3.0);
+                drivetrain.driveToPos(0.3, 6,6,3);
+                drivetrain.driveToPos(0.3, -6,-6,3);
+                drivetrain.turn(0.3, -90.0, 3.0);
+            }
+        }
     }
     public void park(){
         drivetrain.driveToPos(0.75,120,120,10);

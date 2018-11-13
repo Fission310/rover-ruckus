@@ -44,4 +44,14 @@ public class Constants {
      */
     public static final double  COUNTS_PER_SERVO_VEX = 627.2;
 
+    public static final double robotLength = 18;
+    public static final double robotWidth = 18;
+    public static final double robotHeight = 18;
+    public static final double landerToSample = 51;
+    public static final double hookHeight = 22;
+    public static final double sampleToCrater = 48;
+    public static final double sampleToDepot = 72;
+    public static final double bottomOfRobotToGround = 2;
+
+
 }
