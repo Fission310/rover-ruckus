@@ -15,7 +15,8 @@ public class RCConfig {
     public static final String LEFT_LIFT = "right_lift";
     public static final String ROTATE_LIFT = "rotate_lift";
     public static final String WINCH = "winch";
-    public static final String HANGER = "hanger";
+    public static final String LEFTHANGER = "left_hanger";
+    public static final String RIGHTHANGER = "right_hanger";
 
     // Servos
     public static final String ARM = "arm";

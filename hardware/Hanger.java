@@ -17,7 +17,8 @@ public class Hanger extends Mechanism {
     /* CONSTANTS */
 
     /* Hardware members */
-    private DcMotor hanger;
+    private DcMotor leftHanger;
+    private DcMotor rightHanger;
     /**
      * Default constructor for Hanger.
      */
@@ -38,26 +39,31 @@ public class Hanger extends Mechanism {
      * @param hwMap        robot's hardware map
      */
     public void init(HardwareMap hwMap) {
-        // Retrieve servos from hardware map and assign to instance vars
+        // Retrieve servos from hardware map and assign to inst?ance vars
 
         // Retrieve motor from hardware map and assign to instance vars
-        hanger = hwMap.dcMotor.get(RCConfig.HANGER);
+        leftHanger = hwMap.dcMotor.get(RCConfig.LEFTHANGER);
+        rightHanger = hwMap.dcMotor.get(RCConfig.RIGHTHANGER);
 
         // Set braking behavior
-        hanger.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftHanger.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightHanger.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set polarity
-        hanger.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftHanger.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightHanger.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set initial power
-        hanger.setPower(0);
+        leftHanger.setPower(0);
+        rightHanger.setPower(0);
     }
 
     /**
      * Sets power for hanger motor.
      */
     public void setHangerPower(double power) {
-        hanger.setPower(power);
+        leftHanger.setPower(power);
+        rightHanger.setPower(power);
     }
 
     /**
@@ -65,13 +71,15 @@ public class Hanger extends Mechanism {
      */
     public void hangeToPos(double inches) {
         // Target position variables
-        int newTarget = hanger.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH);
+        int newTarget = leftHanger.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH);
 
         // Determine new target position, and pass to motor controller
-        hanger.setTargetPosition(newTarget);
+        leftHanger.setTargetPosition(newTarget);
+        rightHanger.setTargetPosition(newTarget);
 
         // Turn On RUN_TO_POSITION
-        hanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftHanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightHanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 
