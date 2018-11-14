@@ -6,7 +6,6 @@ import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class SoundManager {
-
     public int getSoundID(HardwareMap hwMap, String soundName) {
         return hwMap.appContext.getResources().getIdentifier(soundName,   "raw", hwMap.appContext.getPackageName());
     }

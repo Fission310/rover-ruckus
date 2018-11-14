@@ -27,23 +27,20 @@ public class AutonMain extends LinearOpMode {
 
         // Initialize robot
         robot.init(hardwareMap);
+        robot.drivetrain.encoderInit();
 
         // Wait until we're told to go
         waitForStart();
         runtime.reset();  // Start counting run time from now.
 
         robot.land();
+//        sleep(2000);
         robot.drivetrain.turn(0.3, 15.0, 3.0);
-        telemetry.addData("Status", "Turned 30 degrees");
         robot.drivetrain.driveToPos(0.3, -4, -4, 4.0);
-        telemetry.addData("Status", "Forward towards sampling " + (Constants.landerToSample-Constants.robotLength));
         robot.drivetrain.turn(0.3, -105.0, 5.0);
-        telemetry.addData("Status", "Turn -120 degrees ");
         robot.sample(visionManager);
-        telemetry.addData("Status", "Finished sampling " + runtime.toString());
         robot.drivetrain.driveToPos(0.3, 12,12,3);
         robot.drivetrain.turn(0.3, 105.0, 3.0);
-        telemetry.addData("Status", "Turn 120 degrees ");
         robot.drivetrain.driveToPos(0.5, 24,24,5);
         robot.drivetrain.driveToPos(0.5, -50,-50,5);
 

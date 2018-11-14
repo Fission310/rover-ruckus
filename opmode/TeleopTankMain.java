@@ -58,9 +58,9 @@ import static java.lang.Math.abs;
 @TeleOp(name = "Teleop: Tank", group = "Teleop")
 public class TeleopTankMain extends OpMode {
 
-    private static final double ANALOG_THRESHOLD = 0.2;
+    private static final double ANALOG_THRESHOLD = 0.15;
     private static final double SLOW_MULTIPLIER = 0.2;
-    private static final double FAST_MULTIPLIER = 1.5;
+    private static final double FAST_MULTIPLIER = 2;
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -71,31 +71,20 @@ public class TeleopTankMain extends OpMode {
     /* Sound manager */
     private SoundManager soundManager = new SoundManager();
 
-    double yInput, xInput, hangingXInput;
+    double yInput, xInput, hangingInput;
 
-    // Declare OpMode members.
-    private boolean goldFound;      // Sound file present flags
-    private boolean silverFound;
+    private boolean goldFound, silverFound;
+    private boolean isX, isB, wasX, wasB = false;    // Gamepad button state variables
 
-    private boolean isX = false;    // Gamepad button state variables
-    private boolean isB = false;
-
-    private boolean wasX = false;   // Gamepad button history variables
-    private boolean WasB = false;
-    int silverSoundID, goldSoundID;
+    private int silverSoundID, goldSoundID;
 
     @Override
     public void init() {
-        // Determine Resource IDs for sounds built into the RC application.
-        silverSoundID = soundManager.getSoundID(hardwareMap, "silver");
-        goldSoundID   = soundManager.getSoundID(hardwareMap, "gold");
-
         if (goldSoundID != 0)
             goldFound   = SoundPlayer.getInstance().preload(hardwareMap.appContext, goldSoundID);
 
         if (silverSoundID != 0)
             silverFound = SoundPlayer.getInstance().preload(hardwareMap.appContext, silverSoundID);
-
     }
 
     /**
@@ -134,7 +123,7 @@ public class TeleopTankMain extends OpMode {
 
         yInput = gamepad1.left_stick_y;
         xInput = gamepad1.left_stick_x;
-        hangingXInput = gamepad2.left_stick_y;
+        hangingInput = gamepad2.left_stick_y;
 
         telemetry.addData("Status", "yinput: " + yInput);
 
@@ -155,34 +144,30 @@ public class TeleopTankMain extends OpMode {
 
         // Threshold for hanger, makes hanging easier
         if (abs(gamepad2.left_stick_y) < ANALOG_THRESHOLD) {
-            hangingXInput = 0;
+            hangingInput = 0;
         }
 
         // Controls the hanging mechanism, check for slow mode
         if (gamepad2.left_bumper) {
-            robot.hanger.setHangerPower(hangingXInput * SLOW_MULTIPLIER);
+            robot.hanger.setHangerPower(hangingInput * SLOW_MULTIPLIER);
         } else if (gamepad2.right_bumper ) {
-            robot.hanger.setHangerPower(hangingXInput * FAST_MULTIPLIER);
+            robot.hanger.setHangerPower(hangingInput * FAST_MULTIPLIER);
         } else {
-            robot.hanger.setHangerPower(hangingXInput);
-        }
-
-        if (gamepad1.x || gamepad2.x) {
-            telemetry.addData("test", "test");
+            robot.hanger.setHangerPower(hangingInput);
         }
 
         if (silverFound && ((isX = gamepad1.x) || (isX = gamepad2.x)) && !wasX) {
             soundManager.playSound(hardwareMap.appContext, silverSoundID);
         }
 
-        if (goldFound && (isB = gamepad1.b) || (isB = gamepad2.b) && !WasB) {
-            // say Gold each time gamepad B is pressed  (This sound is a resource)
+        // say Gold each time gamepad B is pressed  (This sound is a resource)
+        if (goldFound && ((isB = gamepad1.b) || (isB = gamepad2.b)) && !wasB) {
             soundManager.playSound(hardwareMap.appContext, goldSoundID);
         }
 
         // Save last button states
         wasX = isX;
-        WasB = isB;
+        wasB = isB;
 
         // Set arms position
 //        if (gamepad1.x || gamepad2.x) {
