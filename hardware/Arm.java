@@ -49,9 +49,7 @@ public class Arm extends Mechanism {
 
         // Retrieve arm from hardware map and set to initial position
         arm = hwMap.servo.get(RCConfig.ARM);
-        sweeper = hwMap.servo.get(RCConfig.SWEEPER);
         armInit();
-        sweeperNeutral();
     }
 
     /**

@@ -126,11 +126,13 @@ public class TestTankOpmode extends OpMode {
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
         leftYInput = gamepad1.left_stick_y;
-        rightYInput = gamepad1.left_stick_y;
+        rightYInput = gamepad1.right_stick_y;
         hangingInput = -gamepad2.left_stick_y;
 
+        telemetry.addData("Status", "Right: " + rightYInput);
+
         // Threshold for strafing, makes horizontal strafing easier
-        if (abs(gamepad1.left_stick_y) < ANALOG_THRESHOLD) {
+        if ((abs(gamepad1.left_stick_y) < ANALOG_THRESHOLD) || (abs(gamepad1.left_stick_y) < ANALOG_THRESHOLD)) {
             leftYInput = 0;
             rightYInput = 0;
         }

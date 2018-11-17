@@ -60,15 +60,15 @@ public class AutonMain extends LinearOpMode {
         robot.land();
         sleep(2000);
 
-        robot.drivetrain.turn(0.3, 15.0, 3.0);
+        robot.drivetrain.turn(15.0, 3.0);
         robot.drivetrain.driveToPos(0.3, -4, -4, 4.0);
 //        soundManager.stopSound();
 //        soundManager.playSound(hardwareMap.appContext, cantTouchID);
 
-        robot.drivetrain.turn(0.3, -105.0, 5.0);
+        robot.drivetrain.turn(-105.0, 5.0);
         robot.sample(visionManager);
         robot.drivetrain.driveToPos(0.3, 12,12,3);
-        robot.drivetrain.turn(0.3, 105.0, 3.0);
+        robot.drivetrain.turn(105.0, 3.0);
 //        soundManager.stopSound();
 //        soundManager.playSound(hardwareMap.appContext, barginID);
         robot.drivetrain.driveToPos(0.5, 24,24,3);

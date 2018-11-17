@@ -304,35 +304,25 @@ public class Drivetrain extends Mechanism {
      *  <ol>Driver stops the running OpMode</ol>
      * </li>
      *
-     * @param speed         maximum power of drivetrain motors when driving
      * @param angle         number of degrees to turn
      * @param timeoutS      amount of time before the move should stop
      */
-    public void turn(double speed, double angle, double timeoutS) {
-        // Get IMU angles
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        // Calculate angle to turn
-        double angleToTurn = angle - angles.firstAngle;
-
-        // Reset the timeout time
+    public void turn(double angle, double timeoutS) {
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
+        while (opMode.opModeIsActive() && Math.abs(getError(angle)) > 1.5 && runtime.seconds() < timeoutS) {
 
-        // Loop until a condition is met
-        while (opMode.opModeIsActive() && Math.abs(angleToTurn) > 0.5 && runtime.seconds() < timeoutS) {
-
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            angleToTurn = angle - angles.firstAngle;
+            double velocity = getError(angle) / 180 + 0.02; // this works
 
             // Set motor power according to calculated angle to turn
-            leftFront.setPower(-Math.signum(angleToTurn) * speed);
-            rightFront.setPower(Math.signum(angleToTurn) * speed);
-            leftBack.setPower(-Math.signum(angleToTurn) * speed);
-            rightBack.setPower(Math.signum(angleToTurn) * speed);
+            leftFront.setPower(velocity);
+            rightFront.setPower(-velocity);
+            leftBack.setPower(velocity);
+            rightBack.setPower(-velocity);
 
             // Display heading for the driver
-            opMode.telemetry.addData("Heading: ", "%f", angleToTurn);
+            opMode.telemetry.addData("Heading: ", "%.2f : %.2f", angle, getHeading());
+            opMode.telemetry.addData("Velocity: ", "%.2f", velocity);
             opMode.telemetry.update();
         }
 
@@ -347,7 +337,22 @@ public class Drivetrain extends Mechanism {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return angles.firstAngle;
     }
-
+    private double getError(double targetAngle) {
+        double heading = getHeading();
+        if (targetAngle > heading) {
+            if (targetAngle - heading > 180) {
+                return 360 - Math.abs(targetAngle) - Math.abs(heading);
+            } else {
+                return targetAngle - heading;
+            }
+        } else {
+            if (targetAngle - heading > 180) {
+                return -(360 - Math.abs(targetAngle) - Math.abs(heading));
+            } else {
+                return heading - targetAngle;
+            }
+        }
+    }
     public double[] getPositions() {
         double[] positions = new double[4];
         positions[0] = leftFront.getCurrentPosition() / Constants.TICKS_PER_INCH;

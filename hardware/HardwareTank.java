@@ -84,10 +84,10 @@ public class HardwareTank extends Mechanism {
                 drivetrain.drive(0.3, 0.0);
             }
             if (visionManager.isGoldAligned()) {
-                drivetrain.turn(0.3, 90.0, 3.0);
+                drivetrain.turn(90.0, 3.0);
                 drivetrain.driveToPos(0.3, 13,13,3);
                 drivetrain.driveToPos(0.3, -13,-13,3);
-                drivetrain.turn(0.3, -90.0, 3.0);
+                drivetrain.turn(-90.0, 3.0);
             }
         }
     }
