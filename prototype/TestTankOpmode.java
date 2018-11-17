@@ -55,7 +55,7 @@ import static java.lang.Math.abs;
  * BACK:            N/A
  *
  */
-@TeleOp(name = "Teleop: Tank", group = "Teleop")
+@TeleOp(name = "Teleop: Tank Test", group = "Teleop")
 public class TestTankOpmode extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.15;

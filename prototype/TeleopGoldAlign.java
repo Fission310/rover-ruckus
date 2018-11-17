@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="TeleopGoldAlign", group="DogeCV")
 @Disabled
-
 public class TeleopGoldAlign extends OpMode
 {
     private GoldAlignDetector detector;

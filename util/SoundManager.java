@@ -13,4 +13,7 @@ public class SoundManager {
     public void playSound(Context context, int soundId) {
         SoundPlayer.getInstance().startPlaying(context, soundId);
     }
+    public void stopSound() {
+        SoundPlayer.getInstance().stopPlayingAll();
+    }
 }

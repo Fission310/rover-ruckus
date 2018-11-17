@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auton;
+package org.firstinspires.ftc.teamcode.prototype;
 
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 import org.firstinspires.ftc.teamcode.util.SoundManager;
 import org.firstinspires.ftc.teamcode.hardware.Constants;
 
-@Autonomous(name="Auton: Depot Everything", group="Auton")
-public class AutonMain extends LinearOpMode {
+@Autonomous(name="Auton: Test PID", group="Auton")
+public class AutonPIDTest extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -60,15 +60,16 @@ public class AutonMain extends LinearOpMode {
         robot.land();
         sleep(2000);
 
-        robot.drivetrain.turn(0.3, 15.0, 3.0);
+        robot.drivetrain.turnPID(-15);
+
         robot.drivetrain.driveToPos(0.3, -4, -4, 4.0);
 //        soundManager.stopSound();
 //        soundManager.playSound(hardwareMap.appContext, cantTouchID);
 
-        robot.drivetrain.turn(0.3, -105.0, 5.0);
+        robot.drivetrain.turnPID(105);
         robot.sample(visionManager);
         robot.drivetrain.driveToPos(0.3, 12,12,3);
-        robot.drivetrain.turn(0.3, 105.0, 3.0);
+        robot.drivetrain.turnPID(-105);
 //        soundManager.stopSound();
 //        soundManager.playSound(hardwareMap.appContext, barginID);
         robot.drivetrain.driveToPos(0.5, 24,24,3);

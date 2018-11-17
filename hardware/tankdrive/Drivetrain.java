@@ -18,6 +18,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.RCConfig;
 import org.firstinspires.ftc.teamcode.hardware.Constants;
+import org.firstinspires.ftc.teamcode.util.PIDController;
+import org.firstinspires.ftc.teamcode.util.sensors.IMU;
+import org.firstinspires.ftc.teamcode.util.sensors.SingleIMU;
 
 /**
  * Drivetrain is the class that is used to define all of the hardware for a robot's drivetrain.
@@ -40,9 +43,10 @@ public class Drivetrain extends Mechanism {
 
     double left, right, max;
 
-    private double prevTime;  // The last time loop() was called.
-    private int prevLeftEncoderPosition;   // Encoder tick at last call to loop().
-    private int prevRightEncoderPosition;  // Encoder tick at last call to loop().
+    Orientation lastAngles = new Orientation();
+    double globalAngle, power = .30, correction;
+    PIDController pidRotate, pidDrive;
+
     /**
      * Default constructor for Drivetrain.
      */
@@ -57,7 +61,6 @@ public class Drivetrain extends Mechanism {
     public Drivetrain(LinearOpMode opMode){
         this.opMode = opMode;
     }
-
     /**
      * Initializes drivetrain hardware.
      * @param hwMap        robot's hardware map
@@ -90,6 +93,7 @@ public class Drivetrain extends Mechanism {
 
         // Initialize IMU with parameters
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode                = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json";
@@ -103,6 +107,19 @@ public class Drivetrain extends Mechanism {
 
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+
+        // Set PID proportional value to start reducing power at about 50 degrees of rotation.
+        pidRotate = new PIDController(.005, 0, 0);
+
+        // Set PID proportional value to produce non-zero correction value when robot veers off
+        // straight line. P value controls how sensitive the correction is.
+        pidDrive = new PIDController(.05, 0, 0);
+
+        // Set up parameters for driving in a straight line.
+        pidDrive.setSetpoint(0);
+        pidDrive.setOutputRange(0, power);
+        pidDrive.setInputRange(-90, 90);
+        pidDrive.enable();
     }
 
     /**
@@ -266,6 +283,17 @@ public class Drivetrain extends Mechanism {
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    public void driveToPosPID(double correction) {
+        correction = pidDrive.performPID(getAngle());
+
+        leftFront.setPower(-power + correction);
+        rightFront.setPower(-power);
+        leftBack.setPower(-power + correction);
+        rightBack.setPower(-power);
+    }
+    public void turnPID(int angle) {
+        rotate(angle, power);
+    }
     /**
      * Turn to a specified angle using an IMU.
      *
@@ -328,4 +356,95 @@ public class Drivetrain extends Mechanism {
         return positions;
     }
 
+    public void resetAngle() {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        globalAngle = 0;
+    }
+
+    /**
+     * Get current cumulative angle rotation from last reset.
+     * @return Angle in degrees. + = left, - = right from zero point.
+     */
+    private double getAngle() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180) {
+            deltaAngle += 360;
+        } else if (deltaAngle > 180) {
+            deltaAngle -= 360;
+        }
+
+        globalAngle += deltaAngle;
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+
+    /**
+     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
+     * @param degrees Degrees to turn, + is left - is right
+     */
+    private void rotate(int degrees, double power)
+    {
+        resetAngle();
+
+        // start pid controller. PID controller will monitor the turn angle with respect to the
+        // target angle and reduce power as we approach the target angle with a minimum of 20%.
+        // This is to prevent the robots momentum from overshooting the turn after we turn off the
+        // power. The PID controller reports onTarget() = true when the difference between turn
+        // angle and target angle is within 2% of target (tolerance). This helps prevent overshoot.
+        // The minimum power is determined by testing and must enough to prevent motor stall and
+        // complete the turn. Note: if the gap between the starting power and the stall (minimum)
+        // power is small, overshoot may still occur. Overshoot is dependant on the motor and
+        // gearing configuration, starting power, weight of the robot and the on target tolerance.
+
+        pidRotate.reset();
+        pidRotate.setSetpoint(degrees);
+        pidRotate.setInputRange(0, 90);
+        pidRotate.setOutputRange(.20, power);
+        pidRotate.setTolerance(2);
+        pidRotate.enable();
+
+        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+        // clockwise (right).
+
+        // rotate until turn is completed.
+
+        if (degrees < 0) {
+            // On right turn we have to get off zero first.
+            while (opMode.opModeIsActive() && getAngle() == 0) {
+                leftFront.setPower(-power);
+                rightFront.setPower(power);
+                leftBack.setPower(-power);
+                rightBack.setPower(power);
+                opMode.sleep(100);
+            } do {
+                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
+                leftFront.setPower(power);
+                rightFront.setPower(-power);
+                leftBack.setPower(power);
+                rightBack.setPower(-power);
+            } while (opMode.opModeIsActive() && !pidRotate.onTarget());
+        } else do { // left turn.
+            power = pidRotate.performPID(getAngle()); // power will be + on left turn.
+            leftFront.setPower(power);
+            rightFront.setPower(-power);
+            leftBack.setPower(power);
+            rightBack.setPower(-power);
+        } while (opMode.opModeIsActive() && !pidRotate.onTarget());
+
+        // turn the motors off.
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+
+        // wait for rotation to stop.
+        opMode.sleep(500);
+
+        // reset angle tracking on new heading.
+        resetAngle();
+    }
 }

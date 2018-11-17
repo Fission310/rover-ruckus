@@ -27,8 +27,8 @@ public class SoundTest extends LinearOpMode {
     public void runOpMode() {
 
         // Determine Resource IDs for sounds built into the RC application.
-        int silverSoundID = soundManager.getSoundID(hardwareMap, "silver");
-        int goldSoundID   = soundManager.getSoundID(hardwareMap, "gold");
+        int silverSoundID = soundManager.getSoundID(hardwareMap, "canttouch");
+        int goldSoundID   = soundManager.getSoundID(hardwareMap, "canttouch");
 
         // Determine if sound resources are found.
         // Note: Preloading is NOT required, but it's a good way to verify all your sounds are available before you run.
@@ -49,6 +49,7 @@ public class SoundTest extends LinearOpMode {
 
         telemetry.addData(">", "Press X, B to play sounds.");
         telemetry.update();
+        soundManager.playSound(hardwareMap.appContext, silverSoundID);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
