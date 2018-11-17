@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.teamcode.prototype;
 
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -56,7 +56,7 @@ import static java.lang.Math.abs;
  *
  */
 @TeleOp(name = "Teleop: Tank", group = "Teleop")
-public class TeleopTankMain extends OpMode {
+public class TestTankOpmode extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.15;
     private static final double SLOW_MULTIPLIER = 0.2;
@@ -71,7 +71,7 @@ public class TeleopTankMain extends OpMode {
     /* Sound manager */
     private SoundManager soundManager = new SoundManager();
 
-    double yInput, xInput, hangingInput;
+    double rightYInput, leftYInput, hangingInput;
 
     private boolean goldFound, silverFound;
     private boolean isX, isY, wasX, wasB = false;    // Gamepad button state variables
@@ -125,24 +125,23 @@ public class TeleopTankMain extends OpMode {
         // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
-        yInput = gamepad1.left_stick_y;
-        xInput = gamepad1.left_stick_x;
+        leftYInput = gamepad1.left_stick_y;
+        rightYInput = gamepad1.left_stick_y;
         hangingInput = -gamepad2.left_stick_y;
-
-        telemetry.addData("Status", "yinput: " + yInput);
 
         // Threshold for strafing, makes horizontal strafing easier
         if (abs(gamepad1.left_stick_y) < ANALOG_THRESHOLD) {
-            yInput = 0;
+            leftYInput = 0;
+            rightYInput = 0;
         }
 
         // Drives the robot based on driver joystick input, check for slow mode
         if (gamepad1.left_bumper) {
-            robot.drivetrain.drive(yInput * SLOW_MULTIPLIER, xInput * SLOW_MULTIPLIER);
+            robot.drivetrain.driveTank(leftYInput * SLOW_MULTIPLIER, rightYInput * SLOW_MULTIPLIER);
         } else if (gamepad1.right_bumper ) {
-            robot.drivetrain.drive(yInput * FAST_MULTIPLIER, xInput * FAST_MULTIPLIER);
+            robot.drivetrain.driveTank(leftYInput * FAST_MULTIPLIER, rightYInput * FAST_MULTIPLIER);
         } else {
-            robot.drivetrain.drive(yInput, xInput);
+            robot.drivetrain.driveTank(leftYInput, rightYInput);
         }
 
         // Threshold for hanger, makes hanging easier
@@ -152,11 +151,11 @@ public class TeleopTankMain extends OpMode {
 
         // Controls the hanging mechanism, check for slow mode
         if (gamepad2.left_bumper) {
-            robot.hanger.setHangerPower(hangingInput * SLOW_MULTIPLIER);
+            robot.hanger.setHangerPower(hangingInput);
         } else if (gamepad2.right_bumper ) {
             robot.hanger.setHangerPower(hangingInput * FAST_MULTIPLIER);
         } else {
-            robot.hanger.setHangerPower(hangingInput);
+            robot.hanger.setHangerPower(hangingInput * SLOW_MULTIPLIER);
         }
 
         // Set arms position

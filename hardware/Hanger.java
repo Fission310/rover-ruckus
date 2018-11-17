@@ -80,6 +80,9 @@ public class Hanger extends Mechanism {
         // Turn On RUN_TO_POSITION
         leftHanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightHanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftHanger.setPower(.2);
+        rightHanger.setPower(.2);
     }
 
 

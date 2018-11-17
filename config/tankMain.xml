@@ -11,7 +11,7 @@
             <NeveRest40Gearmotor name="right_front" port="2" />
             <NeveRest40Gearmotor name="right_back" port="3" />
             <Servo name="sweeper" port="0" />
-            <Servo name="marker_arm" port="1" />
+            <Servo name="marker" port="1" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
         </LynxModule>
     </LynxUsbDevice>

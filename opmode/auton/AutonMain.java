@@ -34,18 +34,15 @@ public class AutonMain extends LinearOpMode {
         runtime.reset();  // Start counting run time from now.
 
         robot.land();
-//        sleep(2000);
+        sleep(2000);
         robot.drivetrain.turn(0.3, 15.0, 3.0);
         robot.drivetrain.driveToPos(0.3, -4, -4, 4.0);
         robot.drivetrain.turn(0.3, -105.0, 5.0);
         robot.sample(visionManager);
         robot.drivetrain.driveToPos(0.3, 12,12,3);
         robot.drivetrain.turn(0.3, 105.0, 3.0);
-        robot.drivetrain.driveToPos(0.5, 24,24,5);
+        robot.drivetrain.driveToPos(0.5, 24,24,3);
         robot.drivetrain.driveToPos(0.5, -50,-50,5);
-
-//        robot.getCubeDetails();
-//        sleep(1000);
 
         // Stop CV
         visionManager.goldAlignStop();

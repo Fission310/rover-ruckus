@@ -3,10 +3,10 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.hardware.legacy.Acquirer;
+import org.firstinspires.ftc.teamcode.hardware.legacy.Lift;
+import org.firstinspires.ftc.teamcode.hardware.legacy.Tape;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.Drivetrain;
-
-import java.util.ArrayList;
-
 
 
 /**

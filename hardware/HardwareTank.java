@@ -27,9 +27,9 @@ public class HardwareTank extends Mechanism {
      */
     public Hanger hanger;
     /**
-     * Instance variable containing robot's arms.
+     * Instance variable containing robot's markers arm.
      */
-//    public Arm servoArm;
+    public Marker marker;
 
     /* Miscellaneous mechanisms */
 
@@ -39,6 +39,7 @@ public class HardwareTank extends Mechanism {
     public HardwareTank(){
         drivetrain = new Drivetrain();
         hanger = new Hanger();
+        marker = new Marker();
     }
     /**
      * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
@@ -50,6 +51,7 @@ public class HardwareTank extends Mechanism {
         this.opMode = opMode;
         drivetrain = new Drivetrain(opMode);
         hanger = new Hanger(opMode);
+        marker = new Marker(opMode);
     }
 
     /**
@@ -59,6 +61,7 @@ public class HardwareTank extends Mechanism {
     public void init(HardwareMap hwMap) {
         drivetrain.init(hwMap);
         hanger.init(hwMap);
+        marker.init(hwMap);
     }
 
     /**
@@ -88,6 +91,11 @@ public class HardwareTank extends Mechanism {
             }
         }
     }
+
+    public void markerDrop(){
+        marker.sweeperLeft();
+    }
+
     public void park(){
         drivetrain.driveToPos(0.75,120,120,10);
     }

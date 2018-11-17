@@ -38,10 +38,11 @@ public class Drivetrain extends Mechanism {
 
     private BNO055IMU imu;
 
-    double left;
-    double right;
-    double max;
+    double left, right, max;
 
+    private double prevTime;  // The last time loop() was called.
+    private int prevLeftEncoderPosition;   // Encoder tick at last call to loop().
+    private int prevRightEncoderPosition;  // Encoder tick at last call to loop().
     /**
      * Default constructor for Drivetrain.
      */
@@ -122,15 +123,15 @@ public class Drivetrain extends Mechanism {
 
 
     /**
-     * Set drivetrain motor power based on input.
+     * Set drivetrain motor power POV style based on input.
      *
      * @param y_value      power for left side of drivetrain (-1 to 1)
      * @param x_value     power for right side of drivetrain (-1 to 1)
      */
     public void drive(double y_value, double x_value) {
         // Combine drive and turn for blended motion.
-        left  = y_value + x_value;
-        right = y_value - x_value;
+        left  = y_value - x_value;
+        right = y_value + x_value;
 
         // Normalize the values so neither exceed +/- 1.0
         max = Math.max(Math.abs(left), Math.abs(right));
@@ -143,6 +144,22 @@ public class Drivetrain extends Mechanism {
         leftBack.setPower(left);
         rightBack.setPower(right);
         rightFront.setPower(right);
+    }
+
+    /**
+     * Set drivetrain motor power Tank style based on input.
+     *
+     * @param left      power for left side of drivetrain (-1 to 1)
+     * @param right     power for right side of drivetrain (-1 to 1)
+     */
+    public void driveTank(double left, double right) {
+        leftFront.setPower(left);
+        leftBack.setPower(left);
+        rightBack.setPower(right);
+        rightFront.setPower(right);
+    }
+    public void driveParametric(double v_y, double v_x, double v_rot) {
+        driveTank(v_y-v_rot,v_y+v_rot);
     }
 
     /**
