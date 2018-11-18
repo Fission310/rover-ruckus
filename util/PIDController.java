@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.util;
 
+/**
+ * This class handles all PID related methods for opMode use.
+ */
 public class PIDController {
     private double m_P;                                 // factor for "proportional" control
     private double m_I;                                 // factor for "integral" control

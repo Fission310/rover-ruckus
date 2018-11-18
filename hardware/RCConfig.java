@@ -33,5 +33,7 @@ public class RCConfig {
     public static final String IMU = "imu";
     public static final String RANGE_SENSOR = "sensor_range";
     public static final String LIMIT_SWITCH = "limit_switch";
+    public static final String COLOR_SENSOR = "color_sensor";
+    public static final String TOUCH_SENSOR = "touch_sensor";
 
 }

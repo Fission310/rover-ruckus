@@ -175,19 +175,13 @@ public class TeleopTank extends OpMode {
         wasB = isY;
 
         // Set arms position
-        if (gamepad1.a || gamepad2.a) {
-            robot.marker.markerLeft();
-        } else if (gamepad1.b || gamepad2.b) {
-            robot.marker.markerNeutral();
-        }
+        if (gamepad1.a || gamepad2.a) robot.marker.markerLeft();
+        else if (gamepad1.b || gamepad2.b) robot.marker.markerNeutral();
 
-        if (gamepad2.x) {
-            robot.hanger.spool(1);
-        } else if (gamepad2.y){
-            robot.hanger.spool(.5);
-        } else {
-            robot.hanger.spool(0);
-        }
+        // Controllers spool
+        if (gamepad2.x) robot.hanger.spool(1);
+        else if (gamepad2.y) robot.hanger.spool(.5);
+        else robot.hanger.spool(0);
 
         double[] positions = robot.drivetrain.getPositions();
         telemetry.addData("Path2", "Running at %.2f :%.2f",

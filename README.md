@@ -12,7 +12,7 @@ Documentation can be found in the `docs` directory.
 ## Naming Conventions
 
 ### Autonomous
-The main teleop file should be named `AutonMain.java`. All autonomous OpMode Java files should be named as such
+The main autonomous file should be named `AutonMain.java`. All autonomous OpMode Java files should be named as such
 ```
 Auton<Alliance><Target1><Target2><Target...>.java
 ```
