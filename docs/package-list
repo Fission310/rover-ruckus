@@ -1,0 +1,10 @@
+org.firstinspires.ftc.teamcode.hardware
+org.firstinspires.ftc.teamcode.hardware.legacy
+org.firstinspires.ftc.teamcode.hardware.slidedrive
+org.firstinspires.ftc.teamcode.hardware.tankdrive
+org.firstinspires.ftc.teamcode.opmode
+org.firstinspires.ftc.teamcode.opmode.auton.tank
+org.firstinspires.ftc.teamcode.prototype
+org.firstinspires.ftc.teamcode.util
+org.firstinspires.ftc.teamcode.util.sensors
+org.firstinspires.ftc.teamcode.util.vision
