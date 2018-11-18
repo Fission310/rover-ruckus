@@ -91,14 +91,25 @@ public class HardwareTank extends Mechanism {
             }
         }
     }
+    public void samplePID(VisionManager visionManager){
+        if (opMode.opModeIsActive()) {
+            while (!visionManager.isGoldAligned()) {
+                drivetrain.drive(0.3, 0.0);
+            }
+            if (visionManager.isGoldAligned()) {
+                drivetrain.driveToPos(0.3, -6,-6,3);
+                drivetrain.turnPID(90);
+                drivetrain.driveToPos(0.3, -26,-26,3);
+                drivetrain.driveToPos(0.3, 26,26,3);
+                drivetrain.turnPID(-90);
+            }
+        }
+    }
 
     public void markerDrop(){
-        marker.sweeperLeft();
+        marker.markerLeft();
     }
 
-    public void park(){
-        drivetrain.driveToPos(0.75,120,120,10);
-    }
 
     /**
      * Autonomous action for sampling the gold cube. Uses the robot's servo arm mechanism to detect gold cube

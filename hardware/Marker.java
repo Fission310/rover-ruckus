@@ -11,13 +11,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Marker extends Mechanism {
 
     /* CONSTANTS */
-    private static final double SWEEPER_LEFT_POS = 0;
-    private static final double SWEEPER_NEUTRAL_POS = 0.5;
-    private static final double SWEEPER_RIGHT_POS = 1;
+    private static final double MARKER_LEFT_POS = 0;
+    private static final double MARKER_NEUTRAL_POS = 0.5;
+    private static final double MARKER_RIGHT_POS = 1;
 
     /* Hardware members */
-    private Servo arm;
-
+    private Servo marker;
 
     /**
      * Default constructor for Arm.
@@ -38,28 +37,28 @@ public class Marker extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve arm from hardware map and set to initial position
-        arm = hwMap.servo.get(RCConfig.MARKER);
-        sweeperNeutral();
+        marker = hwMap.servo.get(RCConfig.MARKER);
+        markerNeutral();
     }
 
     /**
-     * Set the sweeper to the left position.
+     * Set the marker to the left position.
      */
-    public void sweeperLeft() {
-        arm.setPosition(SWEEPER_LEFT_POS);
+    public void markerLeft() {
+        marker.setPosition(MARKER_LEFT_POS);
     }
 
     /**
-     * Set the sweeper to the left position.
+     * Set the marker to the left position.
      */
-    public void sweeperRight() {
-        arm.setPosition(SWEEPER_RIGHT_POS);
+    public void markerRight() {
+        marker.setPosition(MARKER_RIGHT_POS);
     }
 
     /**
-     * Set the sweeper to the neutral position.
+     * Set the marker to the neutral position.
      */
-    public void sweeperNeutral() {
-        arm.setPosition(SWEEPER_NEUTRAL_POS);
+    public void markerNeutral() {
+        marker.setPosition(MARKER_NEUTRAL_POS);
     }
 }

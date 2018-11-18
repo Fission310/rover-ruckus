@@ -80,10 +80,10 @@ public class Drivetrain extends Mechanism {
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set motor brake behavior
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         // Set all motors to zero power
         leftFront.setPower(0);
@@ -147,15 +147,8 @@ public class Drivetrain extends Mechanism {
      */
     public void drive(double y_value, double x_value) {
         // Combine drive and turn for blended motion.
-        left  = y_value - x_value;
+        left = y_value - x_value;
         right = y_value + x_value;
-
-        // Normalize the values so neither exceed +/- 1.0
-        max = Math.max(Math.abs(left), Math.abs(right));
-        if (max > 1.0) {
-            left /= max;
-            right /= max;
-        }
 
         leftFront.setPower(left);
         leftBack.setPower(left);

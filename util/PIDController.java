@@ -273,15 +273,12 @@ public class PIDController {
             }
             if (Math.abs(input) > m_maximumInput) {
                 m_input = m_maximumInput * sign;
-            }
-            else if (Math.abs(input) < m_minimumInput) {
+            } else if (Math.abs(input) < m_minimumInput) {
                 m_input = m_minimumInput * sign;
-            }
-            else {
+            } else {
                 m_input = input;
             }
-        }
-        else {
+        } else {
             m_input = input;
         }
     }

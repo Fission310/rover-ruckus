@@ -19,6 +19,7 @@ public class Hanger extends Mechanism {
     /* Hardware members */
     private DcMotor leftHanger;
     private DcMotor rightHanger;
+    private DcMotor winch;
     /**
      * Default constructor for Hanger.
      */
@@ -44,18 +45,22 @@ public class Hanger extends Mechanism {
         // Retrieve motor from hardware map and assign to instance vars
         leftHanger = hwMap.dcMotor.get(RCConfig.LEFTHANGER);
         rightHanger = hwMap.dcMotor.get(RCConfig.RIGHTHANGER);
+        winch = hwMap.dcMotor.get(RCConfig.WINCH);
 
         // Set braking behavior
         leftHanger.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightHanger.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        winch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set polarity
         leftHanger.setDirection(DcMotorSimple.Direction.FORWARD);
         rightHanger.setDirection(DcMotorSimple.Direction.REVERSE);
+        winch.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set initial power
         leftHanger.setPower(0);
         rightHanger.setPower(0);
+        winch.setPower(0);
     }
 
     /**
@@ -64,6 +69,14 @@ public class Hanger extends Mechanism {
     public void setHangerPower(double power) {
         leftHanger.setPower(power);
         rightHanger.setPower(power);
+    }
+
+    /**
+     * Sets power for spool motor.
+     */
+
+    public void spool(double power) {
+        winch.setPower(power);
     }
 
     /**
@@ -84,6 +97,4 @@ public class Hanger extends Mechanism {
         leftHanger.setPower(.2);
         rightHanger.setPower(.2);
     }
-
-
 }
