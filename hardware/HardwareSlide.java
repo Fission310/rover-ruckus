@@ -47,10 +47,10 @@ public class HardwareSlide extends Mechanism {
      */
     public HardwareSlide(){
         drivetrain = new Drivetrain();
-        acquirer = new Acquirer();
-        lift = new Lift();
-        tape = new Tape();
-        servoArm = new Arm();
+//        acquirer = new Acquirer();
+//        lift = new Lift();
+//        tape = new Tape();
+//        servoArm = new Arm();
     }
     /**
      * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
@@ -61,10 +61,10 @@ public class HardwareSlide extends Mechanism {
     public HardwareSlide(LinearOpMode opMode){
         this.opMode = opMode;
         drivetrain = new Drivetrain(opMode);
-        acquirer = new Acquirer(opMode);
-        lift = new Lift(opMode);
-        tape = new Tape(opMode);
-        servoArm = new Arm(opMode);
+//        acquirer = new Acquirer(opMode);
+//        lift = new Lift(opMode);
+//        tape = new Tape(opMode);
+//        servoArm = new Arm(opMode);
     }
 
     /**
@@ -74,9 +74,9 @@ public class HardwareSlide extends Mechanism {
     public void init(HardwareMap hwMap) {
         drivetrain.init(hwMap);
         acquirer.init(hwMap);
-        lift.init(hwMap);
-        tape.init(hwMap);
-        servoArm.init(hwMap);
+//        lift.init(hwMap);
+//        tape.init(hwMap);
+//        servoArm.init(hwMap);
     }
 
     /**

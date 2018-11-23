@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.util.SoundManager;
 import static java.lang.Math.abs;
 
 /**
- * TeleopTankMain is the primary TeleOp OpMode for Relic Recovery. All driver-controlled actions should
- * be defined in this class. This teleop uses two analog sticks to drive the robot.
+ * TeleopTankMain is the primary TeleOp OpMode for tank drivetrains. All driver-controlled actions should
+ * be defined in this class. This teleop uses two analog sticks to driveArcade the robot.
  *
  * Gamepad1 BUTTON MAPPINGS:
  * Left stick x:      N/A
@@ -25,7 +25,7 @@ import static java.lang.Math.abs;
  * B:               Extends drop arm
  * Left bumper:     Decelerates robot
  * Right bumper:    Accelerates robot
- * Left trigger:    Special CV program: drive to lander - drives slightly left of the middle of the lander + lifts tape measure
+ * Left trigger:    Special CV program: driveArcade to lander - drives slightly left of the middle of the lander + lifts tape measure
  * Right trigger:   Special CV program: Orient robot facing parallel to each wall - press multiple times to orient
  * DPAD_UP:         N/A
  * DPAD_DOWN:       N/A
@@ -97,6 +97,8 @@ public class TeleopTank extends OpMode {
      */
     @Override
     public void init_loop() {
+        telemetry.addData("Status", "Waiting in Init");
+        telemetry.update();
     }
 
     /**
@@ -121,7 +123,9 @@ public class TeleopTank extends OpMode {
      */
     @Override
     public void loop() {
-        // Adds runtime data to telemetry
+        /**
+         * Adds runtime data to telemetry
+         */
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
         leftYInput = gamepad1.left_stick_y;
@@ -130,7 +134,9 @@ public class TeleopTank extends OpMode {
 
         telemetry.addData("Status", "Right: " + rightYInput);
 
-        // Drives the robot based on driver joystick input, check for slow mode
+        /**
+         * Drives the robot based on driver joystick input, check for slow mode
+         */
         if (gamepad1.left_bumper) {
             robot.drivetrain.driveTank(leftYInput * SLOW_MULTIPLIER, rightYInput * SLOW_MULTIPLIER);
         } else if (gamepad1.right_bumper ) {
@@ -139,12 +145,16 @@ public class TeleopTank extends OpMode {
             robot.drivetrain.driveTank(leftYInput, rightYInput);
         }
 
-        // Threshold for hanger, makes hanging easier
+        /**
+         * Threshold for hanger, makes hanging easier
+         */
         if (abs(gamepad2.left_stick_y) < ANALOG_THRESHOLD) {
             hangingInput = 0;
         }
 
-        // Controls the hanging mechanism, check for slow mode
+        /**
+         * Controls the hanging mechanism, check for slow mode
+         */
         if (gamepad2.left_bumper) {
             robot.hanger.setHangerPower(hangingInput);
         } else if (gamepad2.right_bumper ) {
@@ -153,19 +163,25 @@ public class TeleopTank extends OpMode {
             robot.hanger.setHangerPower(hangingInput * SLOW_MULTIPLIER);
         }
 
-        // Set arms position
+        /**
+         * Set arms position
+         */
         if (gamepad1.a || gamepad2.a) {
             robot.marker.markerLeft();
         } else if (gamepad1.b || gamepad2.b) {
             robot.marker.markerNeutral();
         }
 
-        // Activates sounds for gold and silver
+        /**
+         * Activates sounds for gold and silver
+         */
         if (silverFound && ((isX = gamepad1.x) || (isX = gamepad2.x)) && !wasX) {
             soundManager.playSound(hardwareMap.appContext, silverSoundID);
         }
 
-        // say Gold each time gamepad B is pressed  (This sound is a resource)
+        /**
+         * Sound activates each time gamepad y is pressed  (This sound is a resource)
+         */
         if (goldFound && ((isY = gamepad1.y) || (isY = gamepad2.y)) && !wasB) {
             soundManager.playSound(hardwareMap.appContext, goldSoundID);
         }
@@ -174,11 +190,15 @@ public class TeleopTank extends OpMode {
         wasX = isX;
         wasB = isY;
 
-        // Set arms position
+        /**
+         * Set arms position
+         */
         if (gamepad1.a || gamepad2.a) robot.marker.markerLeft();
         else if (gamepad1.b || gamepad2.b) robot.marker.markerNeutral();
 
-        // Controllers spool
+        /**
+         * Controllers spool
+         */
         if (gamepad2.x) robot.hanger.spool(1);
         else if (gamepad2.y) robot.hanger.spool(.5);
         else robot.hanger.spool(0);

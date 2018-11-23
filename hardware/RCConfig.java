@@ -35,5 +35,4 @@ public class RCConfig {
     public static final String LIMIT_SWITCH = "limit_switch";
     public static final String COLOR_SENSOR = "color_sensor";
     public static final String TOUCH_SENSOR = "touch_sensor";
-
 }

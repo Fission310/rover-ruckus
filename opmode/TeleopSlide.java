@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -8,7 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareSlide;
 import static java.lang.Math.abs;
 
 /**
- * TeleopMain is the primary TeleOp OpMode for Relic Recovery. All driver-controlled actions should
+ * TeleopMain is the primary TeleOp OpMode for slide drivetrains. All driver-controlled actions should
  * be defined in this class.
  *
  * Gamepad1 BUTTON MAPPINGS:
@@ -22,7 +23,7 @@ import static java.lang.Math.abs;
  * B:               Extends drop arm
  * Left bumper:     Decelerates robot
  * Right bumper:    Accelerates robot
- * Left trigger:    Special CV program: drive to lander - drives slightly left of the middle of the lander + lifts tape measure
+ * Left trigger:    Special CV program: driveArcade to lander - drives slightly left of the middle of the lander + lifts tape measure
  * Right trigger:   Special CV program: Orient robot facing parallel to each wall - press multiple times to orient
  * DPAD_UP:         N/A
  * DPAD_DOWN:       N/A
@@ -53,7 +54,7 @@ import static java.lang.Math.abs;
  *
  */
 @TeleOp(name = "Teleop: Mains", group = "Teleop")
-public class TeleopSlideArcade extends OpMode {
+public class TeleopSlide extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.2;
     private static final double SLOW_MULTIPLIER = 0.5;
@@ -64,6 +65,8 @@ public class TeleopSlideArcade extends OpMode {
 
     /* Robot hardware map */
     private HardwareSlide robot = new HardwareSlide();
+
+    double yInput, xInput, slideInput, hangingInput;
 
     @Override
     public void init() {
@@ -76,6 +79,8 @@ public class TeleopSlideArcade extends OpMode {
      */
     @Override
     public void init_loop() {
+        telemetry.addData("Status", "Waiting in Init");
+        telemetry.update();
     }
 
     /**
@@ -85,9 +90,6 @@ public class TeleopSlideArcade extends OpMode {
     @Override
     public void start() {
         robot.drivetrain.encoderInit();
-
-        robot.servoArm.armUp();
-        robot.servoArm.sweeperNeutral();
 
         runtime.reset();
 
@@ -103,30 +105,20 @@ public class TeleopSlideArcade extends OpMode {
         // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
-        double yInput = Range.clip(gamepad1.left_stick_y, -1.0, 1.0);
-        double xInput = Range.clip(gamepad1.left_stick_x, -1.0, 1.0);
+        yInput = Range.clip(-gamepad1.left_stick_y, -1.0, 1.0);
+        xInput = Range.clip(gamepad1.left_stick_x, -1.0, 1.0);
+        slideInput = Range.clip(gamepad1.right_stick_x, -1.0, 1.0);
 
         // Threshold for strafing, makes horizontal strafing easier
-        if (abs(gamepad1.left_stick_y) < ANALOG_THRESHOLD) {
-            yInput = 0;
+        if (abs(slideInput) < ANALOG_THRESHOLD) {
+            slideInput = 0;
         }
 
         // Drives the robot based on driver joystick input, check for slow mode
         if (gamepad1.left_bumper) {
-            robot.drivetrain.drive(yInput * SLOW_MULTIPLIER, yInput * SLOW_MULTIPLIER, xInput * SLOW_MULTIPLIER);
+            robot.drivetrain.drive(yInput * SLOW_MULTIPLIER, xInput * SLOW_MULTIPLIER, slideInput * SLOW_MULTIPLIER);
         } else {
-            robot.drivetrain.drive(yInput, yInput, xInput);
-        }
-
-        // Set arms position
-        if (gamepad1.x || gamepad2.x) {
-            robot.servoArm.sweeperLeft();
-        } else if (gamepad1.y || gamepad2.y) {
-            robot.servoArm.sweeperRight();
-        } else if (gamepad1.a || gamepad2.a) {
-            robot.servoArm.armDown();
-        } else if (gamepad1.b || gamepad2.b) {
-            robot.servoArm.armUp();
+            robot.drivetrain.drive(yInput, xInput, slideInput);
         }
 
         double[] positions = robot.drivetrain.getPositions();

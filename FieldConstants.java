@@ -1,0 +1,17 @@
+package org.firstinspires.ftc.teamcode;
+
+/**
+ * This file contains constant values pertaining to the field.
+ */
+public class FieldConstants {
+    public static final double FIELD_LENGTH = 144 ; // Length in inches
+    public static final double FLOOR_TILE = 24; // Length in inches
+    public static final double TILE_HYPOTENUSE = 24 * Math.sqrt(24); // Length in inches
+    public static final double HANG_HEIGHT = 4; // Height in inches
+
+    public static final double ROBOT_WIDTH = 18; // Height in inches
+    public static final double ROBOT_LENGTH = 18; // Height in inches
+    public static final double ROBOT_HEIGHT = 18; // Height in inches
+
+    public static final double LANDER_TO_SAMPLE = TILE_HYPOTENUSE - 6;
+}

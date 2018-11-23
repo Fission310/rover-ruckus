@@ -3,10 +3,9 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.tankdrive.Drivetrain;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
-
-import java.util.ArrayList;
 
 /**
  * HardwareTank is the class that is used to define all of the hardware for a single robot. In this
@@ -75,13 +74,13 @@ public class HardwareTank extends Mechanism {
     }
 
     public void land(){
-        hanger.hangeToPos(7);
+        hanger.hangeToPos(FieldConstants.HANG_HEIGHT);
     }
 
     public void sample(VisionManager visionManager){
         if (opMode.opModeIsActive()) {
             while (!visionManager.isGoldAligned()) {
-                drivetrain.drive(0.3, 0.0);
+                drivetrain.driveArcade(0.3, 0.0);
             }
             if (visionManager.isGoldAligned()) {
                 drivetrain.turn(90.0, 3.0);
@@ -94,14 +93,14 @@ public class HardwareTank extends Mechanism {
     public void samplePID(VisionManager visionManager){
         if (opMode.opModeIsActive()) {
             while (!visionManager.isGoldAligned()) {
-                drivetrain.drive(0.3, 0.0);
+                drivetrain.driveArcade(0.25, 0.0);
             }
             if (visionManager.isGoldAligned()) {
-                drivetrain.driveToPos(0.3, -6,-6,3);
-                drivetrain.turnPID(90);
-                drivetrain.driveToPos(0.3, -26,-26,3);
-                drivetrain.driveToPos(0.3, 26,26,3);
+                drivetrain.driveToPos(0.3, -FieldConstants.TILE_HYPOTENUSE / 6,-FieldConstants.TILE_HYPOTENUSE / 6,2);
                 drivetrain.turnPID(-90);
+                drivetrain.driveToPos(0.3, FieldConstants.FLOOR_TILE * 6,FieldConstants.FLOOR_TILE * 6,3);
+                drivetrain.driveToPos(0.3, -FieldConstants.FLOOR_TILE * 6,-FieldConstants.FLOOR_TILE * 6,3);
+                drivetrain.turnPID(90);
             }
         }
     }

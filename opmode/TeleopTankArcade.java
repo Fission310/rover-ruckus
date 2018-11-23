@@ -4,15 +4,15 @@ import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.teamcode.hardware.HardwareTank;
 import org.firstinspires.ftc.teamcode.util.SoundManager;
 
 import static java.lang.Math.abs;
 
 /**
- * TeleopTankMain is the primary TeleOp OpMode for Relic Recovery. All driver-controlled actions should
- * be defined in this class. This teleop uses one analog sticks to drive the robot
+ * TeleopTankMain is the primary TeleOp OpMode for tank drivetrains. All driver-controlled actions should
+ * be defined in this class. This teleop uses one analog sticks to driveArcade the robot
  *
  * Gamepad1 BUTTON MAPPINGS:
  * Left stick x:      N/A
@@ -25,7 +25,7 @@ import static java.lang.Math.abs;
  * B:               Extends drop arm
  * Left bumper:     Decelerates robot
  * Right bumper:    Accelerates robot
- * Left trigger:    Special CV program: drive to lander - drives slightly left of the middle of the lander + lifts tape measure
+ * Left trigger:    Special CV program: driveArcade to lander - drives slightly left of the middle of the lander + lifts tape measure
  * Right trigger:   Special CV program: Orient robot facing parallel to each wall - press multiple times to orient
  * DPAD_UP:         N/A
  * DPAD_DOWN:       N/A
@@ -97,6 +97,8 @@ public class TeleopTankArcade extends OpMode {
      */
     @Override
     public void init_loop() {
+        telemetry.addData("Status", "Waiting in Init");
+        telemetry.update();
     }
 
     /**
@@ -131,26 +133,34 @@ public class TeleopTankArcade extends OpMode {
 
         telemetry.addData("Status", "yinput: " + yInput);
 
-        // Threshold for strafing, makes horizontal strafing easier
+        /**
+         * Threshold for strafing, makes horizontal strafing easier
+         */
         if (abs(gamepad2.left_stick_y) < ANALOG_THRESHOLD) {
             yInput = 0;
         }
 
-        // Drives the robot based on driver joystick input, check for slow mode
+        /**
+         * Drives the robot based on driver joystick input, check for slow mode
+         */
         if (gamepad1.left_bumper) {
-            robot.drivetrain.drive(yInput * SLOW_MULTIPLIER, xInput * SLOW_MULTIPLIER);
+            robot.drivetrain.driveArcade(yInput * SLOW_MULTIPLIER, xInput * SLOW_MULTIPLIER);
         } else if (gamepad1.right_bumper ) {
-            robot.drivetrain.drive(yInput * FAST_MULTIPLIER, xInput * FAST_MULTIPLIER);
+            robot.drivetrain.driveArcade(yInput * FAST_MULTIPLIER, xInput * FAST_MULTIPLIER);
         } else {
-            robot.drivetrain.drive(yInput, xInput);
+            robot.drivetrain.driveArcade(yInput, xInput);
         }
 
-        // Threshold for hanger, makes hanging easier
+        /**
+         * Threshold for hanger, makes hanging easier
+         */
         if (abs(gamepad2.left_stick_y) < ANALOG_THRESHOLD) {
             hangingInput = 0;
         }
 
-        // Controls the hanging mechanism, check for slow mode
+        /**
+         * Controls the hanging mechanism, check for slow mode
+         */
         if (gamepad2.left_bumper) {
             robot.hanger.setHangerPower(hangingInput * SLOW_MULTIPLIER);
         } else if (gamepad2.right_bumper ) {
@@ -159,11 +169,15 @@ public class TeleopTankArcade extends OpMode {
             robot.hanger.setHangerPower(hangingInput);
         }
 
-        // Set arms position
+        /**
+         * Set arms position
+         */
         if (gamepad1.a || gamepad2.a) robot.marker.markerLeft();
         else if (gamepad1.b || gamepad2.b) robot.marker.markerNeutral();
 
-        // Controllers spool
+        /**
+         * Controllers spool
+         */
         if (gamepad2.x) robot.hanger.spool(1);
         else if (gamepad2.y) robot.hanger.spool(.5);
         else robot.hanger.spool(0);

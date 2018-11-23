@@ -11,10 +11,10 @@ import org.firstinspires.ftc.teamcode.hardware.RCConfig;
 
 
 /**
- * Acquirer is the class that is used to define all of the hardware for a robot's acquirer.
- * Acquirer must be instantiated, then initialized using <code>init()</code> before being used.
+ * Tape is the class that is used to define all of the hardware for a robot's hanging mechanism.
+ * Tape must be instantiated, then initialized using <code>init()</code> before being used.
  *
- * This class also contains autonomous actions involving the acquirer.
+ * This class also contains autonomous actions involving the tape.
  */
 public class Tape extends Mechanism {
 
@@ -27,13 +27,13 @@ public class Tape extends Mechanism {
     private DigitalChannel limitSwitch;
 
     /**
-     * Default constructor for Acquirer.
+     * Default constructor for Tape.
      */
     public Tape(){
 
     }
     /**
-     * Overloaded constructor for Lift. Sets the OpMode context.
+     * Overloaded constructor for Tape. Sets the OpMode context.
      *
      * @param opMode    the LinearOpMode that is currently running
      */
@@ -65,7 +65,7 @@ public class Tape extends Mechanism {
     }
 
     /**
-     * Sets power for lift motor.
+     * Sets power for tape motor.
      */
     public void setTapePower(double power) {
         leftTape.setPower(power);
@@ -74,7 +74,7 @@ public class Tape extends Mechanism {
     }
 
     /**
-     * Sets power for lift motor based on encoder values.
+     * Sets power for tape motor based on encoder values.
      */
     public void liftTapePos(double power) {
         leftTape.setPower(power);

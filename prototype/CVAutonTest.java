@@ -27,20 +27,24 @@ public class CVAutonTest extends LinearOpMode {
         // Initialize CV
         VisionManager visionManager = new VisionManager();
         visionManager.goldAlignInit(hardwareMap);
-
         // Initialize robot
 //        robot.init(hardwareMap);
 
         // Wait until we're told to go
         waitForStart();
         while (opModeIsActive()) {
+            sleep(10000);
+            visionManager.goldAlignStop();
+
+            visionManager.vuforiaInit(hardwareMap);
+
 //            runtime.reset();  // Start counting run time from now.
 
 //        robot.getCubeDetails();
         }
-        // Stop CV
         visionManager.vuforiaStop();
-        visionManager.goldAlignStop();
+
+        // Stop CV
 
     }
 }

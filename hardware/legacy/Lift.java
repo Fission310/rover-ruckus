@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.hardware.RCConfig;
 
 
 /**
- * Lift is the class that is used to define all of the hardware for a robot's loft.
+ * Lift is the class that is used to define all of the hardware for a robot's lift.
  * Lift must be instantiated, then initialized using <code>init()</code> before being used.
  *
  * This class also contains autonomous actions involving the lift.

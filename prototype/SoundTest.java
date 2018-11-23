@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.util.SoundManager;
 
 @TeleOp(name="Concept: Sound Resources", group="Concept")
+@Disabled
 public class SoundTest extends LinearOpMode {
 
     SoundManager soundManager = new SoundManager();

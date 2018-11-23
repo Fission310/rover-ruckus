@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auton.tank;
+package org.firstinspires.ftc.teamcode.prototype;
 
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -7,12 +7,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.HardwareTank;
-import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 import org.firstinspires.ftc.teamcode.util.SoundManager;
-import org.firstinspires.ftc.teamcode.hardware.Constants;
 
-@Autonomous(name="Depot: Drop + Sample + Marker", group="Depot")
-public class AutonDepot extends LinearOpMode {
+@Autonomous(name="Tank: TEST PID STRAIGHT DRIVE", group="Test")
+public class AutonTankPIDStraightTest extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -31,10 +29,6 @@ public class AutonDepot extends LinearOpMode {
      */
     @Override
     public void runOpMode() {
-        // Initialize CV
-        VisionManager visionManager = new VisionManager();
-        visionManager.goldAlignInit(hardwareMap);
-
         // Initialize robot
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
@@ -62,33 +56,27 @@ public class AutonDepot extends LinearOpMode {
 
         soundManager.playSound(hardwareMap.appContext, einsteinID);
 
-        /**
-         * Land and wait for the robot to fully drop and stabilize.
-         */
-//        robot.land();
-//        sleep(2000);
+        sleep(2000);
+        soundManager.stopSound();
 
-        /**
-         * Rotate and driveArcade to the far end of sampling.
-         */
+        soundManager.playSound(hardwareMap.appContext, cantTouchID);
         robot.drivetrain.turnPID(-45);
-        robot.drivetrain.driveToPos(0.4, FieldConstants.FLOOR_TILE * 1.5, FieldConstants.FLOOR_TILE * 1.5, 4.0);
-        robot.drivetrain.turnPID(135);
 
-        /**
-         * Start the sampling.
-         */
-        robot.samplePID(visionManager);
+        sleep(4000);
+        soundManager.stopSound();
 
-        /**
-         * Drive to wall and rotate to marker depot, drop marker and then driveArcade to park.
-         */
-        robot.drivetrain.driveToPos(0.4, FieldConstants.FLOOR_TILE + 6,FieldConstants.FLOOR_TILE + 6,3);
-        robot.drivetrain.turnPID(-135);
-        robot.drivetrain.driveToPos(0.7, -FieldConstants.FLOOR_TILE * 3,-FieldConstants.FLOOR_TILE * 3,5);
-        robot.drivetrain.driveToPos(1.0, FieldConstants.FLOOR_TILE * 4,FieldConstants.FLOOR_TILE * 4,5);
+        soundManager.playSound(hardwareMap.appContext, groundID);
+        robot.drivetrain.driveToPos(0.4, FieldConstants.FLOOR_TILE * 2, FieldConstants.FLOOR_TILE * 2, 4.0);
 
-        // Stop CV
-        visionManager.goldAlignStop();
+        sleep(4000);
+        soundManager.stopSound();
+
+        soundManager.playSound(hardwareMap.appContext, barginID);
+        robot.drivetrain.driveToPos(0.4, -FieldConstants.FLOOR_TILE * 2, -FieldConstants.FLOOR_TILE * 2, 4.0);
+
+        sleep(4000);
+        soundManager.stopSound();
+
+        robot.drivetrain.turnPID(45);
     }
 }
