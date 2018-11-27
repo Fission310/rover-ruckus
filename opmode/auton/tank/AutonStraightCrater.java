@@ -38,6 +38,6 @@ public class AutonStraightCrater extends LinearOpMode {
         waitForStart();
         runtime.reset();  // Start counting run time from now.
 
-        robot.drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE * 3,FieldConstants.TILE_HYPOTENUSE * 3,30);
+        robot.drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE * 4,FieldConstants.TILE_HYPOTENUSE * 4,30);
     }
 }

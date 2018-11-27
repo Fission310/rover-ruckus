@@ -72,8 +72,8 @@ public class AutonCrater extends LinearOpMode {
          * Rotate and driveArcade to the far end of sampling.
          */
         robot.drivetrain.turnPID(-45);
-        robot.drivetrain.driveToPos(0.4, FieldConstants.FLOOR_TILE * 1.5, FieldConstants.FLOOR_TILE * 1.5, 4.0);
-        robot.drivetrain.turnPID(135);
+        robot.drivetrain.driveToPos(0.4, -FieldConstants.FLOOR_TILE * 1.5, -FieldConstants.FLOOR_TILE * 1.5, 4.0);
+        robot.drivetrain.turnPID(-45);
 
         /**
          * Start the sampling.
@@ -84,8 +84,8 @@ public class AutonCrater extends LinearOpMode {
          * Drive to wall and rotate to marker depot, drop marker and then driveArcade to park.
          */
         robot.drivetrain.driveToPos(0.3, FieldConstants.FLOOR_TILE + 6,FieldConstants.FLOOR_TILE + 6,3);
-        robot.drivetrain.turnPID(-135);
-        robot.drivetrain.driveToPos(0.7, FieldConstants.FLOOR_TILE + 6,FieldConstants.FLOOR_TILE + 6,5);
+        robot.drivetrain.turnPID(45);
+        robot.drivetrain.driveToPos(0.7, FieldConstants.FLOOR_TILE * 4,FieldConstants.FLOOR_TILE * 4,5);
         robot.drivetrain.driveToPos(1.0, -FieldConstants.FLOOR_TILE * 4,-FieldConstants.FLOOR_TILE * 4,5);
 
         /**
