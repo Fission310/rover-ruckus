@@ -38,6 +38,8 @@ public class Drivetrain extends Mechanism {
 
     private BNO055IMU imu;
 
+    double left, right, max;
+
     Orientation lastAngles = new Orientation();
     double globalAngle, power = .35;
     PIDController pidRotate, pidDrive;
@@ -132,10 +134,14 @@ public class Drivetrain extends Mechanism {
     /**
      * Set drivetrain motor power based on input.
      *
-     * @param left      power for left side of drivetrain (-1 to 1)
-     * @param right     power for right side of drivetrain (-1 to 1)
+     * @param y_value      power for vertical direction of drivetrain (-1 to 1)
+     * @param x_value     power for turning of drivetrain (-1 to 1)
      */
-    public void drive(double left, double right) {
+    public void drive(double y_value, double x_value) {
+        // Combine driveArcade and turn for blended motion.
+        double left = y_value - x_value;
+        double right = y_value + x_value;
+
         leftFront.setPower(left);
         rightFront.setPower(right);
     }
@@ -145,20 +151,16 @@ public class Drivetrain extends Mechanism {
      *
      * @param y_value      power for vertical direction of drivetrain (-1 to 1)
      * @param x_value     power for turning of drivetrain (-1 to 1)
-     * @param slide     power for strafing of drivetrain (-1 to 1)
+     * @param slide     power for sliding of drivetrain (-1 to 1)
      */
-    public void drive(double y_value, double x_value, double slide) {
+    public void driveSlide(double y_value, double x_value, double slide) {
         // Combine driveArcade and turn for blended motion.
         double left = y_value - x_value;
         double right = y_value + x_value;
 
         leftFront.setPower(left);
         rightFront.setPower(right);
-        slideDrive.setPower(slide);
-    }
-
-    public void driveParametric(double v_y, double v_x, double v_rot) {
-        drive(v_y-v_rot,v_y+v_rot);
+        strafe(slide);
     }
 
     /**
@@ -470,7 +472,6 @@ public class Drivetrain extends Mechanism {
             drive(power,-power);
         } while (opMode.opModeIsActive() && !pidRotate.onTarget());
 
-        // turn the motors off.
         leftFront.setPower(0);
         rightFront.setPower(0);
 

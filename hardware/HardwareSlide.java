@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.hardware.legacy.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.legacy.Lift;
 import org.firstinspires.ftc.teamcode.hardware.legacy.Tape;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.Drivetrain;
@@ -28,13 +27,13 @@ public class HardwareSlide extends Mechanism {
      */
     public Acquirer acquirer;
     /**
-     * Instance variable containing robot's lift.
+     * Instance variable containing robot's linear slides acquirer.
      */
     public Lift lift;
     /**
-     * Instance variable containing robot's tape measure.
+     * Instance variable containing robot's rack and pinion lift.
      */
-    public Tape tape;
+    public RackNPinonLift rack;
     /**
      * Instance variable containing robot's servo arm.
      */
@@ -49,7 +48,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain();
 //        acquirer = new Acquirer();
 //        lift = new Lift();
-//        tape = new Tape();
+//        rack = new RackNPinionLift();
 //        servoArm = new Arm();
     }
     /**
@@ -63,7 +62,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain(opMode);
 //        acquirer = new Acquirer(opMode);
 //        lift = new Lift(opMode);
-//        tape = new Tape(opMode);
+//        rack = new RackNPinionLift(opMode);
 //        servoArm = new Arm(opMode);
     }
 
@@ -73,9 +72,9 @@ public class HardwareSlide extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         drivetrain.init(hwMap);
-        acquirer.init(hwMap);
+//        acquirer.init(hwMap);
 //        lift.init(hwMap);
-//        tape.init(hwMap);
+//        rack.init(hwMap);
 //        servoArm.init(hwMap);
     }
 

@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp(name="Sampling Order Example", group="DogeCV")
-@Disabled
+//@Disabled
 public class SamplingOrder extends OpMode
 {
     private SamplingOrderDetector detector;

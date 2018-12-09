@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
+import org.firstinspires.ftc.teamcode.hardware.legacy.Hanger;
 import org.firstinspires.ftc.teamcode.hardware.tankdrive.Drivetrain;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
@@ -90,49 +91,38 @@ public class HardwareTank extends Mechanism {
             }
         }
     }
-    public void samplePID(VisionManager visionManager){
+
+    /**
+     * Autonomous action for sampling the gold cube. Uses the robot's servo arm mechanism to detect gold cube
+     * and in a linear slide fashion.
+     * This assumes the vision sensor faces the back of the robot.
+     *
+     *  @param visionManager    VisionManager containing the GoldDetector
+     */
+
+    public void samplePID(VisionManager visionManager) {
         if (opMode.opModeIsActive()) {
             while (!visionManager.isGoldAligned()) {
                 drivetrain.driveArcade(0.25, 0.0);
             }
             if (visionManager.isGoldAligned()) {
-                drivetrain.driveToPos(0.3, -FieldConstants.TILE_HYPOTENUSE / 6,-FieldConstants.TILE_HYPOTENUSE / 6,2);
+                drivetrain.driveToPos(0.3, -FieldConstants.TILE_HYPOTENUSE / 6, -FieldConstants.TILE_HYPOTENUSE / 6, 2);
                 drivetrain.turnPID(-90);
-                drivetrain.driveToPos(0.3, FieldConstants.FLOOR_TILE * 6,FieldConstants.FLOOR_TILE * 6,3);
-                drivetrain.driveToPos(0.3, -FieldConstants.FLOOR_TILE * 6,-FieldConstants.FLOOR_TILE * 6,3);
+                drivetrain.driveToPos(0.3, FieldConstants.FLOOR_TILE * 6, FieldConstants.FLOOR_TILE * 6, 3);
+                drivetrain.driveToPos(0.3, -FieldConstants.FLOOR_TILE * 6, -FieldConstants.FLOOR_TILE * 6, 3);
                 drivetrain.turnPID(90);
             }
         }
     }
-
-    public void markerDrop(){
-        marker.markerLeft();
-    }
-
-
-    /**
-     * Autonomous action for sampling the gold cube. Uses the robot's servo arm mechanism to detect gold cube
-     * and in a linear slide fashion.
-     * This assumes the color sensor faces the back of the robot.
-     *
-     *  @param visionManager    VisionManager containing the GoldDetector
-     *  @param isAllianceRed    whether or not the robot is on the Red Alliance
-     */
-
-    // gold detector
-
-    //
 
     /**
      * Autonomous action for dropping the marker. Uses the robot's distance sensor to detect the robot's
      * position using the vuforia pictograph. Moves parallel to wall until the edge is
      * reached.
      *
-     *  @param targetCol      the cryptobox column that is being targeted (left is 0, center is 1, right is 2)
-     *  @param isAllianceRed    whether or not the robot is on the Red Alliance
      */
 
-    // Marker scorer
-
-    //
+    public void markerDrop(){
+        marker.markerLeft();
+    }
 }

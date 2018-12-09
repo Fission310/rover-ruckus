@@ -271,9 +271,7 @@ public class PIDController {
         int sign = 1;
 
         if (m_maximumInput > m_minimumInput) {
-            if (input < 0) {
-                sign = -1;
-            }
+            if (input < 0) { sign = -1; }
             if (Math.abs(input) > m_maximumInput) {
                 m_input = m_maximumInput * sign;
             } else if (Math.abs(input) < m_minimumInput) {
@@ -281,9 +279,7 @@ public class PIDController {
             } else {
                 m_input = input;
             }
-        } else {
-            m_input = input;
-        }
+        } else { m_input = input; }
     }
 }
 

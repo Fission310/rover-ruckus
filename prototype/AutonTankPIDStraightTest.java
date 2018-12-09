@@ -59,7 +59,6 @@ public class AutonTankPIDStraightTest extends LinearOpMode {
         soundManager.playSound(hardwareMap.appContext, einsteinID);
 
         sleep(2000);
-        soundManager.stopSound();
 
         /**
          * Can't Touch this song = turn 45 then wait 4 seconds
@@ -68,7 +67,6 @@ public class AutonTankPIDStraightTest extends LinearOpMode {
         robot.drivetrain.turnPID(-45);
 
         sleep(4000);
-        soundManager.stopSound();
 
         /**
          * Ground = Drive two floor tile then wait 4 seconds
@@ -77,7 +75,6 @@ public class AutonTankPIDStraightTest extends LinearOpMode {
         robot.drivetrain.driveToPos(0.4, FieldConstants.FLOOR_TILE * 2, FieldConstants.FLOOR_TILE * 2, 4.0);
 
         sleep(4000);
-        soundManager.stopSound();
 
         /**
          * Bargin = Drive back two floor tile then wait 4 seconds
@@ -86,7 +83,6 @@ public class AutonTankPIDStraightTest extends LinearOpMode {
         robot.drivetrain.driveToPos(0.4, -FieldConstants.FLOOR_TILE * 2, -FieldConstants.FLOOR_TILE * 2, 4.0);
 
         sleep(4000);
-        soundManager.stopSound();
 
         /**
          * Turn -45 degrees

@@ -50,7 +50,10 @@ public class VisionManager {
     boolean targetVisible;
     private OpenGLMatrix lastLocation = null;
 
-    public void samplingInit(HardwareMap hwMap) {
+    /**
+     * Sampling methods.
+    **/
+     public void samplingInit(HardwareMap hwMap) {
         sampleDetector = new SamplingOrderDetector();
         sampleDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
         sampleDetector.useDefaults();
@@ -88,6 +91,9 @@ public class VisionManager {
         sampleDetector.disable();
     }
 
+    /**
+     * Gold Align methods.
+     **/
     public void goldAlignInit(HardwareMap hwMap) {
         goldDetector = new GoldAlignDetector();
         goldDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
@@ -120,6 +126,9 @@ public class VisionManager {
         goldDetector.disable();
     }
 
+    /**
+     * Vuforia methods.
+     **/
     public void vuforiaInit(HardwareMap hwMap) {
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();

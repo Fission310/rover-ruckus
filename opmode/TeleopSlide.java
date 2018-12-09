@@ -13,52 +13,52 @@ import static java.lang.Math.abs;
  * be defined in this class.
  *
  * Gamepad1 BUTTON MAPPINGS:
- * Left stick x:      Control robot's velocity and direction (stafe)
+ * Left stick x:      Turn Robot
  * Left stick y:      Control robot's velocity and direction
- * Right stick x:     Turn Robot
+ * Right stick x:     Control robot's velocity and direction (stafe)
  * Right stick y:   N/A
- * X:               Un-extends sweeper arm
- * Y:               Extends sweeper arm
- * A:               Un-extends drop arm
- * B:               Extends drop arm
- * Left bumper:     Decelerates robot
- * Right bumper:    Accelerates robot
- * Left trigger:    Special CV program: driveArcade to lander - drives slightly left of the middle of the lander + lifts tape measure
- * Right trigger:   Special CV program: Orient robot facing parallel to each wall - press multiple times to orient
- * DPAD_UP:         N/A
- * DPAD_DOWN:       N/A
- * DPAD_LEFT:       N/A
- * DPAD_RIGHT:      N/A
- * START:           N/A
- * BACK:            N/A
+ * X:
+ * Y:
+ * A:
+ * B:
+ * Left bumper:     Decelerates slide
+ * Right bumper:    Accelerates slide
+ * Left trigger:    Decelerates robot
+ * Right trigger:   Accelerates robot
+ * DPAD_UP:
+ * DPAD_DOWN:
+ * DPAD_LEFT:
+ * DPAD_RIGHT:
+ * START:
+ * BACK:
  *
  * Gamepad2 BUTTON MAPPINGS:
- * Left stick x:      Rotates linear slides
- * Left stick y:      Raise & Drops linear slides
- * Right stick x:   N/A
- * Right stick y:   Raise and drops tape measure mechanism
- * X:               Un-extends sweeper arm
- * Y:               Extends sweeper arm
- * A:               Un-extends drop arm
- * B:               Extends drop arm
- * Left bumper:     Activates acquirer reverse
- * Right bumper:    Activates acquirer inward
- * Left trigger:    N/A
- * Right trigger:   N/A
- * DPAD_UP:         N/A
- * DPAD_DOWN:       N/A
- * DPAD_LEFT:       N/A
- * DPAD_RIGHT:      N/A
- * START:           N/A
- * BACK:            N/A
+ * Left stick x:
+ * Left stick y:
+ * Right stick x:
+ * Right stick y:
+ * X:
+ * Y:
+ * A:
+ * B:
+ * Left bumper:
+ * Right bumper:
+ * Left trigger:    Activates acquirer reverse
+ * Right trigger:   Activates acquirer inward
+ * DPAD_UP:
+ * DPAD_DOWN:
+ * DPAD_LEFT:
+ * DPAD_RIGHT:
+ * START:
+ * BACK:
  *
  */
 @TeleOp(name = "Teleop: Mains", group = "Teleop")
 public class TeleopSlide extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.2;
-    private static final double SLOW_MULTIPLIER = 0.5;
-    private static final double FAST_MULTIPLIER = 0.5;
+    private static final double SLOW_MULTIPLIER = 0.2;
+    private static final double FAST_MULTIPLIER = 2.0;
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -66,7 +66,8 @@ public class TeleopSlide extends OpMode {
     /* Robot hardware map */
     private HardwareSlide robot = new HardwareSlide();
 
-    double yInput, xInput, slideInput, hangingInput;
+    double yInput, xInput, slideInput, hangingInput, leftTrigger, rightTrigger;
+    double driverXInput, driverYInput;
 
     @Override
     public void init() {
@@ -79,8 +80,7 @@ public class TeleopSlide extends OpMode {
      */
     @Override
     public void init_loop() {
-        telemetry.addData("Status", "Waiting in Init");
-        telemetry.update();
+        robot.waitForStart();
     }
 
     /**
@@ -92,11 +92,10 @@ public class TeleopSlide extends OpMode {
         robot.drivetrain.encoderInit();
 
         runtime.reset();
-
     }
 
     /**
-     * Runs continuously while the OpMode is active. Defines the driver-controlled actions
+     * Runs continuously while the OpMode is ac tive. Defines the driver-controlled actions
      * according to gamepad input.
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
      */
@@ -108,17 +107,22 @@ public class TeleopSlide extends OpMode {
         yInput = Range.clip(-gamepad1.left_stick_y, -1.0, 1.0);
         xInput = Range.clip(gamepad1.left_stick_x, -1.0, 1.0);
         slideInput = Range.clip(gamepad1.right_stick_x, -1.0, 1.0);
+        leftTrigger = Range.clip(gamepad1.left_trigger, 0.0, 1.0);
+        rightTrigger = Range.clip(gamepad1.right_trigger, 0.0, 1.0);
 
         // Threshold for strafing, makes horizontal strafing easier
-        if (abs(slideInput) < ANALOG_THRESHOLD) {
-            slideInput = 0;
-        }
+        if (abs(slideInput) < ANALOG_THRESHOLD) { slideInput = 0; }
 
-        // Drives the robot based on driver joystick input, check for slow mode
+        // Drives the robot based on driver joystick input
+        driverYInput = Range.clip(yInput - leftTrigger + rightTrigger, -1.0, 1.0) / 1;
+        driverXInput = Range.clip(xInput - leftTrigger + rightTrigger, -1.0, 1.0) / 1;
+
         if (gamepad1.left_bumper) {
-            robot.drivetrain.drive(yInput * SLOW_MULTIPLIER, xInput * SLOW_MULTIPLIER, slideInput * SLOW_MULTIPLIER);
+            robot.drivetrain.driveSlide(driverYInput, driverXInput, slideInput * SLOW_MULTIPLIER);
+        } else if (gamepad1.right_bumper) {
+            robot.drivetrain.driveSlide(driverYInput, driverXInput, slideInput * FAST_MULTIPLIER);
         } else {
-            robot.drivetrain.drive(yInput, xInput, slideInput);
+            robot.drivetrain.driveSlide(driverYInput, driverXInput, slideInput);
         }
 
         double[] positions = robot.drivetrain.getPositions();
