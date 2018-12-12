@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -130,7 +131,22 @@ public class Drivetrain extends Mechanism {
         slideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    double scaleInput(double joystickValue) {
+        double[] scaleArray = {0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
+                0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00};
 
+        int index = (int)(joystickValue * 16.0);
+
+        if (index < 0) index = -index;
+        else if (index > 16) index = 16;
+
+        double joystickScale = 0.0;
+
+        if (joystickValue < 0) joystickScale = -scaleArray[index];
+        else joystickScale = scaleArray[index];
+
+        return joystickScale;
+    }
     /**
      * Set drivetrain motor power based on input.
      *
@@ -139,8 +155,8 @@ public class Drivetrain extends Mechanism {
      */
     public void drive(double y_value, double x_value) {
         // Combine driveArcade and turn for blended motion.
-        double left = y_value - x_value;
-        double right = y_value + x_value;
+        double left = Range.clip(y_value - x_value, -1.0, 1.0);
+        double right = Range.clip(y_value + x_value, -1.0, 1.0);
 
         leftFront.setPower(left);
         rightFront.setPower(right);
@@ -155,12 +171,32 @@ public class Drivetrain extends Mechanism {
      */
     public void driveSlide(double y_value, double x_value, double slide) {
         // Combine driveArcade and turn for blended motion.
-        double left = y_value - x_value;
-        double right = y_value + x_value;
+        double left = Range.clip(y_value - x_value, -1.0, 1.0);
+        double right = Range.clip(y_value + x_value, -1.0, 1.0);
 
         leftFront.setPower(left);
         rightFront.setPower(right);
         strafe(slide);
+    }
+
+    /**
+     * Set drivetrain motor power based on a scaled input.
+     *
+     * @param y_value      power for vertical direction of drivetrain (-1 to 1)
+     * @param x_value     power for turning of drivetrain (-1 to 1)
+     * @param slide     power for sliding of drivetrain (-1 to 1)
+     */
+    public void driveSlideScaled(double y_value, double x_value, double slide) {
+        // Combine driveArcade and turn for blended motion.
+        double left = Range.clip(y_value - x_value, -1.0, 1.0);
+        double right = Range.clip(y_value + x_value, -1.0, 1.0);
+
+        left = (double)scaleInput(left);
+        right = (double)scaleInput(right);
+
+        leftFront.setPower(left);
+        rightFront.setPower(right);
+        strafe((double)scaleInput(slide));
     }
 
     /**

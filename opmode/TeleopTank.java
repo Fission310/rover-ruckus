@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
 import com.qualcomm.ftccommon.SoundPlayer;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -56,6 +57,7 @@ import static java.lang.Math.abs;
  *
  */
 @TeleOp(name = "Teleop: Tank Test", group = "Teleop")
+@Disabled
 public class TeleopTank extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.15;

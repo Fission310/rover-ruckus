@@ -52,10 +52,10 @@ import static java.lang.Math.abs;
  * BACK:
  *
  */
-@TeleOp(name = "Teleop: Slide", group = "Teleop")
-public class TeleopSlide extends OpMode {
+@TeleOp(name = "Teleop: Slide Scaled", group = "Teleop")
+public class TeleopSlideScaled extends OpMode {
 
-    private static final double ANALOG_THRESHOLD = 0.2;
+    private static final double ANALOG_THRESHOLD = 0.0;
     private static final double SLOW_MULTIPLIER = 0.2;
     private static final double FAST_MULTIPLIER = 2.0;
 
@@ -125,17 +125,17 @@ public class TeleopSlide extends OpMode {
         if (abs(slideInput) < ANALOG_THRESHOLD) { slideInput = 0; }
 
         if (gamepad1.left_bumper) {
-            robot.drivetrain.driveSlide(slowYInput, slowXInput, slowSlide);
+            robot.drivetrain.driveSlideScaled(slowYInput, slowXInput, slowSlide);
             telemetry.addData("Status", "slowYInput: " + slowYInput);
             telemetry.addData("Status", "slowXInput: " + slowXInput);
             telemetry.addData("Status", "slowSlide: " + slowSlide);
         } else if (gamepad1.right_bumper) {
-            robot.drivetrain.driveSlide(fastYInput, fastXInput, fastSlide);
+            robot.drivetrain.driveSlideScaled(fastYInput, fastXInput, fastSlide);
             telemetry.addData("Status", "fastYInput: " + fastYInput);
             telemetry.addData("Status", "fastXInput: " + fastXInput);
             telemetry.addData("Status", "fastSlide: " + fastSlide);
         } else {
-            robot.drivetrain.driveSlide(yInput, xInput, slideInput);
+            robot.drivetrain.driveSlideScaled(yInput, xInput, slideInput);
             telemetry.addData("Status", "yInput: " + yInput);
             telemetry.addData("Status", "xInput: " + xInput);
             telemetry.addData("Status", "slideInput: " + slideInput);
