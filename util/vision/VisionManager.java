@@ -68,6 +68,7 @@ public class VisionManager {
         sampleDetector.ratioScorer.weight = 15;
         sampleDetector.ratioScorer.perfectRatio = 1.0;
 
+        //starts vision detection
         sampleDetector.enable();
     }
 

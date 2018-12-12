@@ -2,14 +2,16 @@ package org.firstinspires.ftc.teamcode.prototype;
 
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
-import org.firstinspires.ftc.teamcode.hardware.HardwareTank;
+import org.firstinspires.ftc.teamcode.hardware.tankdrive.HardwareTank;
 import org.firstinspires.ftc.teamcode.util.SoundManager;
 
 @Autonomous(name="Tank: TEST PID STRAIGHT DRIVE", group="Test")
+@Disabled
 public class AutonTankPIDStraightTest extends LinearOpMode {
 
     /* Private OpMode members */

@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import org.firstinspires.ftc.teamcode.hardware.HardwareSlide;
+import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import static java.lang.Math.abs;
 
 /**
@@ -21,10 +20,10 @@ import static java.lang.Math.abs;
  * Y:
  * A:
  * B:
- * Left bumper:     Decelerates slide
- * Right bumper:    Accelerates slide
- * Left trigger:    Decelerates robot
- * Right trigger:   Accelerates robot
+ * Left bumper:     Decelerates robot
+ * Right bumper:    Accelerates robot
+ * Left trigger:    Decelerates slide
+ * Right trigger:   Accelerates slide
  * DPAD_UP:
  * DPAD_DOWN:
  * DPAD_LEFT:
@@ -66,12 +65,13 @@ public class TeleopSlide extends OpMode {
     /* Robot hardware map */
     private HardwareSlide robot = new HardwareSlide();
 
-    double yInput, xInput, slideInput, hangingInput, leftTrigger, rightTrigger;
-    double driverXInput, driverYInput;
+    /* Holds gamepad joystick's values */
+    double yInput, xInput, slideInput;
+    /* Applies slow or fast mode */
+    double slowYInput, slowXInput, fastYInput, fastXInput, slowSlide, fastSlide;
 
     @Override
     public void init() {
-        robot.init(hardwareMap);
     }
 
     /**
@@ -80,7 +80,7 @@ public class TeleopSlide extends OpMode {
      */
     @Override
     public void init_loop() {
-        robot.waitForStart();
+//        robot.waitForStart();
     }
 
     /**
@@ -89,13 +89,14 @@ public class TeleopSlide extends OpMode {
      */
     @Override
     public void start() {
+        robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
 
         runtime.reset();
     }
 
     /**
-     * Runs continuously while the OpMode is ac tive. Defines the driver-controlled actions
+     * Runs continuously while the OpMode is active. Defines the driver-controlled actions
      * according to gamepad input.
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
      */
@@ -104,26 +105,41 @@ public class TeleopSlide extends OpMode {
         // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
-        yInput = Range.clip(-gamepad1.left_stick_y, -1.0, 1.0);
+        /**
+         * Gamepad1
+         */
+        yInput = -Range.clip(gamepad1.left_stick_y, -1.0, 1.0);
         xInput = Range.clip(gamepad1.left_stick_x, -1.0, 1.0);
         slideInput = Range.clip(gamepad1.right_stick_x, -1.0, 1.0);
-        leftTrigger = Range.clip(gamepad1.left_trigger, 0.0, 1.0);
-        rightTrigger = Range.clip(gamepad1.right_trigger, 0.0, 1.0);
+
+        slowYInput = Range.clip(yInput * SLOW_MULTIPLIER, -1.0, 1.0);
+        slowXInput = Range.clip(xInput * SLOW_MULTIPLIER, -1.0, 1.0);
+        slowSlide = Range.clip(slideInput * SLOW_MULTIPLIER, -1.0, 1.0);
+
+        fastYInput = Range.clip(yInput * FAST_MULTIPLIER, -1.0, 1.0);
+        fastXInput = Range.clip(xInput * FAST_MULTIPLIER, -1.0, 1.0);
+        fastSlide = Range.clip(slideInput * FAST_MULTIPLIER, -1.0, 1.0);
 
         // Threshold for strafing, makes horizontal strafing easier
         if (abs(slideInput) < ANALOG_THRESHOLD) { slideInput = 0; }
 
-        // Drives the robot based on driver joystick input
-        driverYInput = Range.clip(yInput - leftTrigger + rightTrigger, -1.0, 1.0) / 1;
-        driverXInput = Range.clip(xInput - leftTrigger + rightTrigger, -1.0, 1.0) / 1;
-
         if (gamepad1.left_bumper) {
-            robot.drivetrain.driveSlide(driverYInput, driverXInput, slideInput * SLOW_MULTIPLIER);
+            robot.drivetrain.driveSlide(slowYInput, slowXInput, slowSlide);
+            telemetry.addData("Status", "yInput: " + yInput);
+            telemetry.addData("Status", "xInput: " + xInput);
         } else if (gamepad1.right_bumper) {
-            robot.drivetrain.driveSlide(driverYInput, driverXInput, slideInput * FAST_MULTIPLIER);
+            robot.drivetrain.driveSlide(fastYInput, fastXInput, fastSlide);
+            telemetry.addData("Status", "yInput: " + yInput);
+            telemetry.addData("Status", "xInput: " + xInput);
         } else {
-            robot.drivetrain.driveSlide(driverYInput, driverXInput, slideInput);
+            robot.drivetrain.driveSlide(yInput, xInput, slideInput);
+            telemetry.addData("Status", "yInput: " + yInput);
+            telemetry.addData("Status", "xInput: " + xInput);
         }
+
+        /**
+         * Gamepad2
+         */
 
         double[] positions = robot.drivetrain.getPositions();
         telemetry.addData("Path2", "Running at %.2f :%.2f",

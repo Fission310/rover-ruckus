@@ -1,11 +1,16 @@
-package org.firstinspires.ftc.teamcode.hardware;
+package org.firstinspires.ftc.teamcode.hardware.slidedrive;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.hardware.legacy.Lift;
-import org.firstinspires.ftc.teamcode.hardware.legacy.Tape;
-import org.firstinspires.ftc.teamcode.hardware.slidedrive.Drivetrain;
+import org.firstinspires.ftc.teamcode.FieldConstants;
+import org.firstinspires.ftc.teamcode.hardware.Acquirer;
+import org.firstinspires.ftc.teamcode.hardware.Arm;
+import org.firstinspires.ftc.teamcode.hardware.Mechanism;
+import org.firstinspires.ftc.teamcode.hardware.RackNPinonLift;
+import org.firstinspires.ftc.teamcode.hardware.Lift;
+import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 
 /**
@@ -25,19 +30,19 @@ public class HardwareSlide extends Mechanism {
     /**
      * Instance variable containing robot's acquirer.
      */
-    public Acquirer acquirer;
+//    public Acquirer acquirer;
     /**
      * Instance variable containing robot's linear slides acquirer.
      */
-    public Lift lift;
+//    public Lift lift;
     /**
      * Instance variable containing robot's rack and pinion lift.
      */
-    public RackNPinonLift rack;
+//    public RackNPinonLift rack;
     /**
      * Instance variable containing robot's servo arm.
      */
-    public Arm servoArm;
+//    public Arm servoArm;
 
     /* Miscellaneous mechanisms */
 
@@ -82,7 +87,7 @@ public class HardwareSlide extends Mechanism {
      * Waits for opMode's to start. Can perform actions while waiting.
      */
     public void waitForStart() {
-        while (!opMode.isStarted()) {
+        while (!opMode.opModeIsActive() && !opMode.isStopRequested()) {
             opMode.telemetry.addData("Heading:", drivetrain.getHeading());
             opMode.telemetry.update();
         }
@@ -91,15 +96,25 @@ public class HardwareSlide extends Mechanism {
     /**
      * Autonomous action for sampling the gold cube. Uses the robot's servo arm mechanism to detect gold cube
      * and in a linear slide fashion.
-     * This assumes the color sensor faces the back of the robot.
+     * This assumes the vision sensor faces the back of the robot.
      *
      *  @param visionManager    VisionManager containing the GoldDetector
-     *  @param isAllianceRed    whether or not the robot is on the Red Alliance
      */
 
-    // gold detector
-
-    //
+    public void samplePID(VisionManager visionManager) {
+        if (opMode.opModeIsActive()) {
+            while (!visionManager.isGoldAligned()) {
+                drivetrain.drive(0.25, 0.0);
+            }
+            if (visionManager.isGoldAligned()) {
+                drivetrain.driveToPos(0.3, -FieldConstants.TILE_HYPOTENUSE / 6, -FieldConstants.TILE_HYPOTENUSE / 6, 2);
+                drivetrain.turnPID(-90);
+                drivetrain.driveToPos(0.3, FieldConstants.FLOOR_TILE * 6, FieldConstants.FLOOR_TILE * 6, 3);
+                drivetrain.driveToPos(0.3, -FieldConstants.FLOOR_TILE * 6, -FieldConstants.FLOOR_TILE * 6, 3);
+                drivetrain.turnPID(90);
+            }
+        }
+    }
 
     /**
      * Autonomous action for dropping the marker. Uses the robot's distance sensor to detect the robot's

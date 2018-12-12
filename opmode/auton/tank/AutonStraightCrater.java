@@ -1,17 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmode.auton.tank;
 
-import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
-import org.firstinspires.ftc.teamcode.hardware.HardwareTank;
-import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
-import org.firstinspires.ftc.teamcode.util.SoundManager;
-import org.firstinspires.ftc.teamcode.hardware.Constants;
+import org.firstinspires.ftc.teamcode.hardware.tankdrive.HardwareTank;
 
 @Autonomous(name="Crater: Straight to Crater", group="Crater")
+@Disabled
 public class AutonStraightCrater extends LinearOpMode {
 
     /* Private OpMode members */
