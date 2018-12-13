@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.RCConfig;
 import org.firstinspires.ftc.teamcode.hardware.Constants;
 import org.firstinspires.ftc.teamcode.util.PIDController;
+import org.firstinspires.ftc.teamcode.util.sensors.SingleIMU;
 
 /**
  * Slide Drivetrain is the class that is used to define all of the hardware for a robot's slide drivetrain.
@@ -44,6 +45,7 @@ public class Drivetrain extends Mechanism {
     Orientation lastAngles = new Orientation();
     double globalAngle, power = .35;
     PIDController pidRotate, pidDrive;
+    SingleIMU singleImu= new SingleIMU();
 
     /**
      * Default constructor for Drivetrain.
@@ -86,22 +88,9 @@ public class Drivetrain extends Mechanism {
         rightFront.setPower(0);
         slideDrive.setPower(0);
 
-        // Initialize IMU with parameters
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.mode                = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
         // Retrieve and initialize the IMU
         imu = hwMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-
-        // Start the logging of measured acceleration
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        singleImu.init(imu, AxesOrder.ZYX,0D);
 
         // Set PID proportional value to start reducing power at about 50 degrees of rotation.
         pidRotate = new PIDController(.005, 0, 0);

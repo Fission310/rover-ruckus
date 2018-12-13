@@ -110,8 +110,8 @@ public class TeleopSlide extends OpMode {
          */
         // clip the input values so that the values never exceed +/- 1
         yInput = -Range.clip(gamepad1.left_stick_y, -1.0, 1.0);
-        xInput = Range.clip(gamepad1.left_stick_x, -1.0, 1.0);
-        slideInput = Range.clip(gamepad1.right_stick_x, -1.0, 1.0);
+        xInput = Range.clip(gamepad1.right_stick_x, -1.0, 1.0);
+        slideInput = Range.clip(gamepad1.left_stick_x, -1.0, 1.0);
 
         slowYInput = Range.clip(yInput * SLOW_MULTIPLIER, -1.0, 1.0);
         slowXInput = Range.clip(xInput * SLOW_MULTIPLIER, -1.0, 1.0);
