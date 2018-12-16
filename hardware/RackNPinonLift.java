@@ -20,7 +20,8 @@ public class RackNPinonLift extends Mechanism {
     /* CONSTANTS */
 
     /* Hardware members */
-    private DcMotor rackMotor;
+    private DcMotor leftRackMotor;
+    private DcMotor rightRackMotor;
     /**
      * Default constructor for Acquirer.
      */
@@ -44,30 +45,36 @@ public class RackNPinonLift extends Mechanism {
         // Retrieve servos from hardware map and assign to instance vars
 
         // Retrieve motor from hardware map and assign to instance vars
-        rackMotor = hwMap.dcMotor.get(RCConfig.RACKANDPINION);
+        leftRackMotor = hwMap.dcMotor.get(RCConfig.RACKANDPINION);
+        rightRackMotor = hwMap.dcMotor.get(RCConfig.RACKANDPINION);
 
         // Set braking behavior
-        rackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set polarity
-        rackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftRackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightRackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set initial power
-        rackMotor.setPower(0);
+        leftRackMotor.setPower(0);
+        rightRackMotor.setPower(0);
     }
 
     /**
      * Sets power for rack motor.
      */
     public void setRackPower(double power) {
-        rackMotor.setPower(power);
+        leftRackMotor.setPower(power);
+        rightRackMotor.setPower(power);
     }
 
     /**
      * Sets power for rack motor based on encoder values.
      */
     public void rackToPos(double power) {
-        rackMotor.setPower(power);
+        leftRackMotor.setPower(power);
+        rightRackMotor.setPower(power);
     }
 
 }

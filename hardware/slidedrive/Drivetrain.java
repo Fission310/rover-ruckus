@@ -188,6 +188,69 @@ public class Drivetrain extends Mechanism {
         strafe((double)scaleInput(slide));
     }
 
+    public void driveToPosNoPID(double speed, double leftInches, double rightInches, double timeoutS) {
+
+        // Target position variables
+        int newLeftTarget;
+        int newRightTarget;
+
+        // Current heading angle of robot
+        double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
+        // Determine new target position, and pass to motor controller
+        newLeftTarget = leftFront.getCurrentPosition() + (int) (leftInches * Constants.TICKS_PER_INCH);
+        newRightTarget = rightFront.getCurrentPosition() + (int) (rightInches * Constants.TICKS_PER_INCH);
+        leftFront.setTargetPosition(newLeftTarget);
+        rightFront.setTargetPosition(newRightTarget);
+
+        // Turn On RUN_TO_POSITION
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Reset the timeout time
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+
+        // Loop until a condition is met
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeoutS) &&
+                leftFront.isBusy() && rightFront.isBusy()) {
+
+            // Get IMU angles
+            Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+            // Heading angle
+            double gyroAngle = angles.firstAngle;
+
+            // Adjustment factor for heading
+            double p = (gyroAngle - currentAngle) * Constants.PCONSTANT;
+
+            // Set power of drivetrain motors accounting for adjustment
+            leftFront.setPower(Math.abs(speed) + p);
+            rightFront.setPower(Math.abs(speed) - p);
+
+            // Display info for the driver.
+            opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+            opMode.telemetry.addData("Path2", "Running at %7d :%7d",
+                    leftFront.getCurrentPosition(),
+                    rightFront.getCurrentPosition());
+            opMode.telemetry.addData("Heading: ", "%f", gyroAngle);
+            opMode.telemetry.addData("AccX: ", "%f", imu.getAcceleration().xAccel);
+            opMode.telemetry.addData("AccY: ", "%f", imu.getAcceleration().yAccel);
+            opMode.telemetry.update();
+        }
+
+        // Stop all motion
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+
+        // Turn off RUN_TO_POSITION
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     /**
      * Drive to a relative position using encoders and an IMU.
      *
@@ -506,4 +569,36 @@ public class Drivetrain extends Mechanism {
         // reset angle tracking on new heading.
         resetAngle();
     }
+
+    public void turnNoPID(double speed, double angle, double timeoutS) {
+        // Get IMU angles
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        // Calculate angle to turn
+        double angleToTurn = angle - angles.firstAngle;
+
+        // Reset the timeout time
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+
+        // Loop until a condition is met
+        while (opMode.opModeIsActive() && Math.abs(angleToTurn) > 0.5 && runtime.seconds() < timeoutS) {
+
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            angleToTurn = angle - angles.firstAngle;
+
+            // Set motor power according to calculated angle to turn
+            leftFront.setPower(-Math.signum(angleToTurn) * speed);
+            rightFront.setPower(Math.signum(angleToTurn) * speed);
+
+            // Display heading for the driver
+            opMode.telemetry.addData("Heading: ", "%f", angleToTurn);
+            opMode.telemetry.update();
+        }
+
+        // Stop motor movement
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+    }
+
 }

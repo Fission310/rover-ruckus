@@ -3,13 +3,16 @@ package org.firstinspires.ftc.teamcode.hardware.slidedrive;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.sun.tools.javac.code.Attribute;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Arm;
+import org.firstinspires.ftc.teamcode.hardware.Constants;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.RackNPinonLift;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
+import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 
@@ -93,6 +96,31 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
+    public void land() {
+        if (opMode.opModeIsActive()) {
+
+        }
+    }
+
+    public void findGoldLocation(TensorFlowManager visionManager, TensorFlowManager.TFLocation location) {
+        TensorFlowManager.TFLocation newLocation;
+
+        if (opMode.opModeIsActive()) {
+            drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
+
+            if (location == TensorFlowManager.TFLocation.LEFT){
+                drivetrain.strafeToPos(.3,-FieldConstants.TILE_HYPOTENUSE / 2, 3);
+            } else if (location == TensorFlowManager.TFLocation.CENTER){
+
+            } else if (location == TensorFlowManager.TFLocation.RIGHT){
+                drivetrain.strafeToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, 3);
+            } else if (location == TensorFlowManager.TFLocation.NONE){
+                newLocation = visionManager.getLocation();
+                findGoldLocation(visionManager, newLocation);
+            }
+        }
+    }
+
     /**
      * Autonomous action for sampling the gold cube. Uses the robot's servo arm mechanism to detect gold cube
      * and in a linear slide fashion.
@@ -100,21 +128,38 @@ public class HardwareSlide extends Mechanism {
      *
      *  @param visionManager    VisionManager containing the GoldDetector
      */
-
-    public void samplePID(VisionManager visionManager) {
+    public void samplePID(TensorFlowManager visionManager, TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            while (!visionManager.isGoldAligned()) {
-                drivetrain.drive(0.25, 0.0);
-            }
-            if (visionManager.isGoldAligned()) {
-                drivetrain.driveToPos(0.3, -FieldConstants.TILE_HYPOTENUSE / 6, -FieldConstants.TILE_HYPOTENUSE / 6, 2);
-                drivetrain.turnPID(-90);
-                drivetrain.driveToPos(0.3, FieldConstants.FLOOR_TILE * 6, FieldConstants.FLOOR_TILE * 6, 3);
-                drivetrain.driveToPos(0.3, -FieldConstants.FLOOR_TILE * 6, -FieldConstants.FLOOR_TILE * 6, 3);
-                drivetrain.turnPID(90);
+            drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
+            if (location == TensorFlowManager.TFLocation.LEFT){
+                drivetrain.turnPID(-45);
+                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
+            } else if (location == TensorFlowManager.TFLocation.CENTER){
+
+            } else if (location == TensorFlowManager.TFLocation.RIGHT){
+
             }
         }
     }
+
+    public void dropMarker() {
+        if (opMode.opModeIsActive()) {
+
+        }
+    }
+
+    public void alignToWall() {
+        if (opMode.opModeIsActive()) {
+
+        }
+    }
+
+    public void driveToCrater() {
+        if (opMode.opModeIsActive()) {
+
+        }
+    }
+
 
     /**
      * Autonomous action for dropping the marker. Uses the robot's distance sensor to detect the robot's

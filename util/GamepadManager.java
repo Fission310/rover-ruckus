@@ -11,12 +11,12 @@ import com.qualcomm.robotcore.util.Range;
 public class GamepadManager {
     public Gamepad gamepad;
 
-    private static final double ANALOG_THRESHOLD = 0.0;
-    private static final double SLOW_MULTIPLIER = 0.2;
-    private static final double FAST_MULTIPLIER = 2.0;
+    public static double ANALOG_THRESHOLD = 0.0;
+    public static double SLOW_MULTIPLIER = 0.2;
+    public static double FAST_MULTIPLIER = 2.0;
 
     /* Holds gamepad joystick's values */
-    public double yInput = -left_stick_y(), xInput = right_stick_x(), slideInput = left_stick_x();
+    public double yInput = (double)-left_stick_y(), xInput = (double)right_stick_x(), slideInput = (double)left_stick_x();
 
     /* Applies slow or fast mode */
     public double slowYInput = yInput * SLOW_MULTIPLIER, slowXInput = xInput * SLOW_MULTIPLIER, slowSlide = slideInput * SLOW_MULTIPLIER;
@@ -24,6 +24,12 @@ public class GamepadManager {
 
     public GamepadManager(Gamepad gamepad) {
         this.gamepad = gamepad;
+    }
+
+    public void init(double threshold, double slow, double fast) {
+        ANALOG_THRESHOLD = threshold;
+        SLOW_MULTIPLIER = slow;
+        FAST_MULTIPLIER = fast;
     }
 
     public double left_stick_x() { return gamepad.left_stick_x; }

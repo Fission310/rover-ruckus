@@ -30,7 +30,7 @@ public class TensorFlowManager {
      */
     private TFLocation location;
     /**
-     * Instance variable containing TensorFlow's detecter
+     * Instance variable containing TensorFlow's detector
      */
     private TFDetector detector;
 
@@ -52,15 +52,11 @@ public class TensorFlowManager {
     /**
      * Activates TensorFlow interface.
      */
-    public void start() {
-        if (tfod != null) tfod.activate();
-    }
+    public void start() { if (tfod != null) tfod.activate(); }
     /**
      * Deactivate TensorFlow interface.
      */
-    public void stop() {
-        if (tfod != null) tfod.shutdown();
-    }
+    public void stop() { if (tfod != null) tfod.shutdown(); }
 
     /**
      * Enum containing all possible detections of the minerals .
@@ -205,5 +201,6 @@ public class TensorFlowManager {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+        tfodParameters.minimumConfidence = .62;
     }
 }

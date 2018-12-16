@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 import org.firstinspires.ftc.teamcode.util.SoundManager;
 
-@Autonomous(name="Depot: Drop + Sample + Marker", group="Slide Depot")
-public class AutonDepot extends LinearOpMode {
+@Autonomous(name="Depot: Drop + Sample + Marker Test", group="Slide Depot")
+public class AutonDepotTest extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -22,7 +22,6 @@ public class AutonDepot extends LinearOpMode {
 
     /* Vision Manager*/
     private TensorFlowManager visionManager = new TensorFlowManager();
-    TensorFlowManager.TFLocation location;
 
     /**
      * Runs the autonomous routine.
@@ -51,36 +50,7 @@ public class AutonDepot extends LinearOpMode {
          * Land and wait for the robot to fully drop and stabilize.
          */
 //        robot.land();
-
-        /**
-         * Figure out where the gold cube is and drive towards it.
-         */
-        location = visionManager.getLocation();
-//        while (location == TensorFlowManager.TFLocation.NONE){
-//            robot.drivetrain.driveToPos(.3,-2,-2,2);
-//            location = visionManager.getLocation();
-//        }
-//        robot.findGoldLocation();
-
-        /**
-         * Align the robot to the gold cube to push it in to the depot
-         */
-//        robot.samplePID()
-
-        /**
-         * Drop the marker
-         */
-//        robot.dropMarker()
-
-        /**
-         * Align to wall
-         */
-//        robot.alignToWall()
-
-        /**
-         * Extend arm and drive up to the crater
-         */
-//        robot.driveToCrater()
+        sleep(30000);
 
 
         // Stop CV
