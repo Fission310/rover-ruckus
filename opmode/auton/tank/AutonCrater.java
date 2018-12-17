@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
-import org.firstinspires.ftc.teamcode.hardware.tankdrive.HardwareTank;
+import org.firstinspires.ftc.teamcode.legacy.hardware.tankdrive.HardwareTank;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 import org.firstinspires.ftc.teamcode.util.SoundManager;
 

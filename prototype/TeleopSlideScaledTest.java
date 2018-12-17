@@ -116,17 +116,17 @@ public class TeleopSlideScaledTest extends OpMode {
         if (abs(gamepadManager1.slideInput) < ANALOG_THRESHOLD) { gamepadManager1.slideInput = 0.0; }
 
         if (gamepad1.left_bumper) {
-            robot.drivetrain.driveSlideScaled(gamepadManager1.slowXInput, gamepadManager1.slowXInput, gamepadManager1.slowSlide);
+            robot.drivetrain.driveSlideScaled(gamepadManager1.slowXInput, gamepadManager1.slowXInput, gamepadManager1.slowSlide, gamepadManager1.right_bumper());
             telemetry.addData("Status", "slowYInput: " + gamepadManager1.slowYInput);
             telemetry.addData("Status", "slowXInput: " + gamepadManager1.slowXInput);
             telemetry.addData("Status", "slowSlide: " + gamepadManager1.slowSlide);
         } else if (gamepad1.right_bumper) {
-            robot.drivetrain.driveSlideScaled(gamepadManager1.fastYInput, gamepadManager1.fastXInput, gamepadManager1.fastSlide);
+            robot.drivetrain.driveSlideScaled(gamepadManager1.fastYInput, gamepadManager1.fastXInput, gamepadManager1.fastSlide, gamepadManager1.right_bumper());
             telemetry.addData("Status", "fastYInput: " + gamepadManager1.fastYInput);
             telemetry.addData("Status", "fastXInput: " + gamepadManager1.fastXInput);
             telemetry.addData("Status", "fastSlide: " + gamepadManager1.fastSlide);
         } else {
-            robot.drivetrain.driveSlideScaled(gamepadManager1.yInput, gamepadManager1.xInput, gamepadManager1.slideInput);
+            robot.drivetrain.driveSlideScaled(gamepadManager1.yInput, gamepadManager1.xInput, gamepadManager1.slideInput, gamepadManager1.right_bumper());
             telemetry.addData("Status", "yInput: " + gamepadManager1.yInput);
             telemetry.addData("Status", "xInput: " + gamepadManager1.xInput);
             telemetry.addData("Status", "slideInput: " + gamepadManager1.slideInput);

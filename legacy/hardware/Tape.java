@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware.legacy;
+package org.firstinspires.ftc.teamcode.legacy.hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;

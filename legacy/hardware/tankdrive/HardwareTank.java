@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware.tankdrive;
+package org.firstinspires.ftc.teamcode.legacy.hardware.tankdrive;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -6,8 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Marker;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
-import org.firstinspires.ftc.teamcode.hardware.legacy.Hanger;
-import org.firstinspires.ftc.teamcode.hardware.tankdrive.Drivetrain;
+import org.firstinspires.ftc.teamcode.legacy.hardware.Hanger;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 /**

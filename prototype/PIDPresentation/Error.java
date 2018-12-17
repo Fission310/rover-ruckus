@@ -1,22 +1,22 @@
-package org.firstinspires.ftc.teamcode.opmode.auton.tank;
+package org.firstinspires.ftc.teamcode.prototype.PIDPresentation;
 
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
-import org.firstinspires.ftc.teamcode.legacy.hardware.tankdrive.HardwareTank;
+import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
+import org.firstinspires.ftc.teamcode.util.SoundManager;
 
-@Autonomous(name="Crater: Straight to Crater", group="Crater")
-@Disabled
-public class AutonStraightCrater extends LinearOpMode {
+@Autonomous(name="Error No Pid turn 45", group="PID")
+public class Error extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
 
     /* Robot hardware */
-    private HardwareTank robot = new HardwareTank(this);
+    private HardwareSlide robot = new HardwareSlide(this);
 
     /**
      * Runs the autonomous routine.
@@ -36,6 +36,8 @@ public class AutonStraightCrater extends LinearOpMode {
         waitForStart();
         runtime.reset();  // Start counting run time from now.
 
-        robot.drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE * 4,FieldConstants.TILE_HYPOTENUSE * 4,30);
+        robot.drivetrain.turnNoPID(.65,-90.0,30);
+        sleep(2000);
+        robot.drivetrain.turnNoPID(.65,90.0,30);
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware.tankdrive;
+package org.firstinspires.ftc.teamcode.legacy.hardware.tankdrive;
 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -19,8 +19,6 @@ import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.RCConfig;
 import org.firstinspires.ftc.teamcode.hardware.Constants;
 import org.firstinspires.ftc.teamcode.util.PIDController;
-import org.firstinspires.ftc.teamcode.util.sensors.IMU;
-import org.firstinspires.ftc.teamcode.util.sensors.SingleIMU;
 
 /**
  * Drivetrain is the class that is used to define all of the hardware for a robot's drivetrain.

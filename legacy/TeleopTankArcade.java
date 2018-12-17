@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.teleop_tank;
+package org.firstinspires.ftc.teamcode.legacy;
 
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.hardware.tankdrive.HardwareTank;
+import org.firstinspires.ftc.teamcode.legacy.hardware.tankdrive.HardwareTank;
 import org.firstinspires.ftc.teamcode.util.SoundManager;
 
 import static java.lang.Math.abs;
