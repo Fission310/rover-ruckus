@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.teamcode.opmode.teleop_tank;
 
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -13,7 +13,7 @@ import static java.lang.Math.abs;
 
 /**
  * TeleopTankMain is the primary TeleOp OpMode for tank drivetrains. All driver-controlled actions should
- * be defined in this class. This teleop uses two analog sticks to driveArcade the robot.
+ * be defined in this class. This teleop uses one analog sticks to driveArcade the robot
  *
  * Gamepad1 BUTTON MAPPINGS:
  * Left stick x:      N/A
@@ -56,11 +56,11 @@ import static java.lang.Math.abs;
  * BACK:            N/A
  *
  */
-@TeleOp(name = "Teleop: Tank Test", group = "Teleop")
+@TeleOp(name = "Teleop: Tank", group = "Teleop")
 @Disabled
-public class TeleopTank extends OpMode {
+public class TeleopTankArcade extends OpMode {
 
-    private static final double ANALOG_THRESHOLD = 0.15;
+    private static final double ANALOG_THRESHOLD = 0.10;
     private static final double SLOW_MULTIPLIER = 0.2;
     private static final double FAST_MULTIPLIER = 2;
 
@@ -73,7 +73,7 @@ public class TeleopTank extends OpMode {
     /* Sound manager */
     private SoundManager soundManager = new SoundManager();
 
-    double rightYInput, leftYInput, hangingInput;
+    double yInput, xInput, hangingInput;
 
     private boolean goldFound, silverFound;
     private boolean isX, isY, wasX, wasB = false;    // Gamepad button state variables
@@ -83,8 +83,8 @@ public class TeleopTank extends OpMode {
     @Override
     public void init() {
         // Retrieve sound ids from raw folder
-        goldSoundID = soundManager.getSoundID(hardwareMap, "einstein");
-        silverSoundID = soundManager.getSoundID(hardwareMap, "conttouch");
+        goldSoundID = soundManager.getSoundID(hardwareMap, "gold");
+        silverSoundID = soundManager.getSoundID(hardwareMap, "silver");
 
         // Checks if soundId has an id and loads them
         if (goldSoundID != 0)
@@ -110,6 +110,7 @@ public class TeleopTank extends OpMode {
     public void start() {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
+
 //        robot.servoArm.armUp();
 //        robot.servoArm.sweeperNeutral();
 
@@ -124,26 +125,31 @@ public class TeleopTank extends OpMode {
      */
     @Override
     public void loop() {
-        /**
-         * Adds runtime data to telemetry
-         */
+        // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
-        leftYInput = gamepad1.left_stick_y;
-        rightYInput = gamepad1.right_stick_y;
+        yInput = gamepad1.left_stick_y;
+        xInput = gamepad1.left_stick_x;
         hangingInput = -gamepad2.left_stick_y;
 
-        telemetry.addData("Status", "Right: " + rightYInput);
+        telemetry.addData("Status", "yinput: " + yInput);
+
+        /**
+         * Threshold for strafing, makes horizontal strafing easier
+         */
+        if (abs(gamepad2.left_stick_y) < ANALOG_THRESHOLD) {
+            yInput = 0;
+        }
 
         /**
          * Drives the robot based on driver joystick input, check for slow mode
          */
         if (gamepad1.left_bumper) {
-            robot.drivetrain.driveTank(leftYInput * SLOW_MULTIPLIER, rightYInput * SLOW_MULTIPLIER);
+            robot.drivetrain.driveArcade(yInput * SLOW_MULTIPLIER, xInput * SLOW_MULTIPLIER);
         } else if (gamepad1.right_bumper ) {
-            robot.drivetrain.driveTank(leftYInput * FAST_MULTIPLIER, rightYInput * FAST_MULTIPLIER);
+            robot.drivetrain.driveArcade(yInput * FAST_MULTIPLIER, xInput * FAST_MULTIPLIER);
         } else {
-            robot.drivetrain.driveTank(leftYInput, rightYInput);
+            robot.drivetrain.driveArcade(yInput, xInput);
         }
 
         /**
@@ -157,39 +163,12 @@ public class TeleopTank extends OpMode {
          * Controls the hanging mechanism, check for slow mode
          */
         if (gamepad2.left_bumper) {
-            robot.hanger.setHangerPower(hangingInput);
-        } else if (gamepad2.right_bumper ) {
-            robot.hanger.setHangerPower(1);
-        } else {
             robot.hanger.setHangerPower(hangingInput * SLOW_MULTIPLIER);
+        } else if (gamepad2.right_bumper ) {
+            robot.hanger.setHangerPower(hangingInput * FAST_MULTIPLIER);
+        } else {
+            robot.hanger.setHangerPower(hangingInput);
         }
-
-        /**
-         * Set arms position
-         */
-        if (gamepad1.a || gamepad2.a) {
-            robot.marker.markerLeft();
-        } else if (gamepad1.b || gamepad2.b) {
-            robot.marker.markerNeutral();
-        }
-
-        /**
-         * Activates sounds for gold and silver
-         */
-        if (silverFound && ((isX = gamepad1.x) || (isX = gamepad2.x)) && !wasX) {
-            soundManager.playSound(hardwareMap.appContext, silverSoundID);
-        }
-
-        /**
-         * Sound activates each time gamepad y is pressed  (This sound is a resource)
-         */
-        if (goldFound && ((isY = gamepad1.y) || (isY = gamepad2.y)) && !wasB) {
-            soundManager.playSound(hardwareMap.appContext, goldSoundID);
-        }
-
-        // Save last button states
-        wasX = isX;
-        wasB = isY;
 
         /**
          * Set arms position

@@ -22,7 +22,9 @@ public class AutonDepot extends LinearOpMode {
 
     /* Vision Manager*/
     private TensorFlowManager visionManager = new TensorFlowManager();
-    TensorFlowManager.TFLocation location;
+
+    /* Holds gold cube location*/
+    private TensorFlowManager.TFLocation location;
 
     /**
      * Runs the autonomous routine.
@@ -57,7 +59,7 @@ public class AutonDepot extends LinearOpMode {
          */
         location = visionManager.getLocation();
 //        while (location == TensorFlowManager.TFLocation.NONE){
-//            robot.drivetrain.driveToPos(.3,-2,-2,2);
+//            robot.drivetrain.driveToPos(.3,2,2,2);
 //            location = visionManager.getLocation();
 //        }
 //        robot.findGoldLocation();

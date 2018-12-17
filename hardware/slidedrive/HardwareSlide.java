@@ -103,20 +103,24 @@ public class HardwareSlide extends Mechanism {
     }
 
     public void findGoldLocation(TensorFlowManager visionManager, TensorFlowManager.TFLocation location) {
-        TensorFlowManager.TFLocation newLocation;
-
         if (opMode.opModeIsActive()) {
             drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
 
             if (location == TensorFlowManager.TFLocation.LEFT){
-                drivetrain.strafeToPos(.3,-FieldConstants.TILE_HYPOTENUSE / 2, 3);
+//                drivetrain.strafeToPos(.3,-FieldConstants.TILE_HYPOTENUSE / 2, 3);
+                drivetrain.turnPID(90);
+                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
+                drivetrain.turnPID(-90);
             } else if (location == TensorFlowManager.TFLocation.CENTER){
 
             } else if (location == TensorFlowManager.TFLocation.RIGHT){
-                drivetrain.strafeToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, 3);
+//                drivetrain.strafeToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, 3);
+                drivetrain.turnPID(-90);
+                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
+                drivetrain.turnPID(90);
+
             } else if (location == TensorFlowManager.TFLocation.NONE){
-                newLocation = visionManager.getLocation();
-                findGoldLocation(visionManager, newLocation);
+
             }
         }
     }

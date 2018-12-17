@@ -1,10 +1,13 @@
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.teamcode.prototype;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
+import org.firstinspires.ftc.teamcode.util.GamepadManager;
+
 import static java.lang.Math.abs;
 
 /**
@@ -52,11 +55,13 @@ import static java.lang.Math.abs;
  * BACK:
  *
  */
-@TeleOp(name = "Teleop: Scaled Slide", group = "Teleop")
-public class TeleopSlideScaled extends OpMode {
+@TeleOp(name = "Teleop: Slide Test", group = "Teleop")
+@Disabled
+public class TeleopSlideScaledTest extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.0;
     private static final double SLOW_MULTIPLIER = 0.2;
+    private static final double FAST_MULTIPLIER = 2.0;
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -64,10 +69,9 @@ public class TeleopSlideScaled extends OpMode {
     /* Robot hardware map */
     private HardwareSlide robot = new HardwareSlide();
 
-    /* Holds gamepad joystick's values */
-    double yInput, xInput, slideInput;
-    /* Applies slow or fast mode */
-    double slowYInput, slowXInput, slowSlide;
+    /* Gamepad map */
+    private GamepadManager gamepadManager1 = new GamepadManager(gamepad1);
+    private GamepadManager gamepadManager2 = new GamepadManager(gamepad2);
 
     @Override
     public void init() {
@@ -107,28 +111,25 @@ public class TeleopSlideScaled extends OpMode {
         /**
          * Gamepad1
          */
-        // clip the input values so that the values never exceed +/- 1
-        yInput = -Range.clip(gamepad1.left_stick_y, -1.0, 1.0);
-        xInput = Range.clip(gamepad1.right_stick_x, -1.0, 1.0);
-        slideInput = Range.clip(gamepad1.left_stick_x, -1.0, 1.0);
-
-        slowYInput = Range.clip(yInput * SLOW_MULTIPLIER, -1.0, 1.0);
-        slowXInput = Range.clip(xInput * SLOW_MULTIPLIER, -1.0, 1.0);
-        slowSlide = Range.clip(slideInput * SLOW_MULTIPLIER, -1.0, 1.0);
 
         // Threshold for strafing, makes horizontal strafing easier
-        if (abs(slideInput) < ANALOG_THRESHOLD) { slideInput = 0; }
+        if (abs(gamepadManager1.slideInput) < ANALOG_THRESHOLD) { gamepadManager1.slideInput = 0.0; }
 
         if (gamepad1.left_bumper) {
-            robot.drivetrain.driveSlideScaled(slowYInput, slowXInput, slowSlide, gamepad1.right_bumper);
-            telemetry.addData("Status", "slowYInput: " + slowYInput);
-            telemetry.addData("Status", "slowXInput: " + slowXInput);
-            telemetry.addData("Status", "slowSlide: " + slowSlide);
+            robot.drivetrain.driveSlideScaled(gamepadManager1.slowXInput, gamepadManager1.slowXInput, gamepadManager1.slowSlide);
+            telemetry.addData("Status", "slowYInput: " + gamepadManager1.slowYInput);
+            telemetry.addData("Status", "slowXInput: " + gamepadManager1.slowXInput);
+            telemetry.addData("Status", "slowSlide: " + gamepadManager1.slowSlide);
+        } else if (gamepad1.right_bumper) {
+            robot.drivetrain.driveSlideScaled(gamepadManager1.fastYInput, gamepadManager1.fastXInput, gamepadManager1.fastSlide);
+            telemetry.addData("Status", "fastYInput: " + gamepadManager1.fastYInput);
+            telemetry.addData("Status", "fastXInput: " + gamepadManager1.fastXInput);
+            telemetry.addData("Status", "fastSlide: " + gamepadManager1.fastSlide);
         } else {
-            robot.drivetrain.driveSlideScaled(yInput, xInput, slideInput, gamepad1.right_bumper);
-            telemetry.addData("Status", "yInput: " + yInput);
-            telemetry.addData("Status", "xInput: " + xInput);
-            telemetry.addData("Status", "slideInput: " + slideInput);
+            robot.drivetrain.driveSlideScaled(gamepadManager1.yInput, gamepadManager1.xInput, gamepadManager1.slideInput);
+            telemetry.addData("Status", "yInput: " + gamepadManager1.yInput);
+            telemetry.addData("Status", "xInput: " + gamepadManager1.xInput);
+            telemetry.addData("Status", "slideInput: " + gamepadManager1.slideInput);
         }
 
         /**

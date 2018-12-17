@@ -79,8 +79,8 @@ public class Drivetrain extends Mechanism {
         slideDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set motor brake behavior
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         slideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         // Set all motors to zero power
@@ -158,7 +158,13 @@ public class Drivetrain extends Mechanism {
      * @param x_value     power for turning of drivetrain (-1 to 1)
      * @param slide     power for sliding of drivetrain (-1 to 1)
      */
-    public void driveSlide(double y_value, double x_value, double slide) {
+    public void driveSlide(double y_value, double x_value, double slide, boolean brake) {
+        if (brake) {
+            setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
+        } else {
+            setDriveZeroPowers(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
+
         // Combine driveArcade and turn for blended motion.
         double left = Range.clip(y_value - x_value, -1.0, 1.0);
         double right = Range.clip(y_value + x_value, -1.0, 1.0);
@@ -175,7 +181,13 @@ public class Drivetrain extends Mechanism {
      * @param x_value     power for turning of drivetrain (-1 to 1)
      * @param slide     power for sliding of drivetrain (-1 to 1)
      */
-    public void driveSlideScaled(double y_value, double x_value, double slide) {
+    public void driveSlideScaled(double y_value, double x_value, double slide, boolean brake) {
+        if (brake) {
+            setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
+        } else {
+            setDriveZeroPowers(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
+
         // Combine driveArcade and turn for blended motion.
         double left = Range.clip(y_value - x_value, -1.0, 1.0);
         double right = Range.clip(y_value + x_value, -1.0, 1.0);
@@ -601,4 +613,9 @@ public class Drivetrain extends Mechanism {
         rightFront.setPower(0);
     }
 
+    private void setDriveZeroPowers(DcMotor.ZeroPowerBehavior behavior) {
+        rightFront.setZeroPowerBehavior(behavior);
+        leftFront.setZeroPowerBehavior(behavior);
+        slideDrive.setZeroPowerBehavior(behavior);
+    }
 }

@@ -21,9 +21,9 @@ import static java.lang.Math.abs;
  * A:
  * B:
  * Left bumper:     Decelerates robot
- * Right bumper:    Accelerates robot
- * Left trigger:    Decelerates slide
- * Right trigger:   Accelerates slide
+ * Right bumper:
+ * Left trigger:
+ * Right trigger:
  * DPAD_UP:
  * DPAD_DOWN:
  * DPAD_LEFT:
@@ -52,12 +52,11 @@ import static java.lang.Math.abs;
  * BACK:
  *
  */
-@TeleOp(name = "Teleop: Slide", group = "Teleop")
-public class TeleopSlide extends OpMode {
+@TeleOp(name = "Teleop: Main Slide", group = "Teleop")
+public class TeleopSlideMain extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.2;
     private static final double SLOW_MULTIPLIER = 0.2;
-    private static final double FAST_MULTIPLIER = 2.0;
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -68,7 +67,7 @@ public class TeleopSlide extends OpMode {
     /* Holds gamepad joystick's values */
     double yInput, xInput, slideInput;
     /* Applies slow or fast mode */
-    double slowYInput, slowXInput, fastYInput, fastXInput, slowSlide, fastSlide;
+    double slowYInput, slowXInput, slowSlide;
 
     @Override
     public void init() {
@@ -117,25 +116,16 @@ public class TeleopSlide extends OpMode {
         slowXInput = Range.clip(xInput * SLOW_MULTIPLIER, -1.0, 1.0);
         slowSlide = Range.clip(slideInput * SLOW_MULTIPLIER, -1.0, 1.0);
 
-        fastYInput = Range.clip(yInput * FAST_MULTIPLIER, -1.0, 1.0);
-        fastXInput = Range.clip(xInput * FAST_MULTIPLIER, -1.0, 1.0);
-        fastSlide = Range.clip(slideInput * FAST_MULTIPLIER, -1.0, 1.0);
-
         // Threshold for strafing, makes horizontal strafing easier
         if (abs(slideInput) < ANALOG_THRESHOLD) { slideInput = 0; }
 
         if (gamepad1.left_bumper) {
-            robot.drivetrain.driveSlide(slowYInput, slowXInput, slowSlide);
+            robot.drivetrain.driveSlide(slowYInput, slowXInput, slowSlide, gamepad1.right_bumper);
             telemetry.addData("Status", "slowYInput: " + slowYInput);
             telemetry.addData("Status", "slowXInput: " + slowXInput);
             telemetry.addData("Status", "slowSlide: " + slowSlide);
-        } else if (gamepad1.right_bumper) {
-            robot.drivetrain.driveSlide(fastYInput, fastXInput, fastSlide);
-            telemetry.addData("Status", "fastYInput: " + fastYInput);
-            telemetry.addData("Status", "fastXInput: " + fastXInput);
-            telemetry.addData("Status", "fastSlide: " + fastSlide);
         } else {
-            robot.drivetrain.driveSlide(yInput, xInput, slideInput);
+            robot.drivetrain.driveSlide(yInput, xInput, slideInput, gamepad1.right_bumper);
             telemetry.addData("Status", "yInput: " + yInput);
             telemetry.addData("Status", "xInput: " + xInput);
             telemetry.addData("Status", "slideInput: " + slideInput);
