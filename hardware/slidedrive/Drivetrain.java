@@ -43,7 +43,7 @@ public class Drivetrain extends Mechanism {
     double left, right, max;
 
     Orientation lastAngles = new Orientation();
-    double globalAngle, power = .35;
+    double globalAngle, power = .30;
     PIDController pidRotate, pidDrive;
     SingleIMU singleImu= new SingleIMU();
 
@@ -93,11 +93,11 @@ public class Drivetrain extends Mechanism {
         singleImu.init(imu, AxesOrder.ZYX,0D);
 
         // Set PID proportional value to start reducing power at about 50 degrees of rotation.
-        pidRotate = new PIDController(.005, 0, 0);
+        pidRotate = new PIDController(.005, .005, .005);
 
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
-        pidDrive = new PIDController(.05, 0, 0);
+        pidDrive = new PIDController(.05, .5, .5);
 
         // Set up parameters for driving in a straight line.
         pidDrive.setSetpoint(0);
@@ -123,7 +123,6 @@ public class Drivetrain extends Mechanism {
     double scaleInput(double joystickValue) {
         double[] scaleArray = {0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
                 0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00};
-
         int index = (int)(joystickValue * 16.0);
 
         if (index < 0) index = -index;
@@ -200,69 +199,6 @@ public class Drivetrain extends Mechanism {
         strafe((double)scaleInput(slide));
     }
 
-    public void driveToPosNoPID(double speed, double leftInches, double rightInches, double timeoutS) {
-
-        // Target position variables
-        int newLeftTarget;
-        int newRightTarget;
-
-        // Current heading angle of robot
-        double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-
-        // Determine new target position, and pass to motor controller
-        newLeftTarget = leftFront.getCurrentPosition() + (int) (leftInches * Constants.TICKS_PER_INCH);
-        newRightTarget = rightFront.getCurrentPosition() + (int) (rightInches * Constants.TICKS_PER_INCH);
-        leftFront.setTargetPosition(newLeftTarget);
-        rightFront.setTargetPosition(newRightTarget);
-
-        // Turn On RUN_TO_POSITION
-        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // Reset the timeout time
-        ElapsedTime runtime = new ElapsedTime();
-        runtime.reset();
-
-        // Loop until a condition is met
-        while (opMode.opModeIsActive() &&
-                (runtime.seconds() < timeoutS) &&
-                leftFront.isBusy() && rightFront.isBusy()) {
-
-            // Get IMU angles
-            Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-            // Heading angle
-            double gyroAngle = angles.firstAngle;
-
-            // Adjustment factor for heading
-            double p = (gyroAngle - currentAngle) * Constants.PCONSTANT;
-
-            // Set power of drivetrain motors accounting for adjustment
-            leftFront.setPower(Math.abs(speed) + p);
-            rightFront.setPower(Math.abs(speed) - p);
-
-            // Display info for the driver.
-            opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
-            opMode.telemetry.addData("Path2", "Running at %7d :%7d",
-                    leftFront.getCurrentPosition(),
-                    rightFront.getCurrentPosition());
-            opMode.telemetry.addData("Heading: ", "%f", gyroAngle);
-            opMode.telemetry.addData("AccX: ", "%f", imu.getAcceleration().xAccel);
-            opMode.telemetry.addData("AccY: ", "%f", imu.getAcceleration().yAccel);
-            opMode.telemetry.update();
-        }
-
-        // Stop all motion
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-
-        // Turn off RUN_TO_POSITION
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
     /**
      * Drive to a relative position using encoders and an IMU.
      *
@@ -279,17 +215,13 @@ public class Drivetrain extends Mechanism {
      * @param timeoutS      amount of time before the move should stop
      */
     public void driveToPos(double speed, double leftInches, double rightInches, double timeoutS) {
-
         // Target position variables
         int newLeftTarget;
         int newRightTarget;
 
-        // Current heading angle of robot
-        double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-
         // Determine new target position, and pass to motor controller
-        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH);
-        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH);
+        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_MR);
+        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_MR);
         leftFront.setTargetPosition(newLeftTarget);
         rightFront.setTargetPosition(newRightTarget);
 
@@ -306,17 +238,8 @@ public class Drivetrain extends Mechanism {
                 (runtime.seconds() < timeoutS) &&
                 leftFront.isBusy() && rightFront.isBusy()) {
 
-            // Get IMU angles
-            Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-            // Heading angle
-            double gyroAngle = angles.firstAngle;
-
-            // Adjustment factor for heading
-            double p = (gyroAngle - currentAngle) * Constants.PCONSTANT;
-
             // Set power of drivetrain motors accounting for adjustment
-            driveStraightPID(speed, p);
+            driveStraightPID(speed);
 
 
             // Display info for the driver.
@@ -326,7 +249,6 @@ public class Drivetrain extends Mechanism {
             leftFront.getCurrentPosition(),
             rightFront.getCurrentPosition());
 
-            opMode.telemetry.addData("Heading: ", "%f", gyroAngle);
             opMode.telemetry.addData("AccX: ", "%f", imu.getAcceleration().xAccel);
             opMode.telemetry.addData("AccY: ", "%f", imu.getAcceleration().yAccel);
             opMode.telemetry.update();
@@ -346,9 +268,8 @@ public class Drivetrain extends Mechanism {
     /**
      * Drive accurately using a PID loop.
      * @param speed         speed at which the motor shall turn
-     * @param correction         a placeholder value for PID output in case correction isnt given a new value
      */
-    public void driveStraightPID(double speed, double correction) {
+    public void driveStraightPID(double speed) {
         double corrections = pidDrive.performPID(getAngle());
 
         leftFront.setPower(-speed + corrections);
@@ -428,7 +349,7 @@ public class Drivetrain extends Mechanism {
         double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         // Determine new target position, and pass to motor controller
-        newTarget = slideDrive.getCurrentPosition() + (int) (inches * Constants.TICKS_PER_INCH);
+        newTarget = slideDrive.getCurrentPosition() + (int) (inches * Constants.TICKS_PER_INCH_MR);
         slideDrive.setTargetPosition(newTarget);
 
         // Turn On RUN_TO_POSITION
@@ -480,8 +401,8 @@ public class Drivetrain extends Mechanism {
 
     public double[] getPositions() {
         double[] positions = new double[4];
-        positions[0] = leftFront.getCurrentPosition() / Constants.TICKS_PER_INCH;
-        positions[1] = rightFront.getCurrentPosition() / Constants.TICKS_PER_INCH;
+        positions[0] = leftFront.getCurrentPosition() / Constants.TICKS_PER_INCH_MR;
+        positions[1] = rightFront.getCurrentPosition() / Constants.TICKS_PER_INCH_MR;
 
         return positions;
     }
@@ -561,15 +482,18 @@ public class Drivetrain extends Mechanism {
 
         if (degrees < 0) { // On right turn we have to get off zero first.
             while (opMode.opModeIsActive() && getAngle() == 0) {
-                drive(-power,power);
+                leftFront.setPower(-power);
+                rightFront.setPower(power);
                 opMode.sleep(100);
             } do {
                 power = pidRotate.performPID(getAngle()); // power will be - on right turn.
-                drive(power,-power);
+                leftFront.setPower(power);
+                rightFront.setPower(-power);
             } while (opMode.opModeIsActive() && !pidRotate.onTarget());
         } else do { // left turn.
             power = pidRotate.performPID(getAngle()); // power will be + on left turn.
-            drive(power,-power);
+            leftFront.setPower(power);
+            rightFront.setPower(-power);
         } while (opMode.opModeIsActive() && !pidRotate.onTarget());
 
         leftFront.setPower(0);
@@ -582,38 +506,7 @@ public class Drivetrain extends Mechanism {
         resetAngle();
     }
 
-    public void turnNoPID(double speed, double angle, double timeoutS) {
-        // Get IMU angles
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        // Calculate angle to turn
-        double angleToTurn = angle - angles.firstAngle;
-
-        // Reset the timeout time
-        ElapsedTime runtime = new ElapsedTime();
-        runtime.reset();
-
-        // Loop until a condition is met
-        while (opMode.opModeIsActive() && Math.abs(angleToTurn) > 0.5 && runtime.seconds() < timeoutS) {
-
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            angleToTurn = angle - angles.firstAngle;
-
-            // Set motor power according to calculated angle to turn
-            leftFront.setPower(-Math.signum(angleToTurn) * speed);
-            rightFront.setPower(Math.signum(angleToTurn) * speed);
-
-            // Display heading for the driver
-            opMode.telemetry.addData("Heading: ", "%f", angleToTurn);
-            opMode.telemetry.update();
-        }
-
-        // Stop motor movement
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-    }
-
-    private void setDriveZeroPowers(DcMotor.ZeroPowerBehavior behavior) {
+    public void setDriveZeroPowers(DcMotor.ZeroPowerBehavior behavior) {
         rightFront.setZeroPowerBehavior(behavior);
         leftFront.setZeroPowerBehavior(behavior);
         slideDrive.setZeroPowerBehavior(behavior);

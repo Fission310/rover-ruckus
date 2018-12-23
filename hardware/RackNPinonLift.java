@@ -45,8 +45,8 @@ public class RackNPinonLift extends Mechanism {
         // Retrieve servos from hardware map and assign to instance vars
 
         // Retrieve motor from hardware map and assign to instance vars
-        leftRackMotor = hwMap.dcMotor.get(RCConfig.RACKANDPINION);
-        rightRackMotor = hwMap.dcMotor.get(RCConfig.RACKANDPINION);
+        leftRackMotor = hwMap.dcMotor.get(RCConfig.LEFT_HANGER);
+        rightRackMotor = hwMap.dcMotor.get(RCConfig.RIGHT_HANGER);
 
         // Set braking behavior
         leftRackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

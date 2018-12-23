@@ -5,8 +5,8 @@ package org.firstinspires.ftc.teamcode;
  */
 public class FieldConstants {
     public static final double FIELD_LENGTH = 144 ; // Length in inches
-    public static final double FLOOR_TILE = 24; // Length in inches
-    public static final double TILE_HYPOTENUSE = 24 * Math.sqrt(24); // Length in inches
+    public static final double FLOOR_TILE = 23.5; // Length in inches *Almost 24 inches
+    public static final double TILE_HYPOTENUSE = 23.5 * Math.sqrt(2); // Length in inches
     public static final double HANG_HEIGHT = 4; // Height in inches
 
     public static final double ROBOT_WIDTH = 18; // Height in inches

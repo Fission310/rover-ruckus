@@ -4,6 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.hardware.Mechanism;
+import org.firstinspires.ftc.teamcode.hardware.RCConfig;
+
 /**
  * Arm is the class that is used to define all of the hardware for a robot's arm.
  * Arm must be instantiated, then initialized using <code>init()</code> before being used.

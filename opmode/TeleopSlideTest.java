@@ -77,16 +77,18 @@ public class TeleopSlideTest extends OpMode {
 
     /**
      * Runs continuously while OpMode is waiting to start.
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init_loop()
+     * @see OpMode#init_loop()
      */
     @Override
     public void init_loop() {
 //        robot.waitForStart();
+        telemetry.addData("Status:", "Waiting to start");
+        telemetry.update();
     }
 
     /**
      * Runs once when the OpMode starts. Starts the OpMode's runtime counter.
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
+     * @see OpMode#loop()
      */
     @Override
     public void start() {
@@ -99,15 +101,13 @@ public class TeleopSlideTest extends OpMode {
     /**
      * Runs continuously while the OpMode is active. Defines the driver-controlled actions
      * according to gamepad input.
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
+     * @see OpMode#loop()
      */
     @Override
     public void loop() {
         // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
-        leftTrigger = gamepad1.left_trigger > .9 ? 1 : .5 * gamepad1.left_trigger;
-        rightTrigger = gamepad1.right_trigger > .9 ? 1 : .5 * gamepad1.right_trigger;
 
         /**
          * Gamepad1
@@ -115,7 +115,7 @@ public class TeleopSlideTest extends OpMode {
         // clip the input values so that the values never exceed +/- 1
         yInput = -Range.clip(gamepad1.left_stick_y, -1.0, 1.0);
         xInput = Range.clip(gamepad1.right_stick_x, -1.0, 1.0);
-        slideInput = Range.clip(gamepad1.left_stick_x, -1.0, 1.0);
+        slideInput = -Range.clip(gamepad1.left_stick_x, -1.0, 1.0);
 
         slowYInput = Range.clip(yInput * SLOW_MULTIPLIER, -1.0, 1.0);
         slowXInput = Range.clip(xInput * SLOW_MULTIPLIER, -1.0, 1.0);
@@ -135,6 +135,9 @@ public class TeleopSlideTest extends OpMode {
             telemetry.addData("Status", "xInput: " + xInput);
             telemetry.addData("Status", "slideInput: " + slideInput);
         }
+
+        leftTrigger = gamepad1.left_trigger > .9 ? 1 : .5 * gamepad1.left_trigger;
+        rightTrigger = gamepad1.right_trigger > .9 ? 1 : .5 * gamepad1.right_trigger;
 
         /**
          * Gamepad2

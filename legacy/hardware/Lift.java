@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware;
+package org.firstinspires.ftc.teamcode.legacy.hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -45,8 +45,8 @@ public class Lift extends Mechanism {
         // Retrieve servos from hardware map and assign to instance vars
 
         // Retrieve motor from hardware map and assign to instance vars
-        leftLift = hwMap.dcMotor.get(RCConfig.LEFT_LIFT);
-        rightLift = hwMap.dcMotor.get(RCConfig.RIGHT_LIFT);
+        leftLift = hwMap.dcMotor.get(RCConfig.LEFT_HANGER);
+        rightLift = hwMap.dcMotor.get(RCConfig.RIGHT_HANGER);
 
         // Set braking behavior
         leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

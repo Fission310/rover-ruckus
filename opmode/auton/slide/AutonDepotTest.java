@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 import org.firstinspires.ftc.teamcode.util.SoundManager;
 
 @Autonomous(name="Depot: Drop + Sample + Marker Test", group="Slide Depot")
+@Disabled
 public class AutonDepotTest extends LinearOpMode {
 
     /* Private OpMode members */

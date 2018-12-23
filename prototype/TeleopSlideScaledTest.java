@@ -79,7 +79,7 @@ public class TeleopSlideScaledTest extends OpMode {
 
     /**
      * Runs continuously while OpMode is waiting to start.
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init_loop()
+     * @see OpMode#init_loop()
      */
     @Override
     public void init_loop() {
@@ -88,7 +88,7 @@ public class TeleopSlideScaledTest extends OpMode {
 
     /**
      * Runs once when the OpMode starts. Starts the OpMode's runtime counter.
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
+     * @see OpMode#loop()
      */
     @Override
     public void start() {
@@ -101,7 +101,7 @@ public class TeleopSlideScaledTest extends OpMode {
     /**
      * Runs continuously while the OpMode is active. Defines the driver-controlled actions
      * according to gamepad input.
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
+     * @see OpMode#loop()
      */
     @Override
     public void loop() {

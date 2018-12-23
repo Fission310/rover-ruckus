@@ -1,19 +1,11 @@
 package org.firstinspires.ftc.teamcode.hardware.slidedrive;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.sun.tools.javac.code.Attribute;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
-import org.firstinspires.ftc.teamcode.hardware.Acquirer;
-import org.firstinspires.ftc.teamcode.hardware.Arm;
-import org.firstinspires.ftc.teamcode.hardware.Constants;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
-import org.firstinspires.ftc.teamcode.hardware.RackNPinonLift;
-import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
-import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 
 /**
@@ -35,10 +27,6 @@ public class HardwareSlide extends Mechanism {
      */
 //    public Acquirer acquirer;
     /**
-     * Instance variable containing robot's linear slides acquirer.
-     */
-//    public Lift lift;
-    /**
      * Instance variable containing robot's rack and pinion lift.
      */
 //    public RackNPinonLift rack;
@@ -55,7 +43,6 @@ public class HardwareSlide extends Mechanism {
     public HardwareSlide(){
         drivetrain = new Drivetrain();
 //        acquirer = new Acquirer();
-//        lift = new Lift();
 //        rack = new RackNPinionLift();
 //        servoArm = new Arm();
     }
@@ -69,7 +56,6 @@ public class HardwareSlide extends Mechanism {
         this.opMode = opMode;
         drivetrain = new Drivetrain(opMode);
 //        acquirer = new Acquirer(opMode);
-//        lift = new Lift(opMode);
 //        rack = new RackNPinionLift(opMode);
 //        servoArm = new Arm(opMode);
     }
@@ -81,7 +67,6 @@ public class HardwareSlide extends Mechanism {
     public void init(HardwareMap hwMap) {
         drivetrain.init(hwMap);
 //        acquirer.init(hwMap);
-//        lift.init(hwMap);
 //        rack.init(hwMap);
 //        servoArm.init(hwMap);
     }
@@ -96,12 +81,22 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
+    /**
+     * Autonomous action for landing the robot using the rack and pinion mechanism.
+     */
     public void land() {
         if (opMode.opModeIsActive()) {
-
+//            rack.setRackPower();
         }
     }
 
+    /**
+     * Autonomous action for finding the location of the gold cube.
+     * This assumes the vision sensor faces the slide of the robot.
+     *
+     *  @param visionManager    VisionManager containing the GoldDetector
+     *  @param location    location holds the TFLocation detected
+     */
     public void findGoldLocation(TensorFlowManager visionManager, TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
             drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
@@ -120,7 +115,7 @@ public class HardwareSlide extends Mechanism {
                 drivetrain.turnPID(90);
 
             } else if (location == TensorFlowManager.TFLocation.NONE){
-
+                opMode.telemetry.addData("Detected None", "Value" + location);
             }
         }
     }
@@ -128,9 +123,10 @@ public class HardwareSlide extends Mechanism {
     /**
      * Autonomous action for sampling the gold cube. Uses the robot's servo arm mechanism to detect gold cube
      * and in a linear slide fashion.
-     * This assumes the vision sensor faces the back of the robot.
+     * This assumes the vision sensor faces the slide of the robot.
      *
      *  @param visionManager    VisionManager containing the GoldDetector
+     *  @param location    location holds the TFLocation detected
      */
     public void samplePID(TensorFlowManager visionManager, TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
@@ -146,6 +142,14 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
+    /**
+     * Autonomous action for dropping the marker. Uses the robot's distance sensor to detect the robot's
+     * position using the vuforia pictograph. Moves parallel to wall until the edge is
+     * reached.
+     *
+//     *  @param targetCol      the cryptobox column that is being targeted (left is 0, center is 1, right is 2)
+//     *  @param isAllianceRed    whether or not the robot is on the Red Alliance
+     */
     public void dropMarker() {
         if (opMode.opModeIsActive()) {
 
@@ -163,18 +167,4 @@ public class HardwareSlide extends Mechanism {
 
         }
     }
-
-
-    /**
-     * Autonomous action for dropping the marker. Uses the robot's distance sensor to detect the robot's
-     * position using the vuforia pictograph. Moves parallel to wall until the edge is
-     * reached.
-     *
-     *  @param targetCol      the cryptobox column that is being targeted (left is 0, center is 1, right is 2)
-     *  @param isAllianceRed    whether or not the robot is on the Red Alliance
-     */
-
-    // Marker scorer
-
-    //
 }

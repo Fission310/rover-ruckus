@@ -7,18 +7,13 @@ public class RCConfig {
 
     // Motors
     public static final String LEFT_FRONT = "left";
-    public static final String LEFT_BACK = "left_back";
     public static final String RIGHT_FRONT = "right";
-    public static final String RIGHT_BACK = "right_back";
     public static final String SLIDE_DRIVE = "slide";
-    public static final String RIGHT_LIFT = "left_lift";
-    public static final String LEFT_LIFT = "right_lift";
-    public static final String ROTATE_LIFT = "rotate_lift";
-    public static final String WINCH = "winch";
-    public static final String LEFTHANGER = "left_hanger";
-    public static final String RIGHTHANGER = "right_hanger";
-    public static final String RACKANDPINION = "rack_pinion";
-    public static final String LINEARSLIDES = "linear_slides";
+    public static final String LEFT_HANGER = "left_hanger";
+    public static final String RIGHT_HANGER = "right_hanger";
+    public static final String LINEAR_SLIDES = "linear_slides";
+    public static final String BACK_ROT = "back_rot";
+    public static final String FRONT_ROT = "front_rot";
 
     // Servos
     public static final String ARM = "arm";
@@ -37,4 +32,13 @@ public class RCConfig {
     public static final String LIMIT_SWITCH = "limit_switch";
     public static final String COLOR_SENSOR = "color_sensor";
     public static final String TOUCH_SENSOR = "touch_sensor";
+    public static final String DISTANCE_SENSOR_1 = "distance_sensor_1";
+    public static final String DISTANCE_SENSOR_2 = "distance_sensor_2";
+    public static final String DISTANCE_SENSOR_3 = "distance_sensor_3";
+
+    //Legacy
+    public static final String LEFT_BACK = "left_back";
+    public static final String RIGHT_BACK = "right_back";
+    public static final String ROTATE_LIFT = "rotate_lift";
+    public static final String WINCH = "winch";
 }

@@ -47,8 +47,8 @@ public class Hanger extends Mechanism {
         // Retrieve servos from hardware map and assign to inst?ance vars
 
         // Retrieve motor from hardware map and assign to instance vars
-        leftHanger = hwMap.dcMotor.get(RCConfig.LEFTHANGER);
-        rightHanger = hwMap.dcMotor.get(RCConfig.RIGHTHANGER);
+        leftHanger = hwMap.dcMotor.get(RCConfig.LEFT_HANGER);
+        rightHanger = hwMap.dcMotor.get(RCConfig.RIGHT_HANGER);
         winch = hwMap.dcMotor.get(RCConfig.WINCH);
 
         // Set braking behavior

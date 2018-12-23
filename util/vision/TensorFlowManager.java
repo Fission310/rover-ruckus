@@ -45,7 +45,6 @@ public class TensorFlowManager {
      */
     public void init(HardwareMap hwMap) {
         this.initVuforia();
-
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) this.initTfod(hwMap);
     }
 
@@ -201,6 +200,6 @@ public class TensorFlowManager {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
-        tfodParameters.minimumConfidence = .62;
+        tfodParameters.minimumConfidence = .55;
     }
 }

@@ -26,6 +26,8 @@ public class AutonDepot extends LinearOpMode {
     /* Holds gold cube location*/
     private TensorFlowManager.TFLocation location;
 
+    private int step = 1;
+
     /**
      * Runs the autonomous routine.
      */
@@ -38,10 +40,14 @@ public class AutonDepot extends LinearOpMode {
         // Initialize CV
         visionManager.init(hardwareMap);
         visionManager.start();
-        telemetry.addData("TF location", visionManager.getLocation());
+        telemetry.addData("Gold Cube location before start", location);
 
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
+            if (location == location.NONE) {
+                location = visionManager.getLocation();
+            }
+            telemetry.addData("Location", "gold cube location:" + location);
             telemetry.addData("Status", "Waiting in Init");
             telemetry.update();
         }
@@ -49,41 +55,67 @@ public class AutonDepot extends LinearOpMode {
         waitForStart();
         runtime.reset();  // Start counting run time from now.
 
-        /**
-         * Land and wait for the robot to fully drop and stabilize.
-         */
-//        robot.land();
+        switch (step){
+            /**
+             * Land and wait for the robot to fully drop and stabilize.
+             */
+            case 0:
+                //        robot.land();
+                step = 2;
+                if (location == location.NONE) step++;
+                break;
 
-        /**
-         * Figure out where the gold cube is and drive towards it.
-         */
-        location = visionManager.getLocation();
-//        while (location == TensorFlowManager.TFLocation.NONE){
-//            robot.drivetrain.driveToPos(.3,2,2,2);
-//            location = visionManager.getLocation();
-//        }
-//        robot.findGoldLocation();
+            /**
+             * Figure out where the gold cube is.
+             */
+            case 1:
+                location = (location != location.NONE) ? location : visionManager.getLocation();
+                telemetry.addData("Gold Cube location after start", location);
+//                while (location == TensorFlowManager.TFLocation.NONE){
+//                    robot.drivetrain.driveToPos(.3,2,2,2);
+//                    location = visionManager.getLocation();
+//                }
+                robot.findGoldLocation(visionManager, location);
+                step++;
+                break;
 
-        /**
-         * Align the robot to the gold cube to push it in to the depot
-         */
-//        robot.samplePID()
+            /**
+             * Align the robot to the gold cube to push it in to the depot
+             */
+            case 2:
+                robot.samplePID(visionManager, location);
+                step++;
+                break;
 
-        /**
-         * Drop the marker
-         */
+            /**
+             * Drop the marker
+             */
+            case 3:
 //        robot.dropMarker()
+                step++;
+                break;
 
-        /**
-         * Align to wall
-         */
+            /**
+             * Align to wall
+             */
+            case 4:
 //        robot.alignToWall()
+                step++;
+                break;
 
-        /**
-         * Extend arm and drive up to the crater
-         */
+            /**
+             * Extend arm and drive up to the crater
+             */
+            case 5:
 //        robot.driveToCrater()
+                step++;
+                break;
 
+            default: {
+                robot.drivetrain.drive(0, 0);
+            }
+            break;
+        }
 
         // Stop CV
         if (isStopRequested() || !opModeIsActive()) { visionManager.stop(); }

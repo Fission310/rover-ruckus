@@ -20,6 +20,9 @@ public class AutonTFTest extends LinearOpMode {
     /* Vision Manager*/
     private TensorFlowManager visionManager = new TensorFlowManager();
 
+    /* Holds gold cube location*/
+    private TensorFlowManager.TFLocation location;
+
     /**
      * Runs the autonomous routine.
      */
@@ -27,10 +30,12 @@ public class AutonTFTest extends LinearOpMode {
     public void runOpMode() {
         // Initialize CV
         visionManager.init(hardwareMap);
+        visionManager.start();
 
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
-            visionManager.start();
+            location = visionManager.getLocation();
+            telemetry.addData("Gold Cube location before start", location);
             telemetry.addData("Status", "Waiting in Init");
             telemetry.update();
         }
@@ -38,12 +43,11 @@ public class AutonTFTest extends LinearOpMode {
         waitForStart();
         runtime.reset();  // Start counting run time from now.
 
-        telemetry.addData("TF location", visionManager.getLocation());
-
-
         /**
-         * Land and wait for the robot to fully drop and stabilize.
+         * Figure out where the gold cube is and drive towards it.
          */
+        location = visionManager.getLocation();
+        telemetry.addData("Gold Cube location after start", location);
         sleep(30000);
 
 
