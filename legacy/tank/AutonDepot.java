@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auton.tank;
+package org.firstinspires.ftc.teamcode.legacy.tank;
 
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;

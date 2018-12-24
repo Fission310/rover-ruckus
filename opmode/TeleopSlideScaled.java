@@ -56,7 +56,7 @@ import static java.lang.Math.abs;
 public class TeleopSlideScaled extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.0;
-    private static final double SLOW_MULTIPLIER = 0.2;
+    private static final double SLOW_MULTIPLIER = 0.35;
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();

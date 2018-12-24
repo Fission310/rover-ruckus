@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.hardware.slidedrive;
 
+import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
-import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
+import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 
 /**
@@ -97,24 +98,24 @@ public class HardwareSlide extends Mechanism {
      *  @param visionManager    VisionManager containing the GoldDetector
      *  @param location    location holds the TFLocation detected
      */
-    public void findGoldLocation(TensorFlowManager visionManager, TensorFlowManager.TFLocation location) {
+    public void findGoldLocation(VisionManager visionManager, SamplingOrderDetector.GoldLocation location) {
         if (opMode.opModeIsActive()) {
             drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
 
-            if (location == TensorFlowManager.TFLocation.LEFT){
+            if (location == location.LEFT){
 //                drivetrain.strafeToPos(.3,-FieldConstants.TILE_HYPOTENUSE / 2, 3);
                 drivetrain.turnPID(90);
-                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
+                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 3);
                 drivetrain.turnPID(-90);
-            } else if (location == TensorFlowManager.TFLocation.CENTER){
+            } else if (location == location.CENTER){
 
-            } else if (location == TensorFlowManager.TFLocation.RIGHT){
+            } else if (location == location.RIGHT){
 //                drivetrain.strafeToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, 3);
                 drivetrain.turnPID(-90);
-                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
+                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 3);
                 drivetrain.turnPID(90);
 
-            } else if (location == TensorFlowManager.TFLocation.NONE){
+            } else if (location == location.UNKNOWN){
                 opMode.telemetry.addData("Detected None", "Value" + location);
             }
         }
@@ -128,15 +129,15 @@ public class HardwareSlide extends Mechanism {
      *  @param visionManager    VisionManager containing the GoldDetector
      *  @param location    location holds the TFLocation detected
      */
-    public void samplePID(TensorFlowManager visionManager, TensorFlowManager.TFLocation location) {
+    public void samplePID(VisionManager visionManager, SamplingOrderDetector.GoldLocation location) {
         if (opMode.opModeIsActive()) {
             drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
-            if (location == TensorFlowManager.TFLocation.LEFT){
+            if (location == location.LEFT){
                 drivetrain.turnPID(-45);
                 drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
-            } else if (location == TensorFlowManager.TFLocation.CENTER){
+            } else if (location == location.CENTER || location == location.UNKNOWN){
 
-            } else if (location == TensorFlowManager.TFLocation.RIGHT){
+            } else if (location == location.RIGHT){
 
             }
         }

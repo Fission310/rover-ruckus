@@ -10,18 +10,16 @@ import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 import org.firstinspires.ftc.teamcode.util.SoundManager;
+import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
-@Autonomous(name="Auton TF Test", group="TEST")
+@Autonomous(name="Auton CV Test", group="TEST")
 public class AutonTFTest extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
 
     /* Vision Manager*/
-    private TensorFlowManager visionManager = new TensorFlowManager();
-
-    /* Holds gold cube location*/
-    private TensorFlowManager.TFLocation location;
+    private VisionManager visionManager = new VisionManager();
 
     /**
      * Runs the autonomous routine.
@@ -29,13 +27,10 @@ public class AutonTFTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize CV
-        visionManager.init(hardwareMap);
-        visionManager.start();
+        visionManager.samplingInit(hardwareMap);
 
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
-            location = visionManager.getLocation();
-            telemetry.addData("Gold Cube location before start", location);
             telemetry.addData("Status", "Waiting in Init");
             telemetry.update();
         }
@@ -46,12 +41,15 @@ public class AutonTFTest extends LinearOpMode {
         /**
          * Figure out where the gold cube is and drive towards it.
          */
-        location = visionManager.getLocation();
-        telemetry.addData("Gold Cube location after start", location);
-        sleep(30000);
+        telemetry.addData("Detector", "" + visionManager.getGoldLocation());
+//        location = visionManager.getLocation();
+//        telemetry.addData("Gold Cube location after start", location);
+        telemetry.update();
+
+//        sleep(30000);
 
 
         // Stop CV
-        if (isStopRequested() || !opModeIsActive()) { visionManager.stop(); }
+        if (isStopRequested() || !opModeIsActive()) { visionManager.samplingStop(); }
     }
 }

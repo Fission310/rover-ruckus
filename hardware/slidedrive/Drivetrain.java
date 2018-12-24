@@ -93,11 +93,11 @@ public class Drivetrain extends Mechanism {
         singleImu.init(imu, AxesOrder.ZYX,0D);
 
         // Set PID proportional value to start reducing power at about 50 degrees of rotation.
-        pidRotate = new PIDController(.005, .005, .005);
+        pidRotate = new PIDController(.006, 0, 0);
 
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
-        pidDrive = new PIDController(.05, .5, .5);
+        pidDrive = new PIDController(.05, 0, 0);
 
         // Set up parameters for driving in a straight line.
         pidDrive.setSetpoint(0);
@@ -270,10 +270,16 @@ public class Drivetrain extends Mechanism {
      * @param speed         speed at which the motor shall turn
      */
     public void driveStraightPID(double speed) {
+        // Set up parameters for driving in a straight line.
+        pidDrive.setSetpoint(0);
+        pidDrive.setOutputRange(0, power);
+        pidDrive.setInputRange(-90, 90);
+        pidDrive.enable();
+
         double corrections = pidDrive.performPID(getAngle());
 
-        leftFront.setPower(-speed + corrections);
-        rightFront.setPower(-speed);
+        leftFront.setPower(speed + corrections);
+        rightFront.setPower(speed);
     }
 
     /**
@@ -329,6 +335,62 @@ public class Drivetrain extends Mechanism {
         leftFront.setPower(0);
         rightFront.setPower(0);
         slideDrive.setPower(0);
+    }
+
+    /**
+     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
+     *
+     * Starts pid controller. PID controller will monitor the turn angle with respect to the
+     * target angle and reduce power as we approach the target angle with a minimum of 20%.
+     * This is to prevent the robots momentum from overshooting the turn after we turn off the
+     * power. The PID controller reports onTarget() = true when the difference between turn
+     * angle and target angle is within 2% of target (tolerance). This helps prevent overshoot.
+     * The minimum power is determined by testing and must enough to prevent motor stall and
+     * complete the turn. Note: if the gap between the starting power and the stall (minimum)
+     * power is small, overshoot may still occur. Overshoot is dependant on the motor and
+     * gearing configuration, starting power, weight of the robot and the on target tolerance.
+     *
+     * @param degrees Degrees to turn, + is left - is right
+     */
+    private void rotate(int degrees, double power) {
+        resetAngle();
+
+        pidRotate.reset();
+        pidRotate.setSetpoint(degrees);
+        pidRotate.setInputRange(0, 90);
+        pidRotate.setOutputRange(.20, power);
+        pidRotate.setTolerance(2);
+        pidRotate.enable();
+
+        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+        // clockwise (right).
+
+        // rotate until turn is completed.
+
+        if (degrees < 0) { // On right turn we have to get off zero first.
+            while (opMode.opModeIsActive() && getAngle() == 0) {
+                leftFront.setPower(-power);
+                rightFront.setPower(power);
+                opMode.sleep(100);
+            } do {
+                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
+                leftFront.setPower(power);
+                rightFront.setPower(-power);
+            } while (opMode.opModeIsActive() && !pidRotate.onTarget());
+        } else do { // left turn.
+            power = pidRotate.performPID(getAngle()); // power will be + on left turn.
+            leftFront.setPower(power);
+            rightFront.setPower(-power);
+        } while (opMode.opModeIsActive() && !pidRotate.onTarget());
+
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+
+        // wait for rotation to stop.
+        opMode.sleep(500);
+
+        // reset angle tracking on new heading.
+        resetAngle();
     }
 
     /**
@@ -450,61 +512,6 @@ public class Drivetrain extends Mechanism {
         return globalAngle;
     }
 
-    /**
-     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
-     *
-     * Starts pid controller. PID controller will monitor the turn angle with respect to the
-     * target angle and reduce power as we approach the target angle with a minimum of 20%.
-     * This is to prevent the robots momentum from overshooting the turn after we turn off the
-     * power. The PID controller reports onTarget() = true when the difference between turn
-     * angle and target angle is within 2% of target (tolerance). This helps prevent overshoot.
-     * The minimum power is determined by testing and must enough to prevent motor stall and
-     * complete the turn. Note: if the gap between the starting power and the stall (minimum)
-     * power is small, overshoot may still occur. Overshoot is dependant on the motor and
-     * gearing configuration, starting power, weight of the robot and the on target tolerance.
-     *
-     * @param degrees Degrees to turn, + is left - is right
-     */
-    private void rotate(int degrees, double power) {
-        resetAngle();
-
-        pidRotate.reset();
-        pidRotate.setSetpoint(degrees);
-        pidRotate.setInputRange(0, 90);
-        pidRotate.setOutputRange(.20, power);
-        pidRotate.setTolerance(2);
-        pidRotate.enable();
-
-        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
-        // clockwise (right).
-
-        // rotate until turn is completed.
-
-        if (degrees < 0) { // On right turn we have to get off zero first.
-            while (opMode.opModeIsActive() && getAngle() == 0) {
-                leftFront.setPower(-power);
-                rightFront.setPower(power);
-                opMode.sleep(100);
-            } do {
-                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
-                leftFront.setPower(power);
-                rightFront.setPower(-power);
-            } while (opMode.opModeIsActive() && !pidRotate.onTarget());
-        } else do { // left turn.
-            power = pidRotate.performPID(getAngle()); // power will be + on left turn.
-            leftFront.setPower(power);
-            rightFront.setPower(-power);
-        } while (opMode.opModeIsActive() && !pidRotate.onTarget());
-
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-
-        // wait for rotation to stop.
-        opMode.sleep(500);
-
-        // reset angle tracking on new heading.
-        resetAngle();
-    }
 
     public void setDriveZeroPowers(DcMotor.ZeroPowerBehavior behavior) {
         rightFront.setZeroPowerBehavior(behavior);

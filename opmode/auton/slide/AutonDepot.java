@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.auton.slide;
 
+import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -8,8 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
-import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
-import org.firstinspires.ftc.teamcode.util.SoundManager;
+import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 @Autonomous(name="Depot: Drop + Sample + Marker", group="Slide Depot")
 public class AutonDepot extends LinearOpMode {
@@ -21,12 +21,12 @@ public class AutonDepot extends LinearOpMode {
     private HardwareSlide robot = new HardwareSlide(this);
 
     /* Vision Manager*/
-    private TensorFlowManager visionManager = new TensorFlowManager();
+    private VisionManager visionManager = new VisionManager();
 
-    /* Holds gold cube location*/
-    private TensorFlowManager.TFLocation location;
+    /* Gold Location*/
+    private SamplingOrderDetector.GoldLocation goldLocation;
 
-    private int step = 1;
+    private int step = 0;
 
     /**
      * Runs the autonomous routine.
@@ -38,16 +38,16 @@ public class AutonDepot extends LinearOpMode {
         robot.drivetrain.encoderInit();
 
         // Initialize CV
-        visionManager.init(hardwareMap);
-        visionManager.start();
-        telemetry.addData("Gold Cube location before start", location);
+        visionManager.samplingInit(hardwareMap);
+        goldLocation = visionManager.getGoldLocation();
+        telemetry.addData("Gold Cube location before start", goldLocation);
 
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
-            if (location == location.NONE) {
-                location = visionManager.getLocation();
+            if (goldLocation == goldLocation.UNKNOWN) {
+                goldLocation = visionManager.getGoldLocation();
             }
-            telemetry.addData("Location", "gold cube location:" + location);
+            telemetry.addData("Location", "gold cube location:" + goldLocation);
             telemetry.addData("Status", "Waiting in Init");
             telemetry.update();
         }
@@ -60,22 +60,22 @@ public class AutonDepot extends LinearOpMode {
              * Land and wait for the robot to fully drop and stabilize.
              */
             case 0:
-                //        robot.land();
-                step = 2;
-                if (location == location.NONE) step++;
+                robot.land();
+//                if (goldLocation == goldLocation.UNKNOWN) step = 1;
+                step++;
                 break;
 
             /**
              * Figure out where the gold cube is.
              */
             case 1:
-                location = (location != location.NONE) ? location : visionManager.getLocation();
-                telemetry.addData("Gold Cube location after start", location);
-//                while (location == TensorFlowManager.TFLocation.NONE){
+                goldLocation = (goldLocation != goldLocation.UNKNOWN) ? goldLocation : visionManager.getGoldLocation();
+                telemetry.addData("Gold Cube location after start", goldLocation);
+//                while (location == goldLocation.NONE){
 //                    robot.drivetrain.driveToPos(.3,2,2,2);
-//                    location = visionManager.getLocation();
+//                    location = visionManager.getGoldLocation();
 //                }
-                robot.findGoldLocation(visionManager, location);
+                robot.findGoldLocation(visionManager, goldLocation);
                 step++;
                 break;
 
@@ -83,7 +83,7 @@ public class AutonDepot extends LinearOpMode {
              * Align the robot to the gold cube to push it in to the depot
              */
             case 2:
-                robot.samplePID(visionManager, location);
+                robot.samplePID(visionManager, goldLocation);
                 step++;
                 break;
 
@@ -118,6 +118,6 @@ public class AutonDepot extends LinearOpMode {
         }
 
         // Stop CV
-        if (isStopRequested() || !opModeIsActive()) { visionManager.stop(); }
+        if (isStopRequested() || !opModeIsActive()) { visionManager.samplingStop(); }
     }
 }

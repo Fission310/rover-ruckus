@@ -57,8 +57,8 @@ import static java.lang.Math.abs;
 @TeleOp(name = "Teleop: Main Slide", group = "Teleop")
 public class TeleopSlideMain extends OpMode {
 
-    private static final double ANALOG_THRESHOLD = 0.2;
-    private static final double SLOW_MULTIPLIER = 0.2;
+    private static final double ANALOG_THRESHOLD = 0.0;
+    private static final double SLOW_MULTIPLIER = 0.35;
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -121,9 +121,9 @@ public class TeleopSlideMain extends OpMode {
         slowSlide = Range.clip(slideInput * SLOW_MULTIPLIER, -1.0, 1.0);
 
         // Threshold for strafing, makes horizontal strafing easier
-        if (abs(slideInput) < ANALOG_THRESHOLD) {
-            slideInput = 0;
-        }
+//        if (abs(slideInput) < ANALOG_THRESHOLD) {
+//            slideInput = 0;
+//        }
 
         if (gamepad1.left_bumper) {
             robot.drivetrain.driveSlide(slowYInput, slowXInput, slowSlide, gamepad1.right_bumper);

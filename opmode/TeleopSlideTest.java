@@ -54,11 +54,11 @@ import static java.lang.Math.abs;
  *
  */
 @TeleOp(name = "Teleop: Slide Test", group = "Teleop")
-@Disabled
+//@Disabled
 public class TeleopSlideTest extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.0;
-    private static final double SLOW_MULTIPLIER = 0.2;
+    private static final double SLOW_MULTIPLIER = 0.35;
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -134,6 +134,10 @@ public class TeleopSlideTest extends OpMode {
             telemetry.addData("Status", "yInput: " + yInput);
             telemetry.addData("Status", "xInput: " + xInput);
             telemetry.addData("Status", "slideInput: " + slideInput);
+        }
+
+        while(gamepad1.a) {
+            robot.drivetrain.driveStraightPID(0.35);
         }
 
         leftTrigger = gamepad1.left_trigger > .9 ? 1 : .5 * gamepad1.left_trigger;

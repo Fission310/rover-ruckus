@@ -1,5 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmode.auton.slide;
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.path.Path;
+import com.acmerobotics.roadrunner.path.PathBuilder;
+import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
+import com.acmerobotics.roadrunner.profile.MotionProfile;
+import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
+import com.acmerobotics.roadrunner.profile.MotionState;
+import com.acmerobotics.roadrunner.trajectory.PathTrajectorySegment;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -9,10 +19,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
-import org.firstinspires.ftc.teamcode.util.SoundManager;
 
-@Autonomous(name="Depot: Drop + Sample + Marker Test", group="Slide Depot")
-@Disabled
+import java.util.ArrayList;
+import java.util.List;
+
+@Autonomous(name="Depot: Test", group="Slide Depot")
 public class AutonDepotTest extends LinearOpMode {
 
     /* Private OpMode members */
@@ -21,8 +32,13 @@ public class AutonDepotTest extends LinearOpMode {
     /* Robot hardware */
     private HardwareSlide robot = new HardwareSlide(this);
 
-    /* Vision Manager*/
-    private TensorFlowManager visionManager = new TensorFlowManager();
+//    public void followPath (Path path) {
+//        trajectory = new Trajectory(path);
+//    }
+//
+//    public boolean isFollowingPath () {
+//        return !trajectory.isComplete() && currentMode == Mode.FOLLOWING_PATH;
+//    }
 
     /**
      * Runs the autonomous routine.
@@ -33,10 +49,7 @@ public class AutonDepotTest extends LinearOpMode {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
 
-        // Initialize CV
-        visionManager.init(hardwareMap);
-        visionManager.start();
-        telemetry.addData("TF location", visionManager.getLocation());
+        List<Path> paths = new ArrayList<>();
 
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
@@ -47,14 +60,24 @@ public class AutonDepotTest extends LinearOpMode {
         waitForStart();
         runtime.reset();  // Start counting run time from now.
 
-        /**
-         * Land and wait for the robot to fully drop and stabilize.
-         */
-//        robot.land();
-        sleep(30000);
+        paths.add(new PathBuilder(new Pose2d(0,0,0))
+                .splineTo(new Pose2d(50, 24, 0), new ConstantInterpolator(0))
+                .splineTo(new Pose2d(90, 36, Math.PI/2), new ConstantInterpolator(0))
+                .splineTo(new Pose2d(50, 72, Math.PI), new ConstantInterpolator(0))
+                .splineTo(new Pose2d(36, 36, -Math.PI/2), new ConstantInterpolator(0))
+                .splineTo(new Pose2d(12, 36, Math.PI/2), new ConstantInterpolator(0))
+                .splineTo(new Pose2d(12, 90, Math.PI/2), new ConstantInterpolator(0))
+                .build());
 
+//        for (Path path: paths) {
+//            robot.drive.followPath(path);
+//            while (robot.drive.isFollowingPath()) {
+//                if (isStopRequested()) {
+//                    robot.drive.stop();
+//                    return;
+//                }
+//            }
+//        }
 
-        // Stop CV
-        if (isStopRequested() || !opModeIsActive()) { visionManager.stop(); }
     }
 }
