@@ -21,6 +21,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.vuforia.CameraDevice;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -202,6 +204,10 @@ public class VisionManager {
         vuforia.enableDogeCV();
         vuforia.showDebug();
         vuforia.start();
+    }
+
+    public void vuforiaLights(boolean turn) {
+        CameraDevice.getInstance().setFlashTorchMode(turn);
     }
 
     public void vuforiaStop() {

@@ -42,10 +42,10 @@ public class Drivetrain extends Mechanism {
 
     double left, right, max;
 
-    Orientation lastAngles = new Orientation();
-    double globalAngle, power = .30;
-    PIDController pidRotate, pidDrive;
-    SingleIMU singleImu= new SingleIMU();
+    public PIDController pidRotate, pidDrive;
+    public SingleIMU singleImu= new SingleIMU();
+
+    private double power = .30;
 
     /**
      * Default constructor for Drivetrain.
@@ -98,12 +98,6 @@ public class Drivetrain extends Mechanism {
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
         pidDrive = new PIDController(.05, 0, 0);
-
-        // Set up parameters for driving in a straight line.
-        pidDrive.setSetpoint(0);
-        pidDrive.setOutputRange(0, power);
-        pidDrive.setInputRange(-90, 90);
-        pidDrive.enable();
     }
 
     /**
@@ -120,6 +114,24 @@ public class Drivetrain extends Mechanism {
         slideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    /**
+     * Sets motors zero power behavior. Indicate whether the drivetrain should be in float or brake mode.
+     * Float mode allows for free rotations after the initial drive.
+     * Brake mode prevents extra rotations after the initial drive.
+     * @param behavior FLOAT, BRAKE
+     */
+    public void setDriveZeroPowers(DcMotor.ZeroPowerBehavior behavior) {
+        rightFront.setZeroPowerBehavior(behavior);
+        leftFront.setZeroPowerBehavior(behavior);
+        slideDrive.setZeroPowerBehavior(behavior);
+    }
+
+    /**
+     * Scales input from the joystick of the gamepad. This allows for easier control from a range of
+     * -1 to 1.
+     * @param joystickValue This should be the respected joystick from the gamepad
+     * @return scaled value=
+     */
     double scaleInput(double joystickValue) {
         double[] scaleArray = {0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
                 0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00};
@@ -135,6 +147,7 @@ public class Drivetrain extends Mechanism {
 
         return joystickScale;
     }
+
     /**
      * Set drivetrain motor power based on input.
      *
@@ -241,7 +254,6 @@ public class Drivetrain extends Mechanism {
             // Set power of drivetrain motors accounting for adjustment
             driveStraightPID(speed);
 
-
             // Display info for the driver.
             opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
             opMode.telemetry.addData("Path2", "Running at %7d :%7d",
@@ -260,7 +272,7 @@ public class Drivetrain extends Mechanism {
 
         // Turn off RUN_TO_POSITION
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
@@ -276,10 +288,10 @@ public class Drivetrain extends Mechanism {
         pidDrive.setInputRange(-90, 90);
         pidDrive.enable();
 
-        double corrections = pidDrive.performPID(getAngle());
+        double corrections = pidDrive.performPID(singleImu.getAngle());
 
-        leftFront.setPower(speed + corrections);
-        rightFront.setPower(speed);
+        leftFront.setPower(-speed + corrections);
+        rightFront.setPower(-speed);
     }
 
     /**
@@ -353,7 +365,7 @@ public class Drivetrain extends Mechanism {
      * @param degrees Degrees to turn, + is left - is right
      */
     private void rotate(int degrees, double power) {
-        resetAngle();
+        singleImu.resetAngle();
 
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
@@ -368,17 +380,17 @@ public class Drivetrain extends Mechanism {
         // rotate until turn is completed.
 
         if (degrees < 0) { // On right turn we have to get off zero first.
-            while (opMode.opModeIsActive() && getAngle() == 0) {
+            while (opMode.opModeIsActive() && singleImu.getAngle() == 0) {
                 leftFront.setPower(-power);
                 rightFront.setPower(power);
                 opMode.sleep(100);
             } do {
-                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
+                power = pidRotate.performPID(singleImu.getAngle()); // power will be - on right turn.
                 leftFront.setPower(power);
                 rightFront.setPower(-power);
             } while (opMode.opModeIsActive() && !pidRotate.onTarget());
         } else do { // left turn.
-            power = pidRotate.performPID(getAngle()); // power will be + on left turn.
+            power = pidRotate.performPID(singleImu.getAngle()); // power will be + on left turn.
             leftFront.setPower(power);
             rightFront.setPower(-power);
         } while (opMode.opModeIsActive() && !pidRotate.onTarget());
@@ -390,7 +402,7 @@ public class Drivetrain extends Mechanism {
         opMode.sleep(500);
 
         // reset angle tracking on new heading.
-        resetAngle();
+        singleImu.resetAngle();
     }
 
     /**
@@ -456,10 +468,6 @@ public class Drivetrain extends Mechanism {
         slideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public double getHeading() {
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return angles.firstAngle;
-    }
 
     public double[] getPositions() {
         double[] positions = new double[4];
@@ -467,55 +475,5 @@ public class Drivetrain extends Mechanism {
         positions[1] = rightFront.getCurrentPosition() / Constants.TICKS_PER_INCH_MR;
 
         return positions;
-    }
-
-    private double getError(double targetAngle) {
-        double heading = getHeading();
-        if (targetAngle > heading) {
-            if (targetAngle - heading > 180) {
-                return 360 - Math.abs(targetAngle) - Math.abs(heading);
-            } else {
-                return targetAngle - heading;
-            }
-        } else {
-            if (targetAngle - heading > 180) {
-                return -(360 - Math.abs(targetAngle) - Math.abs(heading));
-            } else {
-                return heading - targetAngle;
-            }
-        }
-    }
-
-    public void resetAngle() {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        globalAngle = 0;
-    }
-
-    /**
-     * Get current cumulative angle rotation from last reset.
-     * @return Angle in degrees. + = left, - = right from zero point.
-     */
-    private double getAngle() {
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
-
-        if (deltaAngle < -180) {
-            deltaAngle += 360;
-        } else if (deltaAngle > 180) {
-            deltaAngle -= 360;
-        }
-
-        globalAngle += deltaAngle;
-        lastAngles = angles;
-
-        return globalAngle;
-    }
-
-
-    public void setDriveZeroPowers(DcMotor.ZeroPowerBehavior behavior) {
-        rightFront.setZeroPowerBehavior(behavior);
-        leftFront.setZeroPowerBehavior(behavior);
-        slideDrive.setZeroPowerBehavior(behavior);
     }
 }

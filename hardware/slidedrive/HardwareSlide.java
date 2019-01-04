@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
+import org.firstinspires.ftc.teamcode.hardware.RackNPinonLift;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 
@@ -32,9 +33,9 @@ public class HardwareSlide extends Mechanism {
      */
 //    public RackNPinonLift rack;
     /**
-     * Instance variable containing robot's servo arm.
+     * Instance variable containing robot's marker.
      */
-//    public Arm servoArm;
+//    public Marker marker;
 
     /* Miscellaneous mechanisms */
 
@@ -77,7 +78,7 @@ public class HardwareSlide extends Mechanism {
      */
     public void waitForStart() {
         while (!opMode.opModeIsActive() && !opMode.isStopRequested()) {
-            opMode.telemetry.addData("Heading:", drivetrain.getHeading());
+            opMode.telemetry.addData("Heading:", drivetrain.singleImu.getHeading());
             opMode.telemetry.update();
         }
     }
@@ -87,7 +88,10 @@ public class HardwareSlide extends Mechanism {
      */
     public void land() {
         if (opMode.opModeIsActive()) {
-//            rack.setRackPower();
+//            while () {
+//                rack.rackToPos(.3, FieldConstants.HANG_HEIGHT, 4);
+//            }
+            drivetrain.turnPID(-90);
         }
     }
 
@@ -135,10 +139,12 @@ public class HardwareSlide extends Mechanism {
             if (location == location.LEFT){
                 drivetrain.turnPID(-45);
                 drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
+                drivetrain.turnPID(90);
             } else if (location == location.CENTER || location == location.UNKNOWN){
-
+                drivetrain.turnPID(45);
             } else if (location == location.RIGHT){
-
+                drivetrain.turnPID(45);
+                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
             }
         }
     }
@@ -153,7 +159,7 @@ public class HardwareSlide extends Mechanism {
      */
     public void dropMarker() {
         if (opMode.opModeIsActive()) {
-
+//            marker.markerLeft();
         }
     }
 
@@ -165,7 +171,8 @@ public class HardwareSlide extends Mechanism {
 
     public void driveToCrater() {
         if (opMode.opModeIsActive()) {
-
+            drivetrain.turnPID(-180);
+            drivetrain.driveToPos(.5, FieldConstants.TILE_HYPOTENUSE * 3, FieldConstants.TILE_HYPOTENUSE * 3, 3);
         }
     }
 }

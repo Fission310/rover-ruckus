@@ -23,9 +23,12 @@ public class Acquirer extends Mechanism {
     /* Hardware members */
     private DcMotor rotationBack;
     private DcMotor rotationForward;
+
     private DcMotor linearSlide;
+
     private CRServo rightIntakeMotor;
     private CRServo leftIntakeMotor;
+
     private Servo acquirerFloor;
     /**
      * Default constructor for Acquirer.

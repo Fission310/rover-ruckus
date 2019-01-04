@@ -17,12 +17,13 @@ import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import java.util.Locale;
 
 public class SingleIMU implements IMU {
-    double x_location, y_location, init_heading = 0D;
+    public double x_location, y_location, init_heading = 0D;
+    public double globalAngle;
 
-    BNO055IMU imu;
-    AxesOrder axesOrder;
-    Orientation angles;
-    Acceleration gravity;
+    public BNO055IMU imu;
+    public AxesOrder axesOrder;
+    public Orientation angles;
+    public Acceleration gravity;
 
     public void init(BNO055IMU i, AxesOrder axesOrder, double heading) {
         this.axesOrder = axesOrder;
@@ -45,24 +46,71 @@ public class SingleIMU implements IMU {
     }
 
     //get heading from 0-360 range
-    public double getHeading() {
+    public double getHeading360() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, axesOrder, AngleUnit.DEGREES);
         double heading = (angles.firstAngle + 360) % 360;
         return (heading-init_heading) % 360;
     }
 
+    public double getHeading() {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.firstAngle;
+    }
+
     //returns how off the angle is, returns + if counterclockwise rotation is most efficient, - otherwise
-    public double getError(double desired) {
+    public double getErrors(double desired) {
         double rawError = ((desired + 360) % 360) - getHeading();
         if (rawError > 180) return rawError - 360;
         return rawError;
     }
 
-    String formatAngle(AngleUnit angleUnit, double angle) {
+    public String formatAngle(AngleUnit angleUnit, double angle) {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
 
-    String formatDegrees(double degrees){
+    public String formatDegrees(double degrees){
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+
+    public double getError(double targetAngle) {
+        double heading = getHeading();
+        if (targetAngle > heading) {
+            if (targetAngle - heading > 180) {
+                return 360 - Math.abs(targetAngle) - Math.abs(heading);
+            } else {
+                return targetAngle - heading;
+            }
+        } else {
+            if (targetAngle - heading > 180) {
+                return -(360 - Math.abs(targetAngle) - Math.abs(heading));
+            } else {
+                return heading - targetAngle;
+            }
+        }
+    }
+
+    public void resetAngle() {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        globalAngle = 0;
+    }
+
+    /**
+     * Get current cumulative angle rotation from last reset.
+     * @return Angle in degrees. + = left, - = right from zero point.
+     */
+    public double getAngle() {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double deltaAngle = angles.firstAngle - angles.firstAngle;
+
+        if (deltaAngle < -180) {
+            deltaAngle += 360;
+        } else if (deltaAngle > 180) {
+            deltaAngle -= 360;
+        }
+
+        globalAngle += deltaAngle;
+        angles = angles;
+
+        return globalAngle;
     }
 }

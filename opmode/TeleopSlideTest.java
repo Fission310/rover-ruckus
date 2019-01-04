@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
+import org.firstinspires.ftc.teamcode.util.sensors.IMU;
+
 import static java.lang.Math.abs;
 
 /**
@@ -22,9 +23,9 @@ import static java.lang.Math.abs;
  * A:
  * B:
  * Left bumper:     Decelerates robot
- * Right bumper:    Accelerates robot
- * Left trigger:    Decelerates slide
- * Right trigger:   Accelerates slide
+ * Right bumper:
+ * Left trigger:
+ * Right trigger:
  * DPAD_UP:
  * DPAD_DOWN:
  * DPAD_LEFT:
@@ -53,8 +54,7 @@ import static java.lang.Math.abs;
  * BACK:
  *
  */
-@TeleOp(name = "Teleop: Slide Test", group = "Teleop")
-//@Disabled
+@TeleOp(name = "Teleop: Main Slide Test", group = "Teleop")
 public class TeleopSlideTest extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.0;
@@ -108,7 +108,6 @@ public class TeleopSlideTest extends OpMode {
         // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
-
         /**
          * Gamepad1
          */
@@ -122,22 +121,20 @@ public class TeleopSlideTest extends OpMode {
         slowSlide = Range.clip(slideInput * SLOW_MULTIPLIER, -1.0, 1.0);
 
         // Threshold for strafing, makes horizontal strafing easier
-        if (abs(slideInput) < ANALOG_THRESHOLD) { slideInput = 0; }
+//        if (abs(slideInput) < ANALOG_THRESHOLD) {
+//            slideInput = 0;
+//        }
 
         if (gamepad1.left_bumper) {
-            robot.drivetrain.driveSlideScaled(slowYInput, slowXInput, slowSlide, gamepad1.right_bumper);
+            robot.drivetrain.driveSlide(slowYInput, slowXInput, slowSlide, gamepad1.right_bumper);
             telemetry.addData("Status", "slowYInput: " + slowYInput);
             telemetry.addData("Status", "slowXInput: " + slowXInput);
             telemetry.addData("Status", "slowSlide: " + slowSlide);
         } else {
-            robot.drivetrain.driveSlideScaled(yInput, xInput, slideInput, gamepad1.right_bumper);
+            robot.drivetrain.driveSlide(yInput, xInput, slideInput, gamepad1.right_bumper);
             telemetry.addData("Status", "yInput: " + yInput);
             telemetry.addData("Status", "xInput: " + xInput);
             telemetry.addData("Status", "slideInput: " + slideInput);
-        }
-
-        while(gamepad1.a) {
-            robot.drivetrain.driveStraightPID(0.35);
         }
 
         leftTrigger = gamepad1.left_trigger > .9 ? 1 : .5 * gamepad1.left_trigger;
@@ -148,9 +145,11 @@ public class TeleopSlideTest extends OpMode {
          */
 
         double[] positions = robot.drivetrain.getPositions();
+        double imu = robot.drivetrain.singleImu.getHeading();
         telemetry.addData("Path2", "Running at %.2f :%.2f",
                 positions[0],
                 positions[1]);
+        telemetry.addData("IMU", "imu" + imu);
     }
 
     @Override

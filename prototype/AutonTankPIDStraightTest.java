@@ -41,26 +41,26 @@ public class AutonTankPIDStraightTest extends LinearOpMode {
         waitForStart();
         runtime.reset();  // Start counting run time from now.
 
-//        robot.drivetrain.turnPID(-90);
+        robot.drivetrain.turnPID(-90);
 
+        sleep(3000);
+//
+//        robot.drivetrain.driveToPos(0.3, FieldConstants.FLOOR_TILE * 2, FieldConstants.FLOOR_TILE * 2, 4.0);
+//
 //        sleep(3000);
 //
-        robot.drivetrain.driveToPos(0.3, FieldConstants.FLOOR_TILE * 2, FieldConstants.FLOOR_TILE * 2, 4.0);
+//        robot.drivetrain.driveToPos(0.3, -FieldConstants.FLOOR_TILE * 2, -FieldConstants.FLOOR_TILE * 2, 4.0);
+//
+//        sleep(3000);
+//
+        robot.drivetrain.turnPID(90);
 //
         sleep(3000);
 //
-        robot.drivetrain.driveToPos(0.3, -FieldConstants.FLOOR_TILE * 2, -FieldConstants.FLOOR_TILE * 2, 4.0);
-//
-//        sleep(3000);
-//
-//        robot.drivetrain.turnPID(90);
-//
-//        sleep(3000);
-//
-//        robot.drivetrain.turnPID(-90);
-        robot.drivetrain.driveToPos(0.3, FieldConstants.FLOOR_TILE * 2, FieldConstants.FLOOR_TILE * 2, 4.0);
-        robot.drivetrain.driveToPos(0.3, -FieldConstants.FLOOR_TILE * 2, -FieldConstants.FLOOR_TILE * 2, 4.0);
-//        robot.drivetrain.turnPID(90);
+        robot.drivetrain.turnPID(-90);
+//        robot.drivetrain.driveToPos(0.3, FieldConstants.FLOOR_TILE * 2, FieldConstants.FLOOR_TILE * 2, 4.0);
+//        robot.drivetrain.driveToPos(0.3, -FieldConstants.FLOOR_TILE * 2, -FieldConstants.FLOOR_TILE * 2, 4.0);
+        robot.drivetrain.turnPID(90);
 
         robot.drivetrain.setDriveZeroPowers(DcMotor.ZeroPowerBehavior.FLOAT);
     }

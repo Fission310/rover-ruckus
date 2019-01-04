@@ -14,6 +14,7 @@ import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
@@ -48,6 +49,7 @@ public class AutonDepotTest extends LinearOpMode {
         // Initialize robot
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
+        robot.drivetrain.setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
 
         List<Path> paths = new ArrayList<>();
 

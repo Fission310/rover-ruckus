@@ -5,13 +5,14 @@ import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
-@Autonomous(name="Depot: Drop + Sample + Marker", group="Slide Depot")
+@Autonomous(name="Simple Depot: D;S;M;C", group="Slide Depot")
 public class AutonDepot extends LinearOpMode {
 
     /* Private OpMode members */
@@ -36,10 +37,12 @@ public class AutonDepot extends LinearOpMode {
         // Initialize robot
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
+        robot.drivetrain.setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Initialize CV
         visionManager.samplingInit(hardwareMap);
         goldLocation = visionManager.getGoldLocation();
+        visionManager.vuforiaLights(true);
         telemetry.addData("Gold Cube location before start", goldLocation);
 
         // Wait until we're told to go
@@ -61,7 +64,8 @@ public class AutonDepot extends LinearOpMode {
              */
             case 0:
                 robot.land();
-//                if (goldLocation == goldLocation.UNKNOWN) step = 1;
+                telemetry.addData("Status", "Robot Landed");
+                telemetry.update();
                 step++;
                 break;
 
@@ -76,6 +80,8 @@ public class AutonDepot extends LinearOpMode {
 //                    location = visionManager.getGoldLocation();
 //                }
                 robot.findGoldLocation(visionManager, goldLocation);
+                telemetry.addData("Status", "Robot driven to cube");
+                telemetry.update();
                 step++;
                 break;
 
@@ -84,6 +90,8 @@ public class AutonDepot extends LinearOpMode {
              */
             case 2:
                 robot.samplePID(visionManager, goldLocation);
+                telemetry.addData("Status", "Robot Pushed cube into depot");
+                telemetry.update();
                 step++;
                 break;
 
@@ -91,7 +99,9 @@ public class AutonDepot extends LinearOpMode {
              * Drop the marker
              */
             case 3:
-//        robot.dropMarker()
+                robot.dropMarker();
+                telemetry.addData("Status", "Robot dropped marker");
+                telemetry.update();
                 step++;
                 break;
 
@@ -99,7 +109,9 @@ public class AutonDepot extends LinearOpMode {
              * Align to wall
              */
             case 4:
-//        robot.alignToWall()
+                robot.alignToWall();
+                telemetry.addData("Status", "Robot align to wall");
+                telemetry.update();
                 step++;
                 break;
 
@@ -107,12 +119,16 @@ public class AutonDepot extends LinearOpMode {
              * Extend arm and drive up to the crater
              */
             case 5:
-//        robot.driveToCrater()
+                robot.driveToCrater();
+                telemetry.addData("Status", "Robot drove to crater");
+                telemetry.update();
                 step++;
                 break;
 
             default: {
                 robot.drivetrain.drive(0, 0);
+                telemetry.addData("Status", "Robot default");
+                telemetry.update();
             }
             break;
         }
