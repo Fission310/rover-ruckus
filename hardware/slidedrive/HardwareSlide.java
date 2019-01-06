@@ -2,9 +2,11 @@ package org.firstinspires.ftc.teamcode.hardware.slidedrive;
 
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
+import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.RackNPinonLift;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
@@ -27,25 +29,26 @@ public class HardwareSlide extends Mechanism {
     /**
      * Instance variable containing robot's acquirer.
      */
-//    public Acquirer acquirer;
+    public Acquirer acquirer;
     /**
      * Instance variable containing robot's rack and pinion lift.
      */
-//    public RackNPinonLift rack;
+    public RackNPinonLift rack;
     /**
      * Instance variable containing robot's marker.
      */
 //    public Marker marker;
 
     /* Miscellaneous mechanisms */
+    public DistanceSensor sensorRange;
 
     /**
      * Default constructor for HardwareMain. Instantiates public mechanism instance variables.
      */
     public HardwareSlide(){
         drivetrain = new Drivetrain();
-//        acquirer = new Acquirer();
-//        rack = new RackNPinionLift();
+        acquirer = new Acquirer();
+        rack = new RackNPinonLift();
 //        servoArm = new Arm();
     }
     /**
@@ -57,8 +60,8 @@ public class HardwareSlide extends Mechanism {
     public HardwareSlide(LinearOpMode opMode){
         this.opMode = opMode;
         drivetrain = new Drivetrain(opMode);
-//        acquirer = new Acquirer(opMode);
-//        rack = new RackNPinionLift(opMode);
+        acquirer = new Acquirer(opMode);
+        rack = new RackNPinonLift(opMode);
 //        servoArm = new Arm(opMode);
     }
 
@@ -68,8 +71,8 @@ public class HardwareSlide extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         drivetrain.init(hwMap);
-//        acquirer.init(hwMap);
-//        rack.init(hwMap);
+        acquirer.init(hwMap);
+        rack.init(hwMap);
 //        servoArm.init(hwMap);
     }
 
@@ -89,7 +92,7 @@ public class HardwareSlide extends Mechanism {
     public void land() {
         if (opMode.opModeIsActive()) {
 //            while () {
-//                rack.rackToPos(.3, FieldConstants.HANG_HEIGHT, 4);
+                rack.rackToPos(.3, FieldConstants.HANG_HEIGHT, 4);
 //            }
             drivetrain.turnPID(-90);
         }

@@ -79,9 +79,9 @@ public class Drivetrain extends Mechanism {
         slideDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set motor brake behavior
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        slideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
         leftFront.setPower(0);
@@ -170,13 +170,7 @@ public class Drivetrain extends Mechanism {
      * @param x_value     power for turning of drivetrain (-1 to 1)
      * @param slide     power for sliding of drivetrain (-1 to 1)
      */
-    public void driveSlide(double y_value, double x_value, double slide, boolean brake) {
-        if (brake) {
-            setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
-        } else {
-            setDriveZeroPowers(DcMotor.ZeroPowerBehavior.FLOAT);
-        }
-
+    public void driveSlide(double y_value, double x_value, double slide) {
         // Combine driveArcade and turn for blended motion.
         double left = Range.clip(y_value - x_value, -1.0, 1.0);
         double right = Range.clip(y_value + x_value, -1.0, 1.0);
@@ -193,13 +187,7 @@ public class Drivetrain extends Mechanism {
      * @param x_value     power for turning of drivetrain (-1 to 1)
      * @param slide     power for sliding of drivetrain (-1 to 1)
      */
-    public void driveSlideScaled(double y_value, double x_value, double slide, boolean brake) {
-        if (brake) {
-            setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
-        } else {
-            setDriveZeroPowers(DcMotor.ZeroPowerBehavior.FLOAT);
-        }
-
+    public void driveSlideScaled(double y_value, double x_value, double slide) {
         // Combine driveArcade and turn for blended motion.
         double left = Range.clip(y_value - x_value, -1.0, 1.0);
         double right = Range.clip(y_value + x_value, -1.0, 1.0);

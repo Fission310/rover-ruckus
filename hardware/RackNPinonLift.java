@@ -131,14 +131,6 @@ public class RackNPinonLift extends Mechanism {
     }
 
     /**
-     * Sets power for rack motor based on encoder values.
-     */
-    public void rackToPos(double power) {
-        leftRackMotor.setPower(power);
-        rightRackMotor.setPower(power);
-    }
-
-    /**
      * Lift to a relative position using encoders and an IMU.
      *
      * Rack and pinion will stop moving if any of three conditions occur:

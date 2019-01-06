@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
@@ -14,16 +15,16 @@ import static java.lang.Math.abs;
  * be defined in this class.
  *
  * Gamepad1 BUTTON MAPPINGS:
- * Left stick x:      Turn Robot
+ * Left stick x:      Control the robot's slide wheel
  * Left stick y:      Control robot's velocity and direction
- * Right stick x:     Control robot's velocity and direction (stafe)
+ * Right stick x:     Control robot's turn
  * Right stick y:   N/A
  * X:
  * Y:
  * A:
  * B:
- * Left bumper:     Decelerates robot
- * Right bumper:
+ * Left bumper:     Decelerates robot (slow factor)
+ * Right bumper:    Activates the robots zero brake behavior
  * Left trigger:
  * Right trigger:
  * DPAD_UP:
@@ -58,7 +59,7 @@ import static java.lang.Math.abs;
 public class TeleopSlideMain extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.0;
-    private static final double SLOW_MULTIPLIER = 0.35;
+    private static final double SLOW_MULTIPLIER = 0.25;
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -67,9 +68,11 @@ public class TeleopSlideMain extends OpMode {
     private HardwareSlide robot = new HardwareSlide();
 
     /* Holds gamepad joystick's values */
-    double yInput, xInput, slideInput;
+    double yInput, xInput, slideInput, linearSlidesInput, rotationInput;
     /* Applies slow or fast mode */
-    double slowYInput, slowXInput, slowSlide, leftTrigger, rightTrigger;
+    double slowYInput, slowXInput, slowSlide, slowLinearSlidesInput, slowRotationInput, leftTrigger, rightTrigger;
+    /* Applies brake behavior */
+    boolean brake = false;
 
     @Override
     public void init() {
@@ -94,6 +97,7 @@ public class TeleopSlideMain extends OpMode {
     public void start() {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
+        robot.drivetrain.setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
 
         runtime.reset();
     }
@@ -120,29 +124,49 @@ public class TeleopSlideMain extends OpMode {
         slowXInput = Range.clip(xInput * SLOW_MULTIPLIER, -1.0, 1.0);
         slowSlide = Range.clip(slideInput * SLOW_MULTIPLIER, -1.0, 1.0);
 
-        // Threshold for strafing, makes horizontal strafing easier
-//        if (abs(slideInput) < ANALOG_THRESHOLD) {
-//            slideInput = 0;
-//        }
-
         if (gamepad1.left_bumper) {
-            robot.drivetrain.driveSlide(slowYInput, slowXInput, slowSlide, gamepad1.right_bumper);
-            telemetry.addData("Status", "slowYInput: " + slowYInput);
-            telemetry.addData("Status", "slowXInput: " + slowXInput);
-            telemetry.addData("Status", "slowSlide: " + slowSlide);
+            robot.drivetrain.driveSlide(slowYInput, slowXInput, slowSlide);
+            telemetry.addData("GP 1 Status", "slowYInput: " + slowYInput);
+            telemetry.addData("GP 1 Status", "slowXInput: " + slowXInput);
+            telemetry.addData("GP 1 Status", "slowSlide: " + slowSlide);
         } else {
-            robot.drivetrain.driveSlide(yInput, xInput, slideInput, gamepad1.right_bumper);
-            telemetry.addData("Status", "yInput: " + yInput);
-            telemetry.addData("Status", "xInput: " + xInput);
-            telemetry.addData("Status", "slideInput: " + slideInput);
+            robot.drivetrain.driveSlide(yInput, xInput, slideInput);
+            telemetry.addData("GP 1 Status", "yInput: " + yInput);
+            telemetry.addData("GP 1 Status", "xInput: " + xInput);
+            telemetry.addData("GP 1 Status", "slideInput: " + slideInput);
         }
 
-        leftTrigger = gamepad1.left_trigger > .9 ? 1 : .5 * gamepad1.left_trigger;
+        // Sets racks power via the left and right triggers
+        leftTrigger = gamepad1.left_trigger > .9 ? -1 : -.5 * gamepad1.left_trigger;
         rightTrigger = gamepad1.right_trigger > .9 ? 1 : .5 * gamepad1.right_trigger;
+        robot.rack.setRackPower(leftTrigger + rightTrigger);
+
+        // Changes the brake mode
+        brake = gamepad1.right_bumper;
+        if (brake == false) robot.drivetrain.setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
+        else robot.drivetrain.setDriveZeroPowers(DcMotor.ZeroPowerBehavior.FLOAT);
 
         /**
          * Gamepad2
          */
+        // clip the input values so that the values never exceed +/- 1
+        linearSlidesInput = Range.clip(gamepad2.left_stick_y, -1.0, 1.0);
+        rotationInput = Range.clip(gamepad2.right_stick_y, -1.0, 1.0);
+
+        slowLinearSlidesInput = Range.clip(linearSlidesInput * SLOW_MULTIPLIER, -1.0, 1.0);
+        slowRotationInput = Range.clip(rotationInput * SLOW_MULTIPLIER, -1.0, 1.0);
+
+        if (gamepad2.left_bumper) {
+            robot.acquirer.setLinearSlidePower(slowLinearSlidesInput);
+            robot.acquirer.setRotationPower(slowRotationInput);
+            telemetry.addData("GP 2 Status", "slowLinearSlidesInput: " + slowLinearSlidesInput);
+            telemetry.addData("GP 2 Status", "slowRotationInput: " + slowRotationInput);
+        } else {
+            robot.acquirer.setLinearSlidePower(linearSlidesInput);
+            robot.acquirer.setRotationPower(rotationInput);
+            telemetry.addData("GP 2 Status", "linearSlidesInput: " + linearSlidesInput);
+            telemetry.addData("GP 2 Status", "rotationInput: " + rotationInput);
+        }
 
         double[] positions = robot.drivetrain.getPositions();
         double imu = robot.drivetrain.singleImu.getHeading();

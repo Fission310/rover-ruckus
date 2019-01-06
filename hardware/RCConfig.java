@@ -18,6 +18,7 @@ public class RCConfig {
     // Servos
     public static final String ARM = "arm";
     public static final String MARKER = "marker";
+    public static final String ACQUIRER_ROTATION = "acquirer_rot";
     public static final String SWEEPER = "sweeper";
     public static final String MARKERARM = "marker_arm";
     public static final String ACQUIRER_INTAKE = "acquirer_intake";

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.util;
 
-
 import com.acmerobotics.roadrunner.path.Path;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
