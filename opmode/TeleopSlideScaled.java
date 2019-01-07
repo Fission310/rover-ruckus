@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -56,10 +57,12 @@ import static java.lang.Math.abs;
  *
  */
 @TeleOp(name = "Teleop: Slide Scaled", group = "Teleop")
+@Disabled
 public class TeleopSlideScaled extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.0;
     private static final double SLOW_MULTIPLIER = 0.25;
+    private static final double LINEAR_SLIDES_SLOW_MULTIPLIER = 0.5;
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -150,11 +153,13 @@ public class TeleopSlideScaled extends OpMode {
          * Gamepad2
          */
         // clip the input values so that the values never exceed +/- 1
-        linearSlidesInput = Range.clip(gamepad2.left_stick_y, -1.0, 1.0);
-        rotationInput = Range.clip(gamepad2.right_stick_y, -1.0, 1.0);
+        leftTrigger = gamepad1.left_trigger > .9 ? -1 : -.5 * gamepad1.left_trigger;
 
-        slowLinearSlidesInput = Range.clip(linearSlidesInput * SLOW_MULTIPLIER, -1.0, 1.0);
-        slowRotationInput = Range.clip(rotationInput * SLOW_MULTIPLIER, -1.0, 1.0);
+        linearSlidesInput = gamepad2.left_stick_y > .8 ? 1: .5 * gamepad1.left_trigger;
+        rotationInput = gamepad2.right_stick_y > .8 ? 1: .5 * gamepad2.right_stick_y;
+
+        slowLinearSlidesInput = linearSlidesInput * SLOW_MULTIPLIER;
+        slowRotationInput = rotationInput * SLOW_MULTIPLIER;
 
         if (gamepad2.left_bumper) {
             robot.acquirer.setLinearSlidePower(slowLinearSlidesInput);

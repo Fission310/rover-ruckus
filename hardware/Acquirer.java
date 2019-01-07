@@ -31,6 +31,7 @@ public class Acquirer extends Mechanism {
 
 //    private Servo acquirerFloor;
     private Servo acquirerRotation;
+
     /**
      * Default constructor for Acquirer.
      */
@@ -58,7 +59,7 @@ public class Acquirer extends Mechanism {
         rotationBack = hwMap.dcMotor.get(RCConfig.BACK_ROT);
         linearSlide = hwMap.dcMotor.get(RCConfig.LINEAR_SLIDES);
         //        acquirerFloor = hwMap.servo.get(RCConfig.ACQUIRER_FLOOR);
-        acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
+//        acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
 
         // Set braking behavior
         rotationForward.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -79,7 +80,17 @@ public class Acquirer extends Mechanism {
         rotationBack.setPower(0);
         linearSlide.setPower(0);
 //        acquirerFloorInit();
-        acquirerRotationInit();
+//        acquirerRotationInit();
+    }
+
+    public void encoderInit() {
+        rotationForward.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotationBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        rotationForward.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rotationBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /**
