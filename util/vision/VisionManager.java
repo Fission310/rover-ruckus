@@ -125,9 +125,7 @@ public class VisionManager {
         return goldDetector.getXPosition();
     }
 
-    public void goldAlignStop() {
-        goldDetector.disable();
-    }
+    public void goldAlignStop() { goldDetector.disable(); }
 
     /**
      * Vuforia methods.

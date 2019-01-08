@@ -49,7 +49,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain();
         acquirer = new Acquirer();
         rack = new RackNPinonLift();
-//        servoArm = new Arm();
+//        marker = new Marker();
     }
     /**
      * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
@@ -62,7 +62,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain(opMode);
         acquirer = new Acquirer(opMode);
         rack = new RackNPinonLift(opMode);
-//        servoArm = new Arm(opMode);
+//        marker = new Marker(opMode);
     }
 
     /**
@@ -73,7 +73,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain.init(hwMap);
         acquirer.init(hwMap);
         rack.init(hwMap);
-//        servoArm.init(hwMap);
+//        marker.init(hwMap);
     }
 
     /**
