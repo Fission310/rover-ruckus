@@ -113,12 +113,19 @@ public class TeleopSlideTest extends OpMode {
      * according to gamepad input.
      * @see OpMode#loop()
      */
+
     @Override
     public void loop() {
         // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         if (gamepad1.a || gamepad2.a) {
             telemetry.addData("distance sensor", robot.rack.getDistanceSensor());
+        }
+        if (gamepad1.b || gamepad2.b) {
+            telemetry.addData("range sensor", robot.drivetrain.getRangeOpticalSensor());
+        }
+        if (gamepad1.x || gamepad2.x) {
+            telemetry.addData("range sensor", robot.drivetrain.getRangeUltraSensor());
         }
 
         double[] positions = robot.drivetrain.getPositions();

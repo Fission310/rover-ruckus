@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
@@ -51,7 +52,7 @@ public class Drivetrain extends Mechanism {
     private double power = .30;
 
     ModernRoboticsI2cRangeSensor rangeSensor;
-//    private DistanceSensor sensorSponsor;
+    private DistanceSensor sensorSponsor;
 //    private DistanceSensor sensorBack;
 
     /**
@@ -106,9 +107,9 @@ public class Drivetrain extends Mechanism {
         // straight line. P value controls how sensitive the correction is.
         pidDrive = new PIDController(.05, 0, 0);
 
-        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
-//        sensorSponsor = hwMap.get(DistanceSensor.class, RCConfig.DISTANCE_SENSOR_BOTTOM);
-//        Rev2mDistanceSensor sponsorTimeOfFlight = (Rev2mDistanceSensor)sensorSponsor;
+        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, RCConfig.RANGE_SENSOR);
+        sensorSponsor = hwMap.get(DistanceSensor.class, RCConfig.DISTANCE_SENSOR_SPONSOR);
+        Rev2mDistanceSensor sponsorTimeOfFlight = (Rev2mDistanceSensor)sensorSponsor;
 //        sensorBack = hwMap.get(DistanceSensor.class, RCConfig.DISTANCE_SENSOR_BOTTOM);
 //        Rev2mDistanceSensor backTimeOfFlight = (Rev2mDistanceSensor)sensorBack;
 
@@ -478,4 +479,11 @@ public class Drivetrain extends Mechanism {
 
         return positions;
     }
+    public double getRangeOpticalSensor() {
+        return rangeSensor.cmOptical();
+    }
+    public double getRangeUltraSensor() {
+        return rangeSensor.getDistance(DistanceUnit.CM);
+    }
+
 }

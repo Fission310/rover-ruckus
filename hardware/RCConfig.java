@@ -21,8 +21,8 @@ public class RCConfig {
     public static final String ACQUIRER_ROTATION = "acquirer_rot";
     public static final String SWEEPER = "sweeper";
     public static final String MARKERARM = "marker_arm";
-    public static final String ACQUIRER_INTAKE = "in";
-    public static final String ACQUIRER_INTAKE2 = "in2";
+    public static final String LEFT_ACQUIRER_INTAKE = "leftIntake";
+    public static final String RIGHT_ACQUIRER_INTAKE = "rightIntake";
     public static final String ACQUIRER_FLOOR = "acquirer_floor";
     public static final String LEFT_TAPE = "left_tape";
     public static final String RIGHT_TAPE = "right_tape";

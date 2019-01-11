@@ -91,7 +91,7 @@ public class HardwareSlide extends Mechanism {
      */
     public void land() {
         if (opMode.opModeIsActive()) {
-            rack.rackToPos(.3, FieldConstants.HANG_HEIGHT, 4, 5.08);
+            rack.rackToPos(.3, FieldConstants.HANG_HEIGHT, 4, 4.58);
             drivetrain.turnPID(-90);
         }
     }

@@ -191,6 +191,23 @@ public class TeleopSlideMain extends OpMode {
         /**
          * Both Gamepads
          */
+
+//        boolean left = true;
+//        if (gamepad1.x || gamepad2.x)
+//            if (xButtonPressed) {
+//                if left == true {
+//                    robot.marker.markerLeft();
+//                    telemetry.addData("Marker Status", "left");
+//                    left = false;
+//                }
+//                else {
+//                    robot.marker.markerRight();
+//                    telemetry.addData("Marker Status", "left");
+//                    left = true;
+//                }
+//            }
+
+
         if (gamepad1.x || gamepad2.x)
             if (!xButtonPressed) {
                 xButtonPressed = true;
