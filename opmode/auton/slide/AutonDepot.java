@@ -58,79 +58,81 @@ public class AutonDepot extends LinearOpMode {
         waitForStart();
         runtime.reset();  // Start counting run time from now.
 
-        switch (step){
-            /**
-             * Land and wait for the robot to fully drop and stabilize.
-             */
-            case 0:
-                robot.land();
-                telemetry.addData("Status", "Robot Landed");
-                telemetry.update();
-                step++;
-                break;
+        while (opModeIsActive()) {
+            switch (step) {
+                /**
+                 * Land and wait for the robot to fully drop and stabilize.
+                 */
+                case 0:
+                    robot.land();
+                    telemetry.addData("Status", "Robot Landed");
+                    telemetry.update();
+                    step++;
+                    break;
 
-            /**
-             * Figure out where the gold cube is.
-             */
-            case 1:
-                goldLocation = (goldLocation != goldLocation.UNKNOWN) ? goldLocation : visionManager.getGoldLocation();
-                telemetry.addData("Gold Cube location after start", goldLocation);
-//                while (location == goldLocation.NONE){
-//                    robot.drivetrain.driveToPos(.3,2,2,2);
-//                    location = visionManager.getGoldLocation();
-//                }
-                robot.findGoldLocation(visionManager, goldLocation);
-                telemetry.addData("Status", "Robot driven to cube");
-                telemetry.update();
-                step++;
-                break;
+                /**
+                 * Figure out where the gold cube is.
+                 */
+                case 1:
+                    goldLocation = (goldLocation != goldLocation.UNKNOWN) ? goldLocation : visionManager.getGoldLocation();
+                    telemetry.addData("Gold Cube location after start", goldLocation);
+                    //                while (location == goldLocation.NONE){
+                    //                    robot.drivetrain.driveToPos(.3,2,2,2);
+                    //                    location = visionManager.getGoldLocation();
+                    //                }
+                    robot.findGoldLocation(visionManager, goldLocation);
+                    telemetry.addData("Status", "Robot driven to cube");
+                    telemetry.update();
+                    step++;
+                    break;
 
-            /**
-             * Align the robot to the gold cube to push it in to the depot
-             */
-            case 2:
-                robot.samplePID(visionManager, goldLocation);
-                telemetry.addData("Status", "Robot Pushed cube into depot");
-                telemetry.update();
-                step++;
-                break;
+                /**
+                 * Align the robot to the gold cube to push it in to the depot
+                 */
+                case 2:
+                    robot.samplePID(visionManager, goldLocation);
+                    telemetry.addData("Status", "Robot Pushed cube into depot");
+                    telemetry.update();
+                    step++;
+                    break;
 
-            /**
-             * Drop the marker
-             */
-            case 3:
-                robot.dropMarker();
-                telemetry.addData("Status", "Robot dropped marker");
-                telemetry.update();
-                step++;
-                break;
+                /**
+                 * Drop the marker
+                 */
+                case 3:
+                    robot.dropMarker();
+                    telemetry.addData("Status", "Robot dropped marker");
+                    telemetry.update();
+                    step++;
+                    break;
 
-            /**
-             * Align to wall
-             */
-            case 4:
-                robot.alignToWall();
-                telemetry.addData("Status", "Robot align to wall");
-                telemetry.update();
-                step++;
-                break;
+                /**
+                 * Align to wall
+                 */
+                case 4:
+                    robot.alignToWall();
+                    telemetry.addData("Status", "Robot align to wall");
+                    telemetry.update();
+                    step++;
+                    break;
 
-            /**
-             * Extend arm and drive up to the crater
-             */
-            case 5:
-                robot.driveToCrater();
-                telemetry.addData("Status", "Robot drove to crater");
-                telemetry.update();
-                step++;
-                break;
+                /**
+                 * Extend arm and drive up to the crater
+                 */
+                case 5:
+                    robot.driveToCrater();
+                    telemetry.addData("Status", "Robot drove to crater");
+                    telemetry.update();
+                    step++;
+                    break;
 
-            default: {
-                robot.drivetrain.drive(0, 0);
-                telemetry.addData("Status", "Robot default");
-                telemetry.update();
+                default: {
+                    robot.drivetrain.drive(0, 0);
+                    telemetry.addData("Status", "Robot default");
+                    telemetry.update();
+                }
+                break;
             }
-            break;
         }
 
         // Stop CV
