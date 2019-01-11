@@ -1,13 +1,16 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.RCConfig;
 import org.firstinspires.ftc.teamcode.util.PIDController;
@@ -34,6 +37,7 @@ public class RackNPinonLift extends Mechanism {
     PIDController pidRackPinion;
     SingleIMU singleImu= new SingleIMU();
 
+    public DistanceSensor sensorRange;
     /**
      * Default constructor for Acquirer.
      */
@@ -86,6 +90,8 @@ public class RackNPinonLift extends Mechanism {
         pidRackPinion.setInputRange(-90, 90);
         pidRackPinion.enable();
 
+        sensorRange = hwMap.get(DistanceSensor.class, RCConfig.DISTANCE_SENSOR_BOTTOM);
+        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
     }
 
     /**
@@ -144,7 +150,7 @@ public class RackNPinonLift extends Mechanism {
      * @param inches    number of inches to move the rack
      * @param timeoutS      amount of time before the move should stop
      */
-    public void rackToPos(double speed, double inches, double timeoutS) {
+    public void rackToPos(double speed, double inches, double timeoutS, double distance) {
         // Target position variables
         int newTarget;
 
@@ -164,7 +170,7 @@ public class RackNPinonLift extends Mechanism {
         // Loop until a condition is met
         while (opMode.opModeIsActive() &&
                 (runtime.seconds() < timeoutS) &&
-                leftRackMotor.isBusy() && rightRackMotor.isBusy()) {
+                leftRackMotor.isBusy() && rightRackMotor.isBusy() || (sensorRange.getDistance(DistanceUnit.CM) > distance)) {
 
             // Set power of rack and pinion motors accounting for adjustment
             setRackPower(speed);
@@ -189,5 +195,8 @@ public class RackNPinonLift extends Mechanism {
         rightRackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public double getDistanceSensor() {
+        return sensorRange.getDistance(DistanceUnit.CM);
     }
 }

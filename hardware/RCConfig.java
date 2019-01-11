@@ -21,7 +21,8 @@ public class RCConfig {
     public static final String ACQUIRER_ROTATION = "acquirer_rot";
     public static final String SWEEPER = "sweeper";
     public static final String MARKERARM = "marker_arm";
-    public static final String ACQUIRER_INTAKE = "acquirer_intake";
+    public static final String ACQUIRER_INTAKE = "in";
+    public static final String ACQUIRER_INTAKE2 = "in2";
     public static final String ACQUIRER_FLOOR = "acquirer_floor";
     public static final String LEFT_TAPE = "left_tape";
     public static final String RIGHT_TAPE = "right_tape";
@@ -33,9 +34,9 @@ public class RCConfig {
     public static final String LIMIT_SWITCH = "limit_switch";
     public static final String COLOR_SENSOR = "color_sensor";
     public static final String TOUCH_SENSOR = "touch_sensor";
-    public static final String DISTANCE_SENSOR_1 = "distance_sensor_1";
-    public static final String DISTANCE_SENSOR_2 = "distance_sensor_2";
-    public static final String DISTANCE_SENSOR_3 = "distance_sensor_3";
+    public static final String DISTANCE_SENSOR_BOTTOM = "sensor_bottom";
+    public static final String DISTANCE_SENSOR_BACK = "sensor_back";
+    public static final String DISTANCE_SENSOR_SPONSOR = "sensor_sponsor";
 
     //Legacy
     public static final String LEFT_BACK = "left_back";

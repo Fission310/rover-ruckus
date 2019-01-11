@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
+import org.firstinspires.ftc.teamcode.hardware.Marker;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.RackNPinonLift;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
@@ -37,10 +38,9 @@ public class HardwareSlide extends Mechanism {
     /**
      * Instance variable containing robot's marker.
      */
-//    public Marker marker;
+    public Marker marker;
 
     /* Miscellaneous mechanisms */
-    public DistanceSensor sensorRange;
 
     /**
      * Default constructor for HardwareMain. Instantiates public mechanism instance variables.
@@ -49,7 +49,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain();
         acquirer = new Acquirer();
         rack = new RackNPinonLift();
-//        marker = new Marker();
+        marker = new Marker();
     }
     /**
      * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
@@ -62,7 +62,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain(opMode);
         acquirer = new Acquirer(opMode);
         rack = new RackNPinonLift(opMode);
-//        marker = new Marker(opMode);
+        marker = new Marker(opMode);
     }
 
     /**
@@ -73,7 +73,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain.init(hwMap);
         acquirer.init(hwMap);
         rack.init(hwMap);
-//        marker.init(hwMap);
+        marker.init(hwMap);
     }
 
     /**
@@ -91,9 +91,7 @@ public class HardwareSlide extends Mechanism {
      */
     public void land() {
         if (opMode.opModeIsActive()) {
-//            while () {
-                rack.rackToPos(.3, FieldConstants.HANG_HEIGHT, 4);
-//            }
+            rack.rackToPos(.3, FieldConstants.HANG_HEIGHT, 4, 5.08);
             drivetrain.turnPID(-90);
         }
     }
@@ -121,7 +119,6 @@ public class HardwareSlide extends Mechanism {
                 drivetrain.turnPID(-90);
                 drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 3);
                 drivetrain.turnPID(90);
-
             } else if (location == location.UNKNOWN){
                 opMode.telemetry.addData("Detected None", "Value" + location);
             }
@@ -162,7 +159,7 @@ public class HardwareSlide extends Mechanism {
      */
     public void dropMarker() {
         if (opMode.opModeIsActive()) {
-//            marker.markerLeft();
+            marker.markerLeft();
         }
     }
 

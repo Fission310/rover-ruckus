@@ -47,16 +47,4 @@ public class Constants {
      * Ticks per revolution for a VEX EDR 393.
      */
     public static final double  COUNTS_PER_SERVO_VEX = 627.2;
-
-    /**
-     * Generic Constants for field and robot dimensions.
-     */
-    public static final double ROBOT_LENGTH = 18;
-    public static final double ROBOT_WIDTH = 18;
-    public static final double ROBOT_HEIGHT = 18;
-    public static final double LANDER_TO_SAMPLE = 51;
-    public static final double HOOK_HEIGHT = 22;
-    public static final double SAMPLE_TO_CRATER = 48;
-    public static final double SAMPLE_TO_DEPOT = 72;
-    public static final double BOTTOM_OF_ROBOT_TO_GROUND = 2;
 }

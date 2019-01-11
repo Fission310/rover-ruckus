@@ -12,15 +12,15 @@ import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 import org.firstinspires.ftc.teamcode.util.SoundManager;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
-@Autonomous(name="Auton TF Test", group="TEST")
+@Autonomous(name="Auton Doge Test", group="TEST")
 //@Disabled
-public class AutonTFTest extends LinearOpMode {
+public class AutonDogeCVTest extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
 
     /* Vision Manager*/
-    private TensorFlowManager visionManager = new TensorFlowManager();
+    private VisionManager visionManager = new VisionManager();
 
     /**
      * Runs the autonomous routine.
@@ -28,11 +28,14 @@ public class AutonTFTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize CV
-        visionManager.init(hardwareMap);
-        visionManager.start();
+        visionManager.goldAlignInit(hardwareMap);
+        visionManager.vuforiaInit(hardwareMap);
+        visionManager.vuforiaLights(true);
+
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
-            telemetry.addData("Detector", "" + visionManager.getDetector());
+            telemetry.addData("Detector", "" + visionManager.isGoldAligned());
+            telemetry.addData("Gold pos", "" + visionManager.getGoldPosX());
             telemetry.addData("Status", "Waiting in Init");
             telemetry.update();
         }
@@ -43,7 +46,8 @@ public class AutonTFTest extends LinearOpMode {
         /**
          * Figure out where the gold cube is and drive towards it.
          */
-        telemetry.addData("Detector", "" + visionManager.getDetector());
+        telemetry.addData("Detector", "" + visionManager.isGoldAligned());
+        telemetry.addData("Gold pos", "" + visionManager.getGoldPosX());
 //        location = visionManager.getLocation();
 //        telemetry.addData("Gold Cube location after start", location);
         telemetry.update();
@@ -51,7 +55,11 @@ public class AutonTFTest extends LinearOpMode {
 //        sleep(30000);
 
 
-        // Stop .
-        if (isStopRequested() || !opModeIsActive()) { visionManager.stop(); }
+        // Stop CV
+        if (isStopRequested() || !opModeIsActive()) {
+            visionManager.goldAlignStop();
+            visionManager.vuforiaStop();
+            visionManager.vuforiaLights(false);
+        }
     }
 }

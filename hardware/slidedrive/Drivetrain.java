@@ -3,9 +3,12 @@ package org.firstinspires.ftc.teamcode.hardware.slidedrive;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -46,6 +49,10 @@ public class Drivetrain extends Mechanism {
     public SingleIMU singleImu= new SingleIMU();
 
     private double power = .30;
+
+    ModernRoboticsI2cRangeSensor rangeSensor;
+//    private DistanceSensor sensorSponsor;
+//    private DistanceSensor sensorBack;
 
     /**
      * Default constructor for Drivetrain.
@@ -98,6 +105,13 @@ public class Drivetrain extends Mechanism {
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
         pidDrive = new PIDController(.05, 0, 0);
+
+        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+//        sensorSponsor = hwMap.get(DistanceSensor.class, RCConfig.DISTANCE_SENSOR_BOTTOM);
+//        Rev2mDistanceSensor sponsorTimeOfFlight = (Rev2mDistanceSensor)sensorSponsor;
+//        sensorBack = hwMap.get(DistanceSensor.class, RCConfig.DISTANCE_SENSOR_BOTTOM);
+//        Rev2mDistanceSensor backTimeOfFlight = (Rev2mDistanceSensor)sensorBack;
+
     }
 
     /**

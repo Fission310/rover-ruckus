@@ -26,8 +26,8 @@ public class Acquirer extends Mechanism {
 
     private DcMotor linearSlide;
 
-//    private CRServo rightIntakeMotor;
-//    private CRServo leftIntakeMotor;
+    private CRServo rightIntakeMotor;
+    private CRServo leftIntakeMotor;
 
 //    private Servo acquirerFloor;
     private Servo acquirerRotation;
@@ -53,13 +53,13 @@ public class Acquirer extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
-//        rightIntakeMotor = hwMap.crservo.get(RCConfig.ACQUIRER_INTAKE);
-//        leftIntakeMotor = hwMap.crservo.get(RCConfig.ACQUIRER_INTAKE);
+        rightIntakeMotor = hwMap.crservo.get(RCConfig.ACQUIRER_INTAKE);
+        leftIntakeMotor = hwMap.crservo.get(RCConfig.ACQUIRER_INTAKE2);
         rotationForward = hwMap.dcMotor.get(RCConfig.FRONT_ROT);
         rotationBack = hwMap.dcMotor.get(RCConfig.BACK_ROT);
         linearSlide = hwMap.dcMotor.get(RCConfig.LINEAR_SLIDES);
         //        acquirerFloor = hwMap.servo.get(RCConfig.ACQUIRER_FLOOR);
-//        acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
+        acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
 
         // Set braking behavior
         rotationForward.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -67,20 +67,20 @@ public class Acquirer extends Mechanism {
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set polarity
-//        rightIntakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-//        leftIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightIntakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rotationForward.setDirection(DcMotorSimple.Direction.FORWARD);
         rotationBack.setDirection(DcMotorSimple.Direction.FORWARD);
         linearSlide.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set initial power
-//        rightIntakeMotor.setPower(0);
-//        leftIntakeMotor.setPower(0);
+        rightIntakeMotor.setPower(0);
+        leftIntakeMotor.setPower(0);
         rotationForward.setPower(0);
         rotationBack.setPower(0);
         linearSlide.setPower(0);
 //        acquirerFloorInit();
-//        acquirerRotationInit();
+        acquirerRotationInit();
     }
 
     public void encoderInit() {
@@ -97,10 +97,10 @@ public class Acquirer extends Mechanism {
      * Sets power for intake motor.
      * @param power        Motor power with range of (-1 to 1)
      */
-//    public void setIntakePower(double power) {
-//        leftIntakeMotor.setPower(power);
-//        rightIntakeMotor.setPower(power);
-//    }
+    public void setIntakePower(double power) {
+        leftIntakeMotor.setPower(power);
+        rightIntakeMotor.setPower(power);
+    }
 
     /**
      * Sets power for rotation motors.
@@ -144,9 +144,7 @@ public class Acquirer extends Mechanism {
     /**
      * Moves the acquirer rotation servo to set angle to acquire.
      */
-    public void acquirerRotationSet() {
-        acquirerRotation.setPosition(SERVO_CENTER_POS);
-    }
+    public void acquirerRotationSet() { acquirerRotation.setPosition(SERVO_CENTER_POS); }
 
     /**
      * Moves the acquirer rotation servo to set angle to acquire.

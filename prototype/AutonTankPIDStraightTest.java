@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.util.SoundManager;
 
 @Autonomous(name="Slide: TEST PID STRAIGHT AND ROTATE ", group="Test")
-//@Disabled
+@Disabled
 public class AutonTankPIDStraightTest extends LinearOpMode {
 
     /* Private OpMode members */

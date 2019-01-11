@@ -107,8 +107,8 @@ public class VisionManager {
         goldDetector.alignPosOffset = 0; // How far from center frame to offset this alignment zone.
         goldDetector.downscale = 0.4; // How much to downscale the input frames
 
-        goldDetector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
-        //goldDetector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        goldDetector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
+        goldDetector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
         goldDetector.maxAreaScorer.weight = 0.005;
 
         goldDetector.ratioScorer.weight = 5;
