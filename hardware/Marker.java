@@ -38,7 +38,6 @@ public class Marker extends Mechanism {
     public void init(HardwareMap hwMap) {
         // Retrieve arm from hardware map and set to initial position
         marker = hwMap.servo.get(RCConfig.MARKER);
-        markerRight();
     }
 
     /**

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auton.slide;
+package org.firstinspires.ftc.teamcode.prototype;
 
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.util.SoundManager;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 @Autonomous(name="Auton TF Test", group="TEST")
-//@Disabled
+@Disabled
 public class AutonTFTest extends LinearOpMode {
 
     /* Private OpMode members */

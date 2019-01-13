@@ -77,6 +77,9 @@ public class TeleopSlideMain extends OpMode {
     /* Handle time complexities */
     boolean aButtonPressed, bButtonPressed, xButtonPressed;
 
+    int currentAcquirerRotation = 0;
+
+
     /* Applies brake behavior */
     boolean brake = false;
 
@@ -104,7 +107,6 @@ public class TeleopSlideMain extends OpMode {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
         robot.drivetrain.setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
-
         runtime.reset();
     }
 
@@ -142,104 +144,30 @@ public class TeleopSlideMain extends OpMode {
         }
 
         // Sets racks power via the left and right triggers
-        leftTrigger = Math.abs(gamepad1.left_trigger) > .9 ? -1 * Math.signum(gamepad1.left_trigger) : -.5 * gamepad1.left_trigger;
-        rightTrigger = Math.abs(gamepad1.right_trigger) > .9 ? 1 * Math.signum(gamepad1.right_trigger) : .5 * gamepad1.right_trigger;
+        leftTrigger = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.signum(gamepad2.left_trigger) : -.8 * gamepad2.left_trigger;
+        rightTrigger = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.signum(gamepad2.right_trigger) : .8 * gamepad2.right_trigger;
         robot.rack.setRackPower(leftTrigger + rightTrigger);
 
+        telemetry.addData("Rack Power", "" + leftTrigger + rightTrigger);
+        telemetry.update();
         // Changes the brake mode
 //        brake = gamepad1.right_bumper;
 //        if (brake == false) robot.drivetrain.setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
 //        else robot.drivetrain.setDriveZeroPowers(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        /**
-         * Gamepad2
-         */
-        linearSlidesInput = Math.abs(gamepad2.left_stick_y) > .9 ? -1 * Math.signum(gamepad2.left_stick_y) : -.8 * gamepad2.left_stick_y;
-        rotationInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .8 * gamepad2.right_stick_y;
 
-        slowLinearSlidesInput = linearSlidesInput * LINEAR_SLIDES_SLOW_MULTIPLIER;
-        slowRotationInput = rotationInput * LINEAR_SLIDES_SLOW_MULTIPLIER;
-
-        if (gamepad2.left_bumper) {
-            robot.acquirer.setLinearSlidePower(slowLinearSlidesInput);
-            robot.acquirer.setRotationPower(slowRotationInput);
-            telemetry.addData("GP 2 Status", "slowLinearSlidesInput: " + slowLinearSlidesInput);
-            telemetry.addData("GP 2 Status", "slowRotationInput: " + slowRotationInput);
-        } else {
-            robot.acquirer.setLinearSlidePower(linearSlidesInput);
-            robot.acquirer.setRotationPower(rotationInput);
-            telemetry.addData("GP 2 Status", "linearSlidesInput: " + linearSlidesInput);
-            telemetry.addData("GP 2 Status", "rotationInput: " + rotationInput);
-        }
-
-        // Sets acquirer power via the left and right triggers
-        acquirerIntake = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.signum(gamepad2.left_trigger) : -1 * gamepad2.left_trigger;
-        acquirerOuttake = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.signum(gamepad2.right_trigger) : 1 * gamepad2.right_trigger;
-        robot.acquirer.setIntakePower(acquirerIntake + acquirerOuttake);
-
-        if (gamepad2.a)
-            if (!aButtonPressed) {
-                aButtonPressed = true;
-                robot.acquirer.acquirerRotationSet();
-                telemetry.addData("Acquirer Status", "center");
-            } else {
-                robot.acquirer.acquirerRotationInit();
-                telemetry.addData("Acquirer Status", "init");
-            }
-        else aButtonPressed = false;
 
         /**
          * Both Gamepads
          */
-
-//        boolean left = true;
-//        if (gamepad1.x || gamepad2.x)
-//            if (xButtonPressed) {
-//                if left == true {
-//                    robot.marker.markerLeft();
-//                    telemetry.addData("Marker Status", "left");
-//                    left = false;
-//                }
-//                else {
-//                    robot.marker.markerRight();
-//                    telemetry.addData("Marker Status", "left");
-//                    left = true;
-//                }
-//            }
+        if (gamepad1.x || gamepad2.x) { robot.marker.markerLeft(); }
+        if (gamepad1.y || gamepad2.y) { robot.marker.markerRight(); }
 
 
-        if (gamepad1.x || gamepad2.x)
-            if (!xButtonPressed) {
-                xButtonPressed = true;
-                robot.marker.markerLeft();
-                telemetry.addData("Marker Status", "left");
-            } else {
-                robot.marker.markerRight();
-                telemetry.addData("Marker Status", "right");
-            }
-        else xButtonPressed = false;
 
-//
-//        if (gamepad1.x || gamepad2.x)
-//            if (!xButtonPressed) {
-//                xButtonPressed = true;
-//                robot.marker.markerNeutral();
-//            }
-//            else {}
-//        else xButtonPressed = false;
 
-//        if (gamepad1.a || gamepad2.a) {
-//            robot.marker.markerLeft();
-//            telemetry.addData("Marker Status", "left");
-//        }
-//        if (gamepad1.b || gamepad2.b) {
-//            robot.marker.markerRight();
-//            telemetry.addData("Marker Status", "right");
-//        }
-//        if (gamepad1.x || gamepad2.x) {
-//            robot.marker.markerNeutral();
-//            telemetry.addData("Marker Status", "neutral");
-//        }
+
+
 
         double[] positions = robot.drivetrain.getPositions();
         double imu = robot.drivetrain.singleImu.getHeading();

@@ -127,6 +127,9 @@ public class TeleopSlideTest extends OpMode {
         if (gamepad1.x || gamepad2.x) {
             telemetry.addData("range sensor", robot.drivetrain.getRangeUltraSensor());
         }
+        if (gamepad1.y || gamepad2.y) {
+            telemetry.addData("distance sponsor", robot.drivetrain.getSponsorDistance());
+        }
 
         double[] positions = robot.drivetrain.getPositions();
         double imu = robot.drivetrain.singleImu.getHeading();

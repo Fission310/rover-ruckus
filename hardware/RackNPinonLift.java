@@ -110,8 +110,18 @@ public class RackNPinonLift extends Mechanism {
      * Sets power for rack motor.
      */
     public void setRackPower(double power) {
-        leftRackMotor.setPower(power);
-        rightRackMotor.setPower(power);
+            leftRackMotor.setPower(power);
+            rightRackMotor.setPower(power);
+    }
+    public void setRackPower(double power, double timeoutS) {
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeoutS)) {
+            leftRackMotor.setPower(power);
+            rightRackMotor.setPower(power);
+        }
     }
 
     /**
@@ -152,12 +162,13 @@ public class RackNPinonLift extends Mechanism {
      */
     public void rackToPos(double speed, double inches, double timeoutS, double distance) {
         // Target position variables
-        int newTarget;
+        int newTarget, newTargets;
 
         // Determine new target position, and pass to motor controller
         newTarget = leftRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_MR);
+        newTargets = rightRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_MR);
         leftRackMotor.setTargetPosition(newTarget);
-        rightRackMotor.setTargetPosition(newTarget);
+        rightRackMotor.setTargetPosition(newTargets);
 
         // Turn On RUN_TO_POSITION
         leftRackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -170,7 +181,7 @@ public class RackNPinonLift extends Mechanism {
         // Loop until a condition is met
         while (opMode.opModeIsActive() &&
                 (runtime.seconds() < timeoutS) &&
-                leftRackMotor.isBusy() && rightRackMotor.isBusy() || (sensorRange.getDistance(DistanceUnit.CM) > distance)) {
+                leftRackMotor.isBusy() && rightRackMotor.isBusy()) {
 
             // Set power of rack and pinion motors accounting for adjustment
             setRackPower(speed);
@@ -196,6 +207,7 @@ public class RackNPinonLift extends Mechanism {
         leftRackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
     public double getDistanceSensor() {
         return sensorRange.getDistance(DistanceUnit.CM);
     }

@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
-@Autonomous(name="Main Depot: D;S;M;y", group="Slide Depot")
-public class AutonDepot extends LinearOpMode {
+@Autonomous(name="Main Crater: D;S;M;P", group="Slide Depot")
+public class AutonCrater extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -74,7 +74,7 @@ public class AutonDepot extends LinearOpMode {
                  * Land and wait for the robot to fully drop and stabilize.
                  */
                 case 1:
-//                    robot.land();
+                    robot.land();
                     telemetry.addData("Status", "Robot Landed");
                     telemetry.update();
                     step++;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auton.slide;
+package org.firstinspires.ftc.teamcode.prototype;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.path.Path;
@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name="Depot: Test", group="Slide Depot")
+@Autonomous(name="Depot: Test Path Finding", group="Slide Depot")
 public class AutonDepotTest extends LinearOpMode {
 
     /* Private OpMode members */

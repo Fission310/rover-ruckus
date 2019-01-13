@@ -6,15 +6,16 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 public class Constants {
     /* CONSTANTS */
-    public static final double NEVEREST_GEAR_RATIO  = 40;
+    public static final double NEVEREST_GEAR_RATIO  = 60;
     public static final double MODERN_ROBOTICS_GEAR_RATIO = 25.83;
     public static final double PPR = 7.0;
     public static final double CPR = PPR * 4;
+    public static final double CPRRACK = PPR * 2;
     /**
      * Ticks per revolution for a NeverRest 40 and GoBilda.
      */
     public static final double TICKS_PER_MOTOR_REV = CPR * NEVEREST_GEAR_RATIO; // 1120
-    public static final double TICKS_PER_MOTOR_MR = CPR * MODERN_ROBOTICS_GEAR_RATIO; // 723.24
+    public static final double TICKS_PER_MOTOR_MR = CPRRACK * MODERN_ROBOTICS_GEAR_RATIO; // 723.24
     /**
      * Drivetrain gear ratio (< 1.0 if geared up).
      */

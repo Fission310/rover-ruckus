@@ -107,12 +107,6 @@ public class Drivetrain extends Mechanism {
         // straight line. P value controls how sensitive the correction is.
         pidDrive = new PIDController(.05, 0, 0);
 
-        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, RCConfig.RANGE_SENSOR);
-        sensorSponsor = hwMap.get(DistanceSensor.class, RCConfig.DISTANCE_SENSOR_SPONSOR);
-        Rev2mDistanceSensor sponsorTimeOfFlight = (Rev2mDistanceSensor)sensorSponsor;
-//        sensorBack = hwMap.get(DistanceSensor.class, RCConfig.DISTANCE_SENSOR_BOTTOM);
-//        Rev2mDistanceSensor backTimeOfFlight = (Rev2mDistanceSensor)sensorBack;
-
     }
 
     /**
@@ -315,10 +309,59 @@ public class Drivetrain extends Mechanism {
      *  <ol>Driver stops the running OpMode</ol>
      * </li>
      *
-     * @param speed         maximum power of drivetrain motors when driving
-     * @param angle         number of degrees to turn
-     * @param timeoutS      amount of time before the move should stop
      */
+    public double getHeading() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.firstAngle;
+    }
+    // Get the difference in the target angle and the current heading
+    private double getError(double targetAngle) {
+        double heading = getHeading();
+        if (targetAngle > heading) {
+            if (targetAngle - heading > 180) {
+                return 360 - Math.abs(targetAngle) - Math.abs(heading);
+            } else {
+                return targetAngle - heading;
+            }
+        } else {
+            if (targetAngle - heading > 180) {
+                return -(360 - Math.abs(targetAngle) - Math.abs(heading));
+            } else {
+                return heading - targetAngle;
+            }
+        }
+    }
+
+    public void turn(double targetAngle, double timeoutS) {
+
+        // Normalize input
+        //targetAngle = targetAngle % 360;
+
+        // Reset the timeout time
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+
+        // Loop until a condition is met
+        while (opMode.opModeIsActive() && Math.abs(getError(targetAngle)) > 1.5 && runtime.seconds() < timeoutS) {
+
+            double velocity = getError(targetAngle) / 180 + 0.1; // this works
+            //double velocity = Math.max(getError(targetAngle) / 180 * 2, 0.25); // to be tested why doesn't this work
+
+            // Set motor power according to calculated angle to turn
+            leftFront.setPower(velocity);
+            rightFront.setPower(-velocity);
+
+            // Display heading for the driver
+            opMode.telemetry.addData("Heading: ", "%.2f : %.2f", targetAngle, getHeading());
+            opMode.telemetry.addData("Velocity: ", "%.2f", velocity);
+            opMode.telemetry.update();
+        }
+
+        // Stop motor movement
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+    }
+
     public void turn(double speed, double angle, double timeoutS) {
         // Get IMU angles
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -479,11 +522,4 @@ public class Drivetrain extends Mechanism {
 
         return positions;
     }
-    public double getRangeOpticalSensor() {
-        return rangeSensor.cmOptical();
-    }
-    public double getRangeUltraSensor() {
-        return rangeSensor.getDistance(DistanceUnit.CM);
-    }
-
 }

@@ -18,7 +18,7 @@ public class Acquirer extends Mechanism {
 
     /* CONSTANTS */
     private static final double SERVO_INIT_POS = 0;
-    private static final double SERVO_CENTER_POS = 0.5;
+    private static final double SERVO_CENTER_POS = 1;
 
     /* Hardware members */
     private DcMotor rotationBack;
@@ -80,7 +80,6 @@ public class Acquirer extends Mechanism {
         rotationBack.setPower(0);
         linearSlide.setPower(0);
 //        acquirerFloorInit();
-        acquirerRotationInit();
     }
 
     public void encoderInit() {
@@ -98,23 +97,24 @@ public class Acquirer extends Mechanism {
      * @param power        Motor power with range of (-1 to 1)
      */
     public void setIntakePower(double power) {
-        leftIntakeMotor.setPower(power);
-        rightIntakeMotor.setPower(power);
+        double sign = Math.signum(power);
+        leftIntakeMotor.setPower(.7 * sign);
+        rightIntakeMotor.setPower(.7 * sign);
     }
 
     /**
      * Sets power for rotation motors.
      * @param power        Motor power with range of (-1 to 1)
-     */
-    public void setRotationPower(double power) {
-        rotationForward.setPower(power);
-        rotationBack.setPower(power);
-    }
+         */
+        public void setRotationPower(double power) {
+            rotationForward.setPower(power);
+            rotationBack.setPower(power);
+        }
 
-    /**
-     * Sets power for linear slides motors.
-     * @param power        Motor power with range of (-1 to 1)
-     */
+        /**
+         * Sets power for linear slides motors.
+         * @param power        Motor power with range of (-1 to 1)
+         */
     public void setLinearSlidePower(double power) {
         linearSlide.setPower(power);
     }
