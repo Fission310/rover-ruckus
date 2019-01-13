@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auton.slide;
+package org.firstinspires.ftc.teamcode.prototype;
 
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;

@@ -51,16 +51,10 @@ public class Drivetrain extends Mechanism {
 
     private double power = .30;
 
-    ModernRoboticsI2cRangeSensor rangeSensor;
-    private DistanceSensor sensorSponsor;
-//    private DistanceSensor sensorBack;
-
     /**
      * Default constructor for Drivetrain.
      */
-    public Drivetrain(){
-
-    }
+    public Drivetrain() { }
     /**
      * Overloaded constructor for Drivetrain. Sets the OpMode context.
      *
@@ -84,7 +78,6 @@ public class Drivetrain extends Mechanism {
         // Set motor direction (AndyMark configuration)
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        slideDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set motor brake behavior
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -106,7 +99,6 @@ public class Drivetrain extends Mechanism {
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
         pidDrive = new PIDController(.05, 0, 0);
-
     }
 
     /**
@@ -292,74 +284,46 @@ public class Drivetrain extends Mechanism {
     }
 
     /**
-     * Turn to a specified angle accurately using a PID loop.
-     * @param angle         number of degrees to turn
+     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
+     * @param degrees Degrees to turn, + is left - is right
      */
-    public void turnPID(int angle) {
-        rotate(angle, power);
-    }
+    private void imuRotate(int degrees, double power) {
+        double leftPower, rightPower;
 
-    /**
-     * Turn to a specified angle using an IMU.
-     *
-     * Robot will stop moving if any of three conditions occur:
-     * <li>
-     *  <ol>Move gets to the desired angle</ol>
-     *  <ol>Move runs out of time</ol>
-     *  <ol>Driver stops the running OpMode</ol>
-     * </li>
-     *
-     */
-    public double getHeading() {
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return angles.firstAngle;
-    }
-    // Get the difference in the target angle and the current heading
-    private double getError(double targetAngle) {
-        double heading = getHeading();
-        if (targetAngle > heading) {
-            if (targetAngle - heading > 180) {
-                return 360 - Math.abs(targetAngle) - Math.abs(heading);
-            } else {
-                return targetAngle - heading;
-            }
-        } else {
-            if (targetAngle - heading > 180) {
-                return -(360 - Math.abs(targetAngle) - Math.abs(heading));
-            } else {
-                return heading - targetAngle;
-            }
-        }
-    }
+        // restart imu movement tracking.
+        singleImu.resetAngle();
 
-    public void turn(double targetAngle, double timeoutS) {
+        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+        // clockwise (right).
 
-        // Normalize input
-        //targetAngle = targetAngle % 360;
+        if (degrees < 0) {   // turn right.
+            leftPower = -power;
+            rightPower = power;
+        } else if (degrees > 0) {   // turn left.
+            leftPower = power;
+            rightPower = -power;
+        } else return;
 
-        // Reset the timeout time
-        ElapsedTime runtime = new ElapsedTime();
-        runtime.reset();
+        // set power to rotate.
+        leftFront.setPower(leftPower);
+        rightFront.setPower(rightPower);
 
-        // Loop until a condition is met
-        while (opMode.opModeIsActive() && Math.abs(getError(targetAngle)) > 1.5 && runtime.seconds() < timeoutS) {
+        // rotate until turn is completed.
+        if (degrees < 0) {
+            // On right turn we have to get off zero first.
+            while (opMode.opModeIsActive() && singleImu.getAngle() == 0) {}
+            while (opMode.opModeIsActive() && singleImu.getAngle() > degrees) {}
+        } else while (opMode.opModeIsActive() && singleImu.getAngle() < degrees) {}
 
-            double velocity = getError(targetAngle) / 180 + 0.1; // this works
-            //double velocity = Math.max(getError(targetAngle) / 180 * 2, 0.25); // to be tested why doesn't this work
-
-            // Set motor power according to calculated angle to turn
-            leftFront.setPower(velocity);
-            rightFront.setPower(-velocity);
-
-            // Display heading for the driver
-            opMode.telemetry.addData("Heading: ", "%.2f : %.2f", targetAngle, getHeading());
-            opMode.telemetry.addData("Velocity: ", "%.2f", velocity);
-            opMode.telemetry.update();
-        }
-
-        // Stop motor movement
+        // turn the motors off.
         leftFront.setPower(0);
         rightFront.setPower(0);
+
+        // wait for rotation to stop.
+        opMode.sleep(1000);
+
+        // reset angle tracking on new heading.
+        singleImu.resetAngle();
     }
 
     public void turn(double speed, double angle, double timeoutS) {
@@ -396,6 +360,12 @@ public class Drivetrain extends Mechanism {
     }
 
     /**
+     * Turn to a specified angle accurately using a PID loop.
+     * @param angle         number of degrees to turn
+     */
+    public void turnPID(int angle) { pidDriveRotate(angle, power); }
+
+    /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
      *
      * Starts pid controller. PID controller will monitor the turn angle with respect to the
@@ -410,7 +380,7 @@ public class Drivetrain extends Mechanism {
      *
      * @param degrees Degrees to turn, + is left - is right
      */
-    private void rotate(int degrees, double power) {
+    private void pidDriveRotate(int degrees, double power) {
         singleImu.resetAngle();
 
         pidRotate.reset();
@@ -461,7 +431,6 @@ public class Drivetrain extends Mechanism {
     }
 
     public void strafeToPos(double speed, double inches, double timeoutS) {
-
         // Target position variables
         int newTarget;
 
@@ -469,7 +438,7 @@ public class Drivetrain extends Mechanism {
         double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         // Determine new target position, and pass to motor controller
-        newTarget = slideDrive.getCurrentPosition() + (int) (inches * Constants.TICKS_PER_INCH_MR);
+        newTarget = slideDrive.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_MR);
         slideDrive.setTargetPosition(newTarget);
 
         // Turn On RUN_TO_POSITION
@@ -513,7 +482,6 @@ public class Drivetrain extends Mechanism {
         slideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
 
     public double[] getPositions() {
         double[] positions = new double[4];

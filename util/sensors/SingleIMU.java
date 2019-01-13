@@ -22,50 +22,79 @@ public class SingleIMU implements IMU {
 
     public BNO055IMU imu;
     public AxesOrder axesOrder;
-    public Orientation angles;
+    public Orientation lastAngles = new Orientation();
     public Acceleration gravity;
+    public BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
     public void init(BNO055IMU i, AxesOrder axesOrder, double heading) {
         this.axesOrder = axesOrder;
         this.imu = i;
         this.init_heading = heading;
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json";
         parameters.loggingEnabled      = true;
         parameters.loggingTag          = "IMU";
-        parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         imu.initialize(parameters);
-        if (imu.isGyroCalibrated()) { }
+
+        // make sure the imu gyro is calibrated before continuing.
+        while (!imu.isGyroCalibrated()) { }
 
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
-    //get heading from 0-360 range
-    public double getHeading360() {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, axesOrder, AngleUnit.DEGREES);
-        double heading = (angles.firstAngle + 360) % 360;
-        return (heading-init_heading) % 360;
+    /**
+     * Resets the cumulative angle tracking to zero.
+     */
+    public void resetAngle() {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        globalAngle = 0;
+    }
+
+    /**
+     * Get current cumulative angle rotation from last reset.
+     * @return Angle in degrees. + = left, - = right.
+     */
+    public double getAngle() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        // calculates the difference from when we first initialized the rotation to where we are at now
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180) deltaAngle += 360;
+        else if (deltaAngle > 180) deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        // set new last angle to current angle
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+
+    /**
+     * See if we are moving in a straight line and if not return a power correction value.
+     * @return Power adjustment, + is adjust left - is adjust right.
+     */
+    public double checkDirection() {
+        double correction, angle, gain = .10;
+
+        angle = getAngle();
+
+        if (angle == 0) correction = 0;             // no adjustment.
+        else correction = -angle;        // reverse sign of angle for correction.
+
+        correction = correction * gain;
+
+        return correction;
     }
 
     public double getHeading() {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return angles.firstAngle;
-    }
-
-    //returns how off the angle is, returns + if counterclockwise rotation is most efficient, - otherwise
-    public double getErrors(double desired) {
-        double rawError = ((desired + 360) % 360) - getHeading();
-        if (rawError > 180) return rawError - 360;
-        return rawError;
-    }
-
-    public String formatAngle(AngleUnit angleUnit, double angle) {
-        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
 
     public String formatDegrees(double degrees){
@@ -89,28 +118,7 @@ public class SingleIMU implements IMU {
         }
     }
 
-    public void resetAngle() {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        globalAngle = 0;
-    }
-
-    /**
-     * Get current cumulative angle rotation from last reset.
-     * @return Angle in degrees. + = left, - = right from zero point.
-     */
-    public double getAngle() {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double deltaAngle = angles.firstAngle - angles.firstAngle;
-
-        if (deltaAngle < -180) {
-            deltaAngle += 360;
-        } else if (deltaAngle > 180) {
-            deltaAngle -= 360;
-        }
-
-        globalAngle += deltaAngle;
-        angles = angles;
-
-        return globalAngle;
+    public String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
 }

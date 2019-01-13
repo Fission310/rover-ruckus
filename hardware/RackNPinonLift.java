@@ -113,16 +113,6 @@ public class RackNPinonLift extends Mechanism {
             leftRackMotor.setPower(power);
             rightRackMotor.setPower(power);
     }
-    public void setRackPower(double power, double timeoutS) {
-        ElapsedTime runtime = new ElapsedTime();
-        runtime.reset();
-
-        while (opMode.opModeIsActive() &&
-                (runtime.seconds() < timeoutS)) {
-            leftRackMotor.setPower(power);
-            rightRackMotor.setPower(power);
-        }
-    }
 
     /**
      * Scales input from the joystick of the gamepad. This allows for easier control from a range of
@@ -160,7 +150,7 @@ public class RackNPinonLift extends Mechanism {
      * @param inches    number of inches to move the rack
      * @param timeoutS      amount of time before the move should stop
      */
-    public void rackToPos(double speed, double inches, double timeoutS, double distance) {
+    public void rackToPos(double speed, double inches, double timeoutS) {
         // Target position variables
         int newTarget, newTargets;
 

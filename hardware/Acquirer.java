@@ -58,6 +58,7 @@ public class Acquirer extends Mechanism {
         rotationForward = hwMap.dcMotor.get(RCConfig.FRONT_ROT);
         rotationBack = hwMap.dcMotor.get(RCConfig.BACK_ROT);
         linearSlide = hwMap.dcMotor.get(RCConfig.LINEAR_SLIDES);
+
         //        acquirerFloor = hwMap.servo.get(RCConfig.ACQUIRER_FLOOR);
         acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
 

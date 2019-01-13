@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous(name="Depot: Test Path Finding", group="Slide Depot")
+@Disabled
 public class AutonDepotTest extends LinearOpMode {
 
     /* Private OpMode members */

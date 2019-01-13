@@ -182,7 +182,7 @@ public class PIDController {
      * @param setpoint the desired setpoint
      */
     public void setSetpoint(double setpoint) {
-        int     sign = 1;
+        int sign = 1;
 
         if (m_maximumInput > m_minimumInput) {
             if (setpoint < 0) sign = -1;
@@ -229,8 +229,7 @@ public class PIDController {
      * were set using setInputRange.
      * @return true if the error is less than the tolerance
      */
-    public boolean onTarget()
-    {
+    public boolean onTarget() {
         return (Math.abs(m_error) < Math.abs(m_tolerance / 100 * (m_maximumInput - m_minimumInput)));
     }
 

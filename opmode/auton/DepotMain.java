@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auton.slide;
+package org.firstinspires.ftc.teamcode.opmode.auton;
 
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.ftccommon.SoundPlayer;
@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
-@Autonomous(name="Main Depot: D;S;M;y", group="Slide Depot")
-public class AutonDepot extends LinearOpMode {
+@Autonomous(name="Main Depot: D;S;M;P", group="Slide Depot")
+public class DepotMain extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
