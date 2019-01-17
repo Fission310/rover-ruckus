@@ -75,10 +75,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 
 @TeleOp(name="Vuforia Phone Testing", group="DogeCV")
-@Disabled
-public class VuforiaPhoneTesting extends OpMode
-{
-
+//@Disabled
+public class VuforiaPhoneTesting extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private static final float mmPerInch        = 25.4f;
     private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
@@ -224,7 +222,6 @@ public class VuforiaPhoneTesting extends OpMode
             telemetry.addData("Visible Target", "none");
             telemetry.addData("Gold Cube X Pos:", detector.getXPosition());
         }
-
 
         telemetry.update();
     }

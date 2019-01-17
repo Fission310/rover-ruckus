@@ -41,7 +41,6 @@ public class DepotMain extends LinearOpMode {
 
         // Initialize CV
         visionManager.vuforiaInit(hardwareMap);
-        visionManager.samplingInit(hardwareMap);
         goldLocation = visionManager.getGoldLocation();
         visionManager.vuforiaLights(true);
         telemetry.addData("Gold Cube location before start", goldLocation);
@@ -155,6 +154,6 @@ public class DepotMain extends LinearOpMode {
         }
 
         // Stop CV
-        if (isStopRequested() || !opModeIsActive()) { visionManager.samplingStop(); }
+        if (isStopRequested() || !opModeIsActive()) { visionManager.vuforiaStop(); }
     }
 }

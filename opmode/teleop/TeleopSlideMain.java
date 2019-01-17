@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -55,8 +55,8 @@ import static java.lang.Math.abs;
  * BACK:
  *
  */
-@TeleOp(name = "Teleop: Test Slide", group = "Teleop")
-public class TeleopSlideTest extends OpMode {
+@TeleOp(name = "Teleop: Main Slide", group = "Teleop")
+public class TeleopSlideMain extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.0;
     private static final double SLOW_MULTIPLIER = 0.5;
@@ -75,7 +75,11 @@ public class TeleopSlideTest extends OpMode {
     double slowYInput, slowXInput, slowSlide, leftTrigger, rightTrigger; // Gamepad 1
     double slowLinearSlidesInput, slowRotationInput, acquirerIntake, acquirerOuttake; // Gamepad 2
     /* Handle time complexities */
-    boolean aButtonPressed, bButtonPressed, xButtonPressed;
+    boolean aButtonPressed = false, bButtonPressed = false, xButtonPressed = false, yButtonPressed = false;
+    /* Handle button positions */
+    boolean left, right;
+    double currentAcquirerRotation = 0;
+
 
     /* Applies brake behavior */
     boolean brake = false;
@@ -104,7 +108,6 @@ public class TeleopSlideTest extends OpMode {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
         robot.drivetrain.setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
-
         runtime.reset();
     }
 
@@ -113,22 +116,53 @@ public class TeleopSlideTest extends OpMode {
      * according to gamepad input.
      * @see OpMode#loop()
      */
-
     @Override
     public void loop() {
         // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        if (gamepad1.a || gamepad2.a) {
-            telemetry.addData("distance sensor", robot.rack.getDistanceSensor());
+
+        /**
+         * Gamepad1
+         */
+        yInput = Math.abs(gamepad1.left_stick_y) > .9 ? 1 * Math.signum(gamepad1.left_stick_y) : .8 * Math.signum(gamepad1.left_stick_y);
+        xInput = Math.abs(gamepad1.right_stick_x) > .9 ? 1 * Math.signum(gamepad1.right_stick_x) : .6 * Math.signum(gamepad1.right_stick_x);
+        slideInput = Math.abs(gamepad1.left_stick_x) > .9 ? 1 * Math.signum(gamepad1.left_stick_x) : .8 * Math.signum(gamepad1.left_stick_x);
+
+        slowYInput = Range.clip(yInput * SLOW_MULTIPLIER, -1.0, 1.0);
+        slowXInput = Range.clip(xInput * SLOW_MULTIPLIER, -1.0, 1.0);
+        slowSlide = Range.clip(slideInput * SLOW_MULTIPLIER, -1.0, 1.0);
+
+        if (gamepad1.left_bumper) {
+            robot.drivetrain.driveSlide(slowYInput, slowXInput, slowSlide);
+            telemetry.addData("GP 1 Status", "slowYInput: " + slowYInput);
+            telemetry.addData("GP 1 Status", "slowXInput: " + slowXInput);
+            telemetry.addData("GP 1 Status", "slowSlide: " + slowSlide);
+        } else {
+            robot.drivetrain.driveSlide(yInput, xInput, slideInput);
+            telemetry.addData("GP 1 Status", "yInput: " + yInput);
+            telemetry.addData("GP 1 Status", "xInput: " + xInput);
+            telemetry.addData("GP 1 Status", "slideInput: " + slideInput);
         }
-        if (gamepad1.b || gamepad2.b) {
-            telemetry.addData("range sensor", robot.drivetrain.getRangeOpticalSensor());
-        }
+
+        /**
+         * Gamepad1
+         */
+        // Sets racks power via the left and right triggers
+        leftTrigger = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.signum(gamepad2.left_trigger) : -.8 * gamepad2.left_trigger;
+        rightTrigger = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.signum(gamepad2.right_trigger) : .8 * gamepad2.right_trigger;
+        robot.rack.setRackPower(leftTrigger + rightTrigger);
+
+        /**
+         * Both Gamepads
+         */
         if (gamepad1.x || gamepad2.x) {
-            telemetry.addData("range sensor", robot.drivetrain.getRangeUltraSensor());
-        }
-        if (gamepad1.y || gamepad2.y) {
-            telemetry.addData("distance sponsor", robot.drivetrain.getSponsorDistance());
+            if(!xButtonPressed) {
+                robot.marker.markerLeft();
+                xButtonPressed = !xButtonPressed;
+            } else {
+                robot.marker.markerRight();
+                xButtonPressed = !xButtonPressed;
+            }
         }
 
         double[] positions = robot.drivetrain.getPositions();
@@ -140,7 +174,5 @@ public class TeleopSlideTest extends OpMode {
     }
 
     @Override
-    public void stop()
-    {
-    }
+    public void stop() { }
 }

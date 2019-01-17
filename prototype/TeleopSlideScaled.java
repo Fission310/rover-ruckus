@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.teamcode.prototype;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -160,18 +160,6 @@ public class TeleopSlideScaled extends OpMode {
 
         slowLinearSlidesInput = linearSlidesInput * SLOW_MULTIPLIER;
         slowRotationInput = rotationInput * SLOW_MULTIPLIER;
-
-        if (gamepad2.left_bumper) {
-            robot.acquirer.setLinearSlidePower(slowLinearSlidesInput);
-            robot.acquirer.setRotationPower(slowRotationInput);
-            telemetry.addData("GP 2 Status", "slowLinearSlidesInput: " + slowLinearSlidesInput);
-            telemetry.addData("GP 2 Status", "slowRotationInput: " + slowRotationInput);
-        } else {
-            robot.acquirer.setLinearSlidePower(linearSlidesInput);
-            robot.acquirer.setRotationPower(rotationInput);
-            telemetry.addData("GP 2 Status", "linearSlidesInput: " + linearSlidesInput);
-            telemetry.addData("GP 2 Status", "rotationInput: " + rotationInput);
-        }
 
         double[] positions = robot.drivetrain.getPositions();
         double imu = robot.drivetrain.singleImu.getHeading();

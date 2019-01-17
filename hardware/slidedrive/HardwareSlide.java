@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.hardware.slidedrive;
 
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
+import org.firstinspires.ftc.teamcode.hardware.Constants;
 import org.firstinspires.ftc.teamcode.hardware.Marker;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.RackNPinonLift;
@@ -77,6 +79,14 @@ public class HardwareSlide extends Mechanism {
     }
 
     /**
+     * Initializes drivetrain imu on the robot.
+     * @param hwMap     robot's hardware map
+     */
+    public void imuInit(HardwareMap hwMap) {
+        drivetrain.imuInit(hwMap);
+    }
+
+    /**
      * Waits for opMode's to start. Can perform actions while waiting.
      */
     public void waitForStart() {
@@ -91,7 +101,7 @@ public class HardwareSlide extends Mechanism {
      */
     public void land() {
         if (opMode.opModeIsActive()) {
-            rack.setRackPower(.4);
+            rack.rackToPos(.4, FieldConstants.HANG_HEIGHT);
         }
     }
 
@@ -109,19 +119,17 @@ public class HardwareSlide extends Mechanism {
      */
     public void findGoldLocation(VisionManager visionManager, SamplingOrderDetector.GoldLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE, -FieldConstants.TILE_HYPOTENUSE, 3);
+            drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE, -FieldConstants.TILE_HYPOTENUSE, 5);
 
             if (location == location.LEFT){
-//                drivetrain.strafeToPos(.3,-FieldConstants.TILE_HYPOTENUSE / 2, 3);
                 drivetrain.turnPID(-90);
-                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 3);
+                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 5);
                 drivetrain.turnPID(90);
             } else if (location == location.CENTER){
 
             } else if (location == location.RIGHT){
-//                drivetrain.strafeToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, 3);
                 drivetrain.turnPID(90);
-                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 3);
+                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 5);
                 drivetrain.turnPID(-90);
             } else if (location == location.UNKNOWN){
                 opMode.telemetry.addData("Detected None", "Value" + location);
@@ -139,15 +147,15 @@ public class HardwareSlide extends Mechanism {
      */
     public void samplePID(VisionManager visionManager, SamplingOrderDetector.GoldLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE, -FieldConstants.TILE_HYPOTENUSE, 3);
+            drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE, -FieldConstants.TILE_HYPOTENUSE, 5);
             if (location == location.LEFT){
                 drivetrain.turnPID(45);
-                drivetrain.driveToPos(.3, FieldConstants.FLOOR_TILE, FieldConstants.FLOOR_TILE, 3);
+                drivetrain.driveToPos(.3, FieldConstants.FLOOR_TILE, FieldConstants.FLOOR_TILE, 5);
             } else if (location == location.CENTER || location == location.UNKNOWN){
                 drivetrain.turnPID(-45);
             } else if (location == location.RIGHT){
                 drivetrain.turnPID(45);
-                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 3);
+                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 5);
                 drivetrain.turnPID(90);
             }
         }
@@ -164,22 +172,18 @@ public class HardwareSlide extends Mechanism {
     public void dropMarker() {
         if (opMode.opModeIsActive()) {
             marker.markerLeft();
-            drivetrain.driveToPos(.5, 12, 12, 3);
-            drivetrain.driveToPos(.5, -12, -12, 3);
+            drivetrain.driveToPos(.5, 12, 12, 5);
+            drivetrain.driveToPos(.5, -12, -12, 5);
         }
     }
 
     public void alignToWall() {
-        if (opMode.opModeIsActive()) {
-//            while ((drivetrain.getSponsorDistance() > 5) && !(drivetrain.getSponsorDistance() < 2)) {
-//                drivetrain.strafeToPos(.2, -4, 2);
-            }
-//        }
+        if (opMode.opModeIsActive()) { }
     }
 
     public void driveToCrater() {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.5, FieldConstants.TILE_HYPOTENUSE * 3.5, FieldConstants.TILE_HYPOTENUSE * 3.5, 4);
+            drivetrain.driveToPos(.5, FieldConstants.TILE_HYPOTENUSE * 3.5, FieldConstants.TILE_HYPOTENUSE * 3.5, 5);
 
         }
     }

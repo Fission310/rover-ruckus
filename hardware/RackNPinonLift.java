@@ -31,13 +31,6 @@ public class RackNPinonLift extends Mechanism {
     private DcMotor leftRackMotor;
     private DcMotor rightRackMotor;
 
-    private BNO055IMU imu;
-
-    double power = .30;
-    PIDController pidRackPinion;
-    SingleIMU singleImu= new SingleIMU();
-
-    public DistanceSensor sensorRange;
     /**
      * Default constructor for Acquirer.
      */
@@ -75,23 +68,6 @@ public class RackNPinonLift extends Mechanism {
         // Set initial power
         leftRackMotor.setPower(0);
         rightRackMotor.setPower(0);
-
-        // Retrieve and initialize the IMU
-        imu = hwMap.get(BNO055IMU.class, "imu");
-        singleImu.init(imu, AxesOrder.ZYX,0D);
-
-        // Set PID proportional value to produce non-zero correction value when robot veers off
-        // straight line. P value controls how sensitive the correction is.
-        pidRackPinion = new PIDController(.05, 0, 0);
-
-        // Set up parameters for driving in a straight line.
-        pidRackPinion.setSetpoint(0);
-        pidRackPinion.setOutputRange(0, power);
-        pidRackPinion.setInputRange(-90, 90);
-        pidRackPinion.enable();
-
-        sensorRange = hwMap.get(DistanceSensor.class, RCConfig.DISTANCE_SENSOR_BOTTOM);
-        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
     }
 
     /**
@@ -104,6 +80,17 @@ public class RackNPinonLift extends Mechanism {
 
         leftRackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    /**
+     * Sets motors zero power behavior. Indicate whether the rack and pinion lift should be in float or brake mode.
+     * Float mode allows for free rotations after the initial lift.
+     * Brake mode prevents extra rotations after the initial lift.
+     * @param behavior FLOAT, BRAKE
+     */
+    public void setDriveZeroPowers(DcMotor.ZeroPowerBehavior behavior) {
+        rightRackMotor.setZeroPowerBehavior(behavior);
+        leftRackMotor.setZeroPowerBehavior(behavior);
     }
 
     /**
@@ -148,15 +135,14 @@ public class RackNPinonLift extends Mechanism {
      *
      * @param speed         maximum power of drivetrain motors when driving
      * @param inches    number of inches to move the rack
-     * @param timeoutS      amount of time before the move should stop
      */
-    public void rackToPos(double speed, double inches, double timeoutS) {
+    public void rackToPos(double speed, double inches) {
         // Target position variables
         int newTarget, newTargets;
 
         // Determine new target position, and pass to motor controller
-        newTarget = leftRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_MR);
-        newTargets = rightRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_MR);
+        newTarget = leftRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_60);
+        newTargets = rightRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_60);
         leftRackMotor.setTargetPosition(newTarget);
         rightRackMotor.setTargetPosition(newTargets);
 
@@ -164,13 +150,14 @@ public class RackNPinonLift extends Mechanism {
         leftRackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightRackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        setDriveZeroPowers(DcMotor.ZeroPowerBehavior.FLOAT);
+
         // Reset the timeout time
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
 
         // Loop until a condition is met
         while (opMode.opModeIsActive() &&
-                (runtime.seconds() < timeoutS) &&
                 leftRackMotor.isBusy() && rightRackMotor.isBusy()) {
 
             // Set power of rack and pinion motors accounting for adjustment
@@ -178,12 +165,7 @@ public class RackNPinonLift extends Mechanism {
 
             // Display info for the driver.
             opMode.telemetry.addData("Path1", "Running to %7d", newTarget);
-            opMode.telemetry.addData("Path2", "Running at %7d :%7d",
-                    leftRackMotor.getCurrentPosition(),
-                    rightRackMotor.getCurrentPosition());
-
-            opMode.telemetry.addData("AccX: ", "%f", imu.getAcceleration().xAccel);
-            opMode.telemetry.addData("AccY: ", "%f", imu.getAcceleration().yAccel);
+            opMode.telemetry.addData("Path2", "Running at %7d :%7d", leftRackMotor.getCurrentPosition(), rightRackMotor.getCurrentPosition());
             opMode.telemetry.update();
         }
 
@@ -196,9 +178,5 @@ public class RackNPinonLift extends Mechanism {
         rightRackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public double getDistanceSensor() {
-        return sensorRange.getDistance(DistanceUnit.CM);
     }
 }

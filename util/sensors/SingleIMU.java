@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 
 import java.util.Locale;
 
-public class SingleIMU implements IMU {
+public class SingleIMU {
     public double x_location, y_location, init_heading = 0D;
     public double globalAngle;
 
@@ -26,10 +26,13 @@ public class SingleIMU implements IMU {
     public Acceleration gravity;
     public BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
-    public void init(BNO055IMU i, AxesOrder axesOrder, double heading) {
+    public SingleIMU() { }
+
+    public void init(HardwareMap hwMap, AxesOrder axesOrder, double heading) {
         this.axesOrder = axesOrder;
-        this.imu = i;
+        this.imu = hwMap.get(BNO055IMU.class, "imu");
         this.init_heading = heading;
+
         parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -95,6 +98,18 @@ public class SingleIMU implements IMU {
     public double getHeading() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return angles.firstAngle;
+    }
+    public double getZAxis() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.firstAngle;
+    }
+    public double getYAxis() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.secondAngle;
+    }
+    public double getXAxis() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.thirdAngle;
     }
 
     public String formatDegrees(double degrees){

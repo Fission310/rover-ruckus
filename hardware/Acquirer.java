@@ -106,16 +106,16 @@ public class Acquirer extends Mechanism {
     /**
      * Sets power for rotation motors.
      * @param power        Motor power with range of (-1 to 1)
-         */
-        public void setRotationPower(double power) {
-            rotationForward.setPower(power);
-            rotationBack.setPower(power);
-        }
+     */
+    public void setRotationPower(double power) {
+        rotationForward.setPower(power);
+        rotationBack.setPower(power);
+    }
 
-        /**
-         * Sets power for linear slides motors.
-         * @param power        Motor power with range of (-1 to 1)
-         */
+    /**
+     * Sets power for linear slides motors.
+     * @param power        Motor power with range of (-1 to 1)
+     */
     public void setLinearSlidePower(double power) {
         linearSlide.setPower(power);
     }
