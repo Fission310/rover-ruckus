@@ -36,11 +36,11 @@ public class HardwareSlide extends Mechanism {
     /**
      * Instance variable containing robot's rack and pinion lift.
      */
-    public RackNPinonLift rack;
+//    public RackNPinonLift rack;
     /**
      * Instance variable containing robot's marker.
      */
-    public Marker marker;
+//    public Marker marker;
 
     /* Miscellaneous mechanisms */
 
@@ -50,8 +50,8 @@ public class HardwareSlide extends Mechanism {
     public HardwareSlide(){
         drivetrain = new Drivetrain();
 //        acquirer = new Acquirer();
-        rack = new RackNPinonLift();
-        marker = new Marker();
+//        rack = new RackNPinonLift();
+//        marker = new Marker();
     }
     /**
      * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
@@ -63,8 +63,8 @@ public class HardwareSlide extends Mechanism {
         this.opMode = opMode;
         drivetrain = new Drivetrain(opMode);
 //        acquirer = new Acquirer(opMode);
-        rack = new RackNPinonLift(opMode);
-        marker = new Marker(opMode);
+//        rack = new RackNPinonLift(opMode);
+//        marker = new Marker(opMode);
     }
 
     /**
@@ -74,8 +74,8 @@ public class HardwareSlide extends Mechanism {
     public void init(HardwareMap hwMap) {
         drivetrain.init(hwMap);
 //        acquirer.init(hwMap);
-        rack.init(hwMap);
-        marker.init(hwMap);
+//        rack.init(hwMap);
+//        marker.init(hwMap);
     }
 
     /**
@@ -101,7 +101,7 @@ public class HardwareSlide extends Mechanism {
      */
     public void land() {
         if (opMode.opModeIsActive()) {
-            rack.rackToPos(.4, FieldConstants.HANG_HEIGHT);
+//            rack.rackToPos(.4, FieldConstants.HANG_HEIGHT);
         }
     }
 
@@ -171,7 +171,7 @@ public class HardwareSlide extends Mechanism {
      */
     public void dropMarker() {
         if (opMode.opModeIsActive()) {
-            marker.markerLeft();
+//            marker.markerLeft();
             drivetrain.driveToPos(.5, 12, 12, 5);
             drivetrain.driveToPos(.5, -12, -12, 5);
         }

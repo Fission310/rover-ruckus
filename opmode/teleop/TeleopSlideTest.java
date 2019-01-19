@@ -55,7 +55,7 @@ import static java.lang.Math.abs;
  * BACK:
  *
  */
-@TeleOp(name = "Teleop: Test Slide 1/14/19", group = "Teleop")
+@TeleOp(name = "IMU & Encoder Test", group = "Teleop")
 public class TeleopSlideTest extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.0;
@@ -103,7 +103,6 @@ public class TeleopSlideTest extends OpMode {
     public void start() {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
-        robot.drivetrain.setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
 
         runtime.reset();
     }
@@ -123,9 +122,10 @@ public class TeleopSlideTest extends OpMode {
         double imuZAxis = robot.drivetrain.singleImu.getZAxis();
         double imuYAxis = robot.drivetrain.singleImu.getYAxis();
         double imuXAxis = robot.drivetrain.singleImu.getXAxis();
-        telemetry.addData("Encoder counts", "Running at %.2f :%.2f",
+        telemetry.addData("Encoder counts", "Running at %.2f :%.2f :%.2f",
                 positions[0],
-                positions[1]);
+                positions[1],
+                positions[2]);
         telemetry.addData("IMU", "Z-axis: " + imuZAxis);
         telemetry.addData("IMU", "Y-axis: " + imuYAxis);
         telemetry.addData("IMU", "X-axis: " + imuXAxis);

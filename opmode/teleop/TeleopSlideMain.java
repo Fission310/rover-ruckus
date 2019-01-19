@@ -107,7 +107,6 @@ public class TeleopSlideMain extends OpMode {
     public void start() {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
-        robot.drivetrain.setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
         runtime.reset();
     }
 
@@ -122,7 +121,7 @@ public class TeleopSlideMain extends OpMode {
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
         /**
-         * Gamepad1
+         * Gamepad 1
          */
         yInput = Math.abs(gamepad1.left_stick_y) > .9 ? 1 * Math.signum(gamepad1.left_stick_y) : .8 * Math.signum(gamepad1.left_stick_y);
         xInput = Math.abs(gamepad1.right_stick_x) > .9 ? 1 * Math.signum(gamepad1.right_stick_x) : .6 * Math.signum(gamepad1.right_stick_x);
@@ -145,25 +144,25 @@ public class TeleopSlideMain extends OpMode {
         }
 
         /**
-         * Gamepad1
+         * Gamepad 2
          */
-        // Sets racks power via the left and right triggers
-        leftTrigger = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.signum(gamepad2.left_trigger) : -.8 * gamepad2.left_trigger;
-        rightTrigger = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.signum(gamepad2.right_trigger) : .8 * gamepad2.right_trigger;
-        robot.rack.setRackPower(leftTrigger + rightTrigger);
-
-        /**
-         * Both Gamepads
-         */
-        if (gamepad1.x || gamepad2.x) {
-            if(!xButtonPressed) {
-                robot.marker.markerLeft();
-                xButtonPressed = !xButtonPressed;
-            } else {
-                robot.marker.markerRight();
-                xButtonPressed = !xButtonPressed;
-            }
-        }
+//        // Sets racks power via the left and right triggers
+//        leftTrigger = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.signum(gamepad2.left_trigger) : -.8 * gamepad2.left_trigger;
+//        rightTrigger = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.signum(gamepad2.right_trigger) : .8 * gamepad2.right_trigger;
+////        robot.rack.setRackPower(leftTrigger + rightTrigger);
+//
+//        /**
+//         * Both Gamepads
+//         */
+//        if (gamepad1.x || gamepad2.x) {
+//            if(!xButtonPressed) {
+//                robot.marker.markerLeft();
+//                xButtonPressed = !xButtonPressed;
+//            } else {
+//                robot.marker.markerRight();
+//                xButtonPressed = !xButtonPressed;
+//            }
+//        }
 
         double[] positions = robot.drivetrain.getPositions();
         double imu = robot.drivetrain.singleImu.getHeading();

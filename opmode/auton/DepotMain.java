@@ -37,7 +37,6 @@ public class DepotMain extends LinearOpMode {
         // Initialize robot
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
-        robot.drivetrain.setDriveZeroPowers(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Initialize CV
         visionManager.vuforiaInit(hardwareMap);

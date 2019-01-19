@@ -23,6 +23,7 @@ public class Constants {
      * Drivetrain gear ratio (< 1.0 if geared up).
      */
     public static final double DRIVE_GEAR_REDUCTION = 1.0;
+    public static final double DRIVETRAIN_GEAR_REDUCTION = 1.0 / 3.0;
     /**
      * Diameter of wheel in inches.
      */
@@ -31,13 +32,14 @@ public class Constants {
     /**
      * Calculated ticks per inch.
      */
-    public static final double INCHES_PER_TICK_60 = ((WHEEL_DIAMETER_INCHES_2 * Math.PI) / TICKS_PER_MOTOR_60);
-    public static final double INCHES_PER_TICK_40 = ((WHEEL_DIAMETER_INCHES_4 * Math.PI) / TICKS_PER_MOTOR_40);
-    public static final double INCHES_PER_TICK_MR = ((WHEEL_DIAMETER_INCHES_4 * Math.PI) / TICKS_PER_MOTOR_MR);
+    public static final double INCHES_PER_TICK_60 = ((WHEEL_DIAMETER_INCHES_2 * Math.PI) / (TICKS_PER_MOTOR_60 * DRIVE_GEAR_REDUCTION));
+    public static final double INCHES_PER_TICK_40 = ((WHEEL_DIAMETER_INCHES_4 * Math.PI) / (TICKS_PER_MOTOR_40 * DRIVETRAIN_GEAR_REDUCTION));
+    public static final double INCHES_PER_TICK_MR = ((WHEEL_DIAMETER_INCHES_4 * Math.PI) / (TICKS_PER_MOTOR_MR * DRIVE_GEAR_REDUCTION));
     /**
      * Calculated inch per tick.
      */
     public static final double TICKS_PER_INCH_60 = 1.0 / INCHES_PER_TICK_60;
+    public static final double TICKS_PER_INCH_40 = 1.0 / INCHES_PER_TICK_40;
     public static final double TICKS_PER_INCH_MR = 1.0 / INCHES_PER_TICK_MR;
     /**
      * Drive speed when using encoders.

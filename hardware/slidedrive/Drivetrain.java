@@ -128,6 +128,10 @@ public class Drivetrain extends Mechanism {
         slideDrive.setZeroPowerBehavior(behavior);
     }
 
+    public void setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior behavior) {
+        slideDrive.setZeroPowerBehavior(behavior);
+    }
+
     /**
      * Scales input from the joystick of the gamepad. This allows for easier control from a range of
      * -1 to 1.
@@ -223,10 +227,11 @@ public class Drivetrain extends Mechanism {
         int newRightTarget;
 
         // Determine new target position, and pass to motor controller
-        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_MR);
-        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_MR);
+        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_40);
+        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_40);
         leftFront.setTargetPosition(newLeftTarget);
         rightFront.setTargetPosition(newRightTarget);
+        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
 
         // Turn On RUN_TO_POSITION
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -256,6 +261,7 @@ public class Drivetrain extends Mechanism {
         // Stop all motion
         leftFront.setPower(0);
         rightFront.setPower(0);
+        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Turn off RUN_TO_POSITION
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -287,6 +293,7 @@ public class Drivetrain extends Mechanism {
      */
     public void imuRotate(int degrees, double power) {
         double leftPower, rightPower;
+        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
 
         // restart imu movement tracking.
         singleImu.resetAngle();
@@ -316,6 +323,7 @@ public class Drivetrain extends Mechanism {
         // turn the motors off.
         leftFront.setPower(0);
         rightFront.setPower(0);
+        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // wait for rotation to stop.
         opMode.sleep(1000);
@@ -380,6 +388,7 @@ public class Drivetrain extends Mechanism {
      */
     private void pidDriveRotate(int degrees, double power) {
         singleImu.resetAngle();
+        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
 
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
@@ -411,6 +420,7 @@ public class Drivetrain extends Mechanism {
 
         leftFront.setPower(0);
         rightFront.setPower(0);
+        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // wait for rotation to stop.
         opMode.sleep(500);
@@ -480,9 +490,10 @@ public class Drivetrain extends Mechanism {
     }
 
     public double[] getPositions() {
-        double[] positions = new double[2];
-        positions[0] = leftFront.getCurrentPosition() / Constants.TICKS_PER_INCH_MR;
-        positions[1] = rightFront.getCurrentPosition() / Constants.TICKS_PER_INCH_MR;
+        double[] positions = new double[3];
+        positions[0] = leftFront.getCurrentPosition() / Constants.TICKS_PER_INCH_40;
+        positions[1] = rightFront.getCurrentPosition() / Constants.TICKS_PER_INCH_40;
+        positions[2] = slideDrive.getCurrentPosition() / Constants.TICKS_PER_INCH_40;
 
         return positions;
     }
