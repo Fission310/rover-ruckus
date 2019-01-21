@@ -167,9 +167,10 @@ public class TeleopSlideMain extends OpMode {
 
         double[] positions = robot.drivetrain.getPositions();
         double imu = robot.drivetrain.singleImu.getHeading();
-        telemetry.addData("Path2", "Running at %.2f :%.2f",
+        telemetry.addData("Path2", "Running at %.2f :%.2f :%.2f",
                 positions[0],
-                positions[1]);
+                positions[1],
+                positions[2]);
         telemetry.addData("IMU", "imu" + imu);
     }
 

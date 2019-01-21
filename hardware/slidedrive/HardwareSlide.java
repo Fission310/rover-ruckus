@@ -174,8 +174,6 @@ public class HardwareSlide extends Mechanism {
     public void dropMarker() {
         if (opMode.opModeIsActive()) {
 //            marker.markerLeft();
-            drivetrain.driveToPos(.5, 12, 12, 5);
-            drivetrain.driveToPos(.5, -12, -12, 5);
         }
     }
 
@@ -185,7 +183,7 @@ public class HardwareSlide extends Mechanism {
 
     public void driveToCrater() {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.5, FieldConstants.TILE_HYPOTENUSE * 3.5, FieldConstants.TILE_HYPOTENUSE * 3.5, 5);
+            drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE * 3.5, FieldConstants.FLOOR_TILE * 3.5, 5);
 
         }
     }

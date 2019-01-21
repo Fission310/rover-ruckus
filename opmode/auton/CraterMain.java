@@ -13,9 +13,8 @@ import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.opmode.Steps;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
-@Autonomous(name="Main Crater: D;S;M;P", group="Slide Depot")
+@Autonomous(name="Main Crater: D;S;M;P", group="Slide Crater")
 public class CraterMain extends LinearOpMode {
-
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -40,8 +39,8 @@ public class CraterMain extends LinearOpMode {
         robot.drivetrain.encoderInit();
 
         // Initialize CV
-        visionManager.samplingInit(hardwareMap);
-        visionManager.vuforiaInit(hardwareMap);
+//        visionManager.samplingInit(hardwareMap);
+        visionManager.vuforiaSampleInit(hardwareMap);
 //        goldLocation = visionManager.getGoldLocation();
         visionManager.vuforiaLights(true);
         telemetry.addData("Gold Cube location before start", goldLocation);
@@ -152,7 +151,7 @@ public class CraterMain extends LinearOpMode {
         // Stop CV
         if (isStopRequested() || !opModeIsActive()) {
             visionManager.vuforiaStop();
-            visionManager.samplingStop();
+//            visionManager.samplingStop();
         }
     }
 }
