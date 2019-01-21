@@ -58,33 +58,6 @@ public class AutonTestDrive extends LinearOpMode {
                     step++;
                     break;
 
-                case 2:
-                    telemetry.addData("Step 2", "Robot Drive one floor tile");
-                    telemetry.update();
-                    robot.drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE, FieldConstants.FLOOR_TILE, 5.00);
-                    step++;
-                    break;
-
-                case 3:
-                    telemetry.addData("Step 3", "Robot Ryan Turn");
-                    telemetry.update();
-                    robot.drivetrain.turn(.3, 90, 5.00);
-                    step++;
-                    break;
-
-                case 4:
-                    telemetry.addData("Step 4", "Robot Drive one floor tile");
-                    telemetry.update();
-                    robot.drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE, FieldConstants.FLOOR_TILE, 5.00);
-                    break;
-
-                case 5:
-                    telemetry.addData("Step 5", "Robot IMU Turn");
-                    telemetry.update();
-                    robot.drivetrain.imuRotate(90, .3);
-                    step++;
-                    break;
-
                 default: {
                     robot.drivetrain.drive(0, 0);
                     telemetry.addData("Status", "Robot default");

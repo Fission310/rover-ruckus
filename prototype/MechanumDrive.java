@@ -33,10 +33,10 @@ public class MechanumDrive extends LinearOpMode {
         double v3 = r * Math.sin(robotAngle) + turn;
         double v4 = r * Math.cos(robotAngle) - turn;
 
-        leftFront.setPower(v3); // v2
-        leftBack.setPower(v1); // v4
-        rightBack.setPower(v2); // v3
-        rightFront.setPower(v4); // v1
+        leftFront.setPower(v1); // v2
+        leftBack.setPower(v3); // v4
+        rightBack.setPower(v4); // v3
+        rightFront.setPower(v2); // v1
     }
 
     @Override
@@ -51,10 +51,10 @@ public class MechanumDrive extends LinearOpMode {
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.FORWARD);
-        rightBack.setDirection(DcMotor.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotor.Direction.FORWARD);
+        leftBack.setDirection(DcMotor.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.FORWARD);
 
         // Set motor brake behavior
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -87,9 +87,6 @@ public class MechanumDrive extends LinearOpMode {
 
             // Threshold for strafing, makes horizontal strafing easier
             double yInput = gamepad1.left_stick_y;
-            if (abs(gamepad1.left_stick_y) < ANALOG_THRESHOLD) {
-                yInput = 0;
-            }
             // Drives the robot based on driver joystick input, check for slow mode
             if (gamepad1.right_bumper || gamepad2.right_bumper) {
                 drive(gamepad1.left_stick_x * SLOW_MULTIPLIER, yInput * SLOW_MULTIPLIER, gamepad1.right_stick_x * SLOW_MULTIPLIER);

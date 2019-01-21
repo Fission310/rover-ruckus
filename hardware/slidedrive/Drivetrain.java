@@ -73,7 +73,7 @@ public class Drivetrain extends Mechanism {
         // Set motor direction (AndyMark configuration)
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        slideDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        slideDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set motor brake behavior
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -109,11 +109,11 @@ public class Drivetrain extends Mechanism {
         singleImu.init(hwMap, AxesOrder.ZYX,0D);
 
         // Set PID proportional value to start reducing power at about 50 degrees of rotation.
-        pidRotate = new PIDController(.005, 0, 0);
+        pidRotate = new PIDController(.0053, 0, 0);
 
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
-        pidDrive = new PIDController(.05, 0, 0);
+        pidDrive = new PIDController(.04, 0, 0);
     }
 
     /**
@@ -227,8 +227,8 @@ public class Drivetrain extends Mechanism {
         int newRightTarget;
 
         // Determine new target position, and pass to motor controller
-        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_40);
-        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_40);
+        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_30);
+        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_30);
         leftFront.setTargetPosition(newLeftTarget);
         rightFront.setTargetPosition(newRightTarget);
         setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -285,84 +285,6 @@ public class Drivetrain extends Mechanism {
 
         leftFront.setPower(-speed + corrections);
         rightFront.setPower(-speed);
-    }
-
-    /**
-     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
-     * @param degrees Degrees to turn, + is left - is right
-     */
-    public void imuRotate(int degrees, double power) {
-        double leftPower, rightPower;
-        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
-
-        // restart imu movement tracking.
-        singleImu.resetAngle();
-
-        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
-        // clockwise (right).
-
-        if (degrees < 0) {   // turn right.
-            leftPower = -power;
-            rightPower = power;
-        } else if (degrees > 0) {   // turn left.
-            leftPower = power;
-            rightPower = -power;
-        } else return;
-
-        // set power to rotate.
-        leftFront.setPower(leftPower);
-        rightFront.setPower(rightPower);
-
-        // rotate until turn is completed.
-        if (degrees < 0) {
-            // On right turn we have to get off zero first.
-            while (opMode.opModeIsActive() && singleImu.getAngle() == 0) {}
-            while (opMode.opModeIsActive() && singleImu.getAngle() > degrees) {}
-        } else while (opMode.opModeIsActive() && singleImu.getAngle() < degrees) {}
-
-        // turn the motors off.
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // wait for rotation to stop.
-        opMode.sleep(1000);
-
-        // reset angle tracking on new heading.
-        singleImu.resetAngle();
-    }
-
-    public void turn(double speed, double angle, double timeoutS) {
-        // Get IMU angles
-        Orientation angles = singleImu.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        // Calculate angle to turn
-        double angleToTurn = angle - angles.firstAngle;
-
-        // Reset the timeout time
-        ElapsedTime runtime = new ElapsedTime();
-        runtime.reset();
-
-        // Loop until a condition is met
-        while (opMode.opModeIsActive() && Math.abs(angleToTurn) > 0.5 && runtime.seconds() < timeoutS) {
-
-            angles = singleImu.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            angleToTurn = angle - angles.firstAngle;
-
-            // Set motor power according to calculated angle to turn
-            leftFront.setPower(-Math.signum(angleToTurn) * speed);
-            rightFront.setPower(Math.signum(angleToTurn) * speed);
-            slideDrive.setPower(Math.signum(angleToTurn) * speed);
-
-            // Display heading for the driver
-            opMode.telemetry.addData("Heading: ", "%f", angleToTurn);
-            opMode.telemetry.update();
-        }
-
-        // Stop motor movement
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        slideDrive.setPower(0);
     }
 
     /**
@@ -446,7 +368,7 @@ public class Drivetrain extends Mechanism {
         double currentAngle = singleImu.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         // Determine new target position, and pass to motor controller
-        newTarget = slideDrive.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_MR);
+        newTarget = slideDrive.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_30);
         slideDrive.setTargetPosition(newTarget);
 
         // Turn On RUN_TO_POSITION
@@ -491,9 +413,9 @@ public class Drivetrain extends Mechanism {
 
     public double[] getPositions() {
         double[] positions = new double[3];
-        positions[0] = leftFront.getCurrentPosition() / Constants.TICKS_PER_INCH_40;
-        positions[1] = rightFront.getCurrentPosition() / Constants.TICKS_PER_INCH_40;
-        positions[2] = slideDrive.getCurrentPosition() / Constants.TICKS_PER_INCH_40;
+        positions[0] = leftFront.getCurrentPosition() / Constants.TICKS_PER_INCH_30;
+        positions[1] = rightFront.getCurrentPosition() / Constants.TICKS_PER_INCH_30;
+        positions[2] = slideDrive.getCurrentPosition() / Constants.TICKS_PER_INCH_30;
 
         return positions;
     }

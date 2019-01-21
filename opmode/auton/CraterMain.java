@@ -40,8 +40,9 @@ public class CraterMain extends LinearOpMode {
         robot.drivetrain.encoderInit();
 
         // Initialize CV
+        visionManager.samplingInit(hardwareMap);
         visionManager.vuforiaInit(hardwareMap);
-        goldLocation = visionManager.getGoldLocation();
+//        goldLocation = visionManager.getGoldLocation();
         visionManager.vuforiaLights(true);
         telemetry.addData("Gold Cube location before start", goldLocation);
 
@@ -85,7 +86,7 @@ public class CraterMain extends LinearOpMode {
                     break;
 
                 case STRAFE_OUT_LANDER:
-                    robot.drivetrain.strafeToPos(.4, -8, 2);
+                    robot.drivetrain.strafeToPos(.4, 8, 2);
                     robot.turn90();
                     telemetry.addData("Status", "Robot turned 90 degrees");
                     telemetry.update();
@@ -149,6 +150,9 @@ public class CraterMain extends LinearOpMode {
         }
 
         // Stop CV
-        if (isStopRequested() || !opModeIsActive()) { visionManager.vuforiaStop(); }
+        if (isStopRequested() || !opModeIsActive()) {
+            visionManager.vuforiaStop();
+            visionManager.samplingStop();
+        }
     }
 }

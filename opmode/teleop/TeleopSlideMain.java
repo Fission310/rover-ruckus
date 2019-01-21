@@ -107,6 +107,7 @@ public class TeleopSlideMain extends OpMode {
     public void start() {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
+        robot.drivetrain.imuInit(hardwareMap);
         runtime.reset();
     }
 

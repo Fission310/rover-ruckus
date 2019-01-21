@@ -122,12 +122,14 @@ public class HardwareSlide extends Mechanism {
             drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE, -FieldConstants.TILE_HYPOTENUSE, 5);
 
             if (location == location.LEFT){
+                opMode.telemetry.addData("Detected Gold", "Value" + location);
                 drivetrain.turnPID(-90);
                 drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 5);
                 drivetrain.turnPID(90);
             } else if (location == location.CENTER){
-
+                opMode.telemetry.addData("Detected Gold", "Value" + location);
             } else if (location == location.RIGHT){
+                opMode.telemetry.addData("Detected Gold", "Value" + location);
                 drivetrain.turnPID(90);
                 drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 5);
                 drivetrain.turnPID(-90);

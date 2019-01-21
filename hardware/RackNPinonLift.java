@@ -138,13 +138,13 @@ public class RackNPinonLift extends Mechanism {
      */
     public void rackToPos(double speed, double inches) {
         // Target position variables
-        int newTarget, newTargets;
+        int leftTarget, rightTarget;
 
         // Determine new target position, and pass to motor controller
-        newTarget = leftRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_60);
-        newTargets = rightRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_60);
-        leftRackMotor.setTargetPosition(newTarget);
-        rightRackMotor.setTargetPosition(newTargets);
+        leftTarget = leftRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_60);
+        rightTarget = rightRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_60);
+        leftRackMotor.setTargetPosition(leftTarget);
+        rightRackMotor.setTargetPosition(rightTarget);
 
         // Turn On RUN_TO_POSITION
         leftRackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -164,7 +164,7 @@ public class RackNPinonLift extends Mechanism {
             setRackPower(speed);
 
             // Display info for the driver.
-            opMode.telemetry.addData("Path1", "Running to %7d", newTarget);
+            opMode.telemetry.addData("Path1", "Running to %7d :%7d", leftTarget, rightTarget);
             opMode.telemetry.addData("Path2", "Running at %7d :%7d", leftRackMotor.getCurrentPosition(), rightRackMotor.getCurrentPosition());
             opMode.telemetry.update();
         }
