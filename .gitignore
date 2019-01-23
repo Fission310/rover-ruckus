@@ -24,5 +24,6 @@ hs_err_pid*
 
 instructions.md
 /util/path/*
+/util/path/Field.java
 util/path/*
 
