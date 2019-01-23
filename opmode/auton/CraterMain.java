@@ -106,6 +106,13 @@ public class CraterMain extends LinearOpMode {
                     robot.craterSamplePID(visionManager, goldLocation);
                     telemetry.addData("Status", "Robot Pushed cube into depot");
                     telemetry.update();
+                    step = step.DRIVE_TO_DEPOT;
+                    break;
+
+                case DRIVE_TO_DEPOT:
+                    robot.driveToDepot();
+                    telemetry.addData("Status", "Robot drives to depot");
+                    telemetry.update();
                     step = step.MARKER;
                     break;
 
@@ -113,7 +120,7 @@ public class CraterMain extends LinearOpMode {
                  * Drop the marker
                  */
                 case MARKER:
-                    robot.dropMarker();
+                    robot.craterDropMarker();
                     telemetry.addData("Status", "Robot dropped marker");
                     telemetry.update();
                     step = step.ALIGN_TO_WALL;

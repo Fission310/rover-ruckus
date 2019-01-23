@@ -17,6 +17,7 @@ public class Steps {
         FIND_GOLD_LOCATION,
         ALIGN_TO_GOLD,
         SAMPLE,
+        DRIVE_TO_DEPOT,
         ALIGN_TO_WALL,
         MARKER,
         PARK,

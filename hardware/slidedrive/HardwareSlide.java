@@ -188,14 +188,27 @@ public class HardwareSlide extends Mechanism {
             drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE / 3.0, -FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
             if (location == location.LEFT){
                 drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE / 3.0, FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
-
+                drivetrain.turnPID(-45);
+                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 5);
+                drivetrain.turnPID(45);
             } else if (location == location.CENTER || location == location.UNKNOWN){
                 drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE / 3.0, FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
                 drivetrain.turnPID(-45);
+                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE * 1.5 , FieldConstants.TILE_HYPOTENUSE * 1.5, 5);
+                drivetrain.turnPID(45);
             } else if (location == location.RIGHT){
                 drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE / 3.0, FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
                 drivetrain.turnPID(-45);
+                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE * 2.0, FieldConstants.TILE_HYPOTENUSE * 2.0, 5);
+                drivetrain.turnPID(45);
             }
+        }
+    }
+
+    public void driveToDepot() {
+        if (opMode.opModeIsActive()) {
+            drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE * 3.0, FieldConstants.FLOOR_TILE * 3.0, 5);
+
         }
     }
 
@@ -213,6 +226,14 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
+    public void craterDropMarker() {
+        if (opMode.opModeIsActive()) {
+            drivetrain.turnPID(180);
+//            marker.markerLeft();
+
+        }
+    }
+
     public void alignToWall() {
         if (opMode.opModeIsActive()) { }
     }
@@ -220,6 +241,12 @@ public class HardwareSlide extends Mechanism {
     public void driveToCrater() {
         if (opMode.opModeIsActive()) {
             drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE * 3.5, FieldConstants.FLOOR_TILE * 3.5, 7);
+
+        }
+    }
+    public void craterDriveToCrater() {
+        if (opMode.opModeIsActive()) {
+            drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE * 4, -FieldConstants.FLOOR_TILE * 4, 7);
 
         }
     }
