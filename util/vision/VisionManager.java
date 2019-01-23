@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.hardware.RCConfig;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.vuforia.CameraDevice;
@@ -40,19 +41,23 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 public class VisionManager {
     private SamplingOrderDetector sampleDetector;
     private GoldAlignDetector goldDetector;
-
     private Dogeforia vuforia;
+
     WebcamName webcamName;
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
-    private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
-
+    private static final String vuforiaKey = "AZg2Pg7/////AAABmUJNdV5U3UdZuILyo65XAwgrRZJyRDvOUmdlSJISRf2lUECnalP9t4Vq+TPV2IXxriMQEqJFLiWzA30Qs7Kyx9qYi3HYgACR8ifSGJWZRgCDFa46j2xEo1xBP5S5z3bDl/7evo6bhaf3z5y9pdc1LKUVWx4woR0VN36y/IvcNI8FU4rUA5Big4AB4XKIlYpESWAYTj8hnAQSlXkKrG3CDKv7F2IDbZmtCv2SpZgfZEj+OPNlPRO41izEPeMX/svz6UoaugAfOt3M7ZwyX/+ZBZRJfgDRA7OiEPFi4aoACzWUBY2mSODV1n+BJN3+GRR2arcgSDUIJ7mTJ2nwNVdNblXSj18nOVLlS1WpLxCWEDzo\n";
     private static final float mmPerInch        = 25.4f;
-    private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
+    private static final float mmFTCFieldWidth  = (12 * 6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
     private static final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
+    private static final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
+    private static final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
+    private static final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
 
     boolean targetVisible;
     private OpenGLMatrix lastLocation = null;
+    private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
+
 
     /**
      * Sampling methods.
@@ -132,12 +137,16 @@ public class VisionManager {
     /**
      * Vuforia methods.
      **/
-    public void vuforiaInit(HardwareMap hwMap) {
-        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
+    private void baseVuforiaInit(HardwareMap hwMap, Boolean webcam) {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
 
-        parameters.vuforiaLicenseKey = "AZg2Pg7/////AAABmUJNdV5U3UdZuILyo65XAwgrRZJyRDvOUmdlSJISRf2lUECnalP9t4Vq+TPV2IXxriMQEqJFLiWzA30Qs7Kyx9qYi3HYgACR8ifSGJWZRgCDFa46j2xEo1xBP5S5z3bDl/7evo6bhaf3z5y9pdc1LKUVWx4woR0VN36y/IvcNI8FU4rUA5Big4AB4XKIlYpESWAYTj8hnAQSlXkKrG3CDKv7F2IDbZmtCv2SpZgfZEj+OPNlPRO41izEPeMX/svz6UoaugAfOt3M7ZwyX/+ZBZRJfgDRA7OiEPFi4aoACzWUBY2mSODV1n+BJN3+GRR2arcgSDUIJ7mTJ2nwNVdNblXSj18nOVLlS1WpLxCWEDzo\n";
+        parameters.vuforiaLicenseKey = vuforiaKey;
         parameters.fillCameraMonitorViewParent = true;
+
+        if (webcam) {
+            parameters.cameraName = webcamName;
+        }
 
         vuforia = new Dogeforia(parameters);
         vuforia.enableConvertFrameToBitmap();
@@ -176,87 +185,26 @@ public class VisionManager {
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
         backSpace.setLocation(backSpaceLocationOnField);
 
-
-        final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
-        final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
-
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
                         CAMERA_CHOICE == FRONT ? 90 : -90, 0, 0));
 
-        for (VuforiaTrackable trackable : allTrackables)
-        {
+        for (VuforiaTrackable trackable : allTrackables) {
             ((VuforiaTrackableDefaultListener)trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         }
 
         targetsRoverRuckus.activate();
+    }
 
+    public void vuforiaInit(HardwareMap hwMap) {
+        baseVuforiaInit(hwMap, false);
         vuforia.showDebug();
         vuforia.start();
     }
 
     public void vuforiaGoldAlignInit(HardwareMap hwMap) {
-        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = "AZg2Pg7/////AAABmUJNdV5U3UdZuILyo65XAwgrRZJyRDvOUmdlSJISRf2lUECnalP9t4Vq+TPV2IXxriMQEqJFLiWzA30Qs7Kyx9qYi3HYgACR8ifSGJWZRgCDFa46j2xEo1xBP5S5z3bDl/7evo6bhaf3z5y9pdc1LKUVWx4woR0VN36y/IvcNI8FU4rUA5Big4AB4XKIlYpESWAYTj8hnAQSlXkKrG3CDKv7F2IDbZmtCv2SpZgfZEj+OPNlPRO41izEPeMX/svz6UoaugAfOt3M7ZwyX/+ZBZRJfgDRA7OiEPFi4aoACzWUBY2mSODV1n+BJN3+GRR2arcgSDUIJ7mTJ2nwNVdNblXSj18nOVLlS1WpLxCWEDzo\n";
-        parameters.fillCameraMonitorViewParent = true;
-
-        vuforia = new Dogeforia(parameters);
-        vuforia.enableConvertFrameToBitmap();
-
-        VuforiaTrackables targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
-        VuforiaTrackable blueRover = targetsRoverRuckus.get(0);
-        blueRover.setName("Blue-Rover");
-        VuforiaTrackable redFootprint = targetsRoverRuckus.get(1);
-        redFootprint.setName("Red-Footprint");
-        VuforiaTrackable frontCraters = targetsRoverRuckus.get(2);
-        frontCraters.setName("Front-Craters");
-        VuforiaTrackable backSpace = targetsRoverRuckus.get(3);
-        backSpace.setName("Back-Space");
-
-        // For convenience, gather together all the trackable objects in one easily-iterable collection */
-
-        allTrackables.addAll(targetsRoverRuckus);
-
-        OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
-                .translation(0, mmFTCFieldWidth, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0));
-        blueRover.setLocation(blueRoverLocationOnField);
-
-        OpenGLMatrix redFootprintLocationOnField = OpenGLMatrix
-                .translation(0, -mmFTCFieldWidth, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180));
-        redFootprint.setLocation(redFootprintLocationOnField);
-
-        OpenGLMatrix frontCratersLocationOnField = OpenGLMatrix
-                .translation(-mmFTCFieldWidth, 0, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90));
-        frontCraters.setLocation(frontCratersLocationOnField);
-
-        OpenGLMatrix backSpaceLocationOnField = OpenGLMatrix
-                .translation(mmFTCFieldWidth, 0, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
-        backSpace.setLocation(backSpaceLocationOnField);
-
-
-        final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
-        final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
-
-        OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-                .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
-                        CAMERA_CHOICE == FRONT ? 90 : -90, 0, 0));
-
-        for (VuforiaTrackable trackable : allTrackables)
-        {
-            ((VuforiaTrackableDefaultListener)trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        }
-
-        targetsRoverRuckus.activate();
+        baseVuforiaInit(hwMap, false);
 
         goldDetector = new GoldAlignDetector();
         goldDetector.init(hwMap.appContext,CameraViewDisplay.getInstance(), 0, true);
@@ -272,65 +220,7 @@ public class VisionManager {
     }
 
     public void vuforiaSampleInit(HardwareMap hwMap) {
-        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = "AZg2Pg7/////AAABmUJNdV5U3UdZuILyo65XAwgrRZJyRDvOUmdlSJISRf2lUECnalP9t4Vq+TPV2IXxriMQEqJFLiWzA30Qs7Kyx9qYi3HYgACR8ifSGJWZRgCDFa46j2xEo1xBP5S5z3bDl/7evo6bhaf3z5y9pdc1LKUVWx4woR0VN36y/IvcNI8FU4rUA5Big4AB4XKIlYpESWAYTj8hnAQSlXkKrG3CDKv7F2IDbZmtCv2SpZgfZEj+OPNlPRO41izEPeMX/svz6UoaugAfOt3M7ZwyX/+ZBZRJfgDRA7OiEPFi4aoACzWUBY2mSODV1n+BJN3+GRR2arcgSDUIJ7mTJ2nwNVdNblXSj18nOVLlS1WpLxCWEDzo\n";
-        parameters.fillCameraMonitorViewParent = true;
-
-        vuforia = new Dogeforia(parameters);
-        vuforia.enableConvertFrameToBitmap();
-
-        VuforiaTrackables targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
-        VuforiaTrackable blueRover = targetsRoverRuckus.get(0);
-        blueRover.setName("Blue-Rover");
-        VuforiaTrackable redFootprint = targetsRoverRuckus.get(1);
-        redFootprint.setName("Red-Footprint");
-        VuforiaTrackable frontCraters = targetsRoverRuckus.get(2);
-        frontCraters.setName("Front-Craters");
-        VuforiaTrackable backSpace = targetsRoverRuckus.get(3);
-        backSpace.setName("Back-Space");
-
-        // For convenience, gather together all the trackable objects in one easily-iterable collection */
-
-        allTrackables.addAll(targetsRoverRuckus);
-
-        OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
-                .translation(0, mmFTCFieldWidth, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0));
-        blueRover.setLocation(blueRoverLocationOnField);
-
-        OpenGLMatrix redFootprintLocationOnField = OpenGLMatrix
-                .translation(0, -mmFTCFieldWidth, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180));
-        redFootprint.setLocation(redFootprintLocationOnField);
-
-        OpenGLMatrix frontCratersLocationOnField = OpenGLMatrix
-                .translation(-mmFTCFieldWidth, 0, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90));
-        frontCraters.setLocation(frontCratersLocationOnField);
-
-        OpenGLMatrix backSpaceLocationOnField = OpenGLMatrix
-                .translation(mmFTCFieldWidth, 0, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
-        backSpace.setLocation(backSpaceLocationOnField);
-
-
-        final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
-        final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
-
-        OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-                .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
-                        CAMERA_CHOICE == FRONT ? 90 : -90, 0, 0));
-
-        for (VuforiaTrackable trackable : allTrackables)
-        {
-            ((VuforiaTrackableDefaultListener)trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        }
-
-        targetsRoverRuckus.activate();
+        baseVuforiaInit(hwMap, false);
 
         sampleDetector = new SamplingOrderDetector();
         sampleDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
@@ -352,6 +242,43 @@ public class VisionManager {
         vuforia.start();
     }
 
+    public void vuforiaWebcamInit(HardwareMap hwMap, Boolean sample, Boolean goldAlign) {
+        webcamName = hwMap.get(WebcamName.class, RCConfig.WEBCAM);
+        baseVuforiaInit(hwMap, true);
+
+        if (sample) {
+            sampleDetector = new SamplingOrderDetector();
+            sampleDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
+            sampleDetector.useDefaults();
+
+            sampleDetector.downscale = 0.4; // How much to downscale the input frames
+
+            // Optional Tuning
+            sampleDetector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+            //sampleDetector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+            sampleDetector.maxAreaScorer.weight = 0.001;
+
+            sampleDetector.ratioScorer.weight = 15;
+            sampleDetector.ratioScorer.perfectRatio = 1.0;
+
+            vuforia.setDogeCVDetector(sampleDetector);
+        }
+        if (goldAlign) {
+            // Initialize the detector
+            goldDetector = new GoldAlignDetector();
+            goldDetector.init(hwMap.appContext,CameraViewDisplay.getInstance(), 0, true);
+            goldDetector.useDefaults();
+            goldDetector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+            //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+            goldDetector.downscale = 0.8;
+
+            // Set the detector
+            vuforia.setDogeCVDetector(goldDetector);
+        }
+        vuforia.enableDogeCV();
+        vuforia.showDebug();
+        vuforia.start();
+    }
     public void vuforiaLights(boolean turn) {
         CameraDevice.getInstance().setFlashTorchMode(turn);
     }

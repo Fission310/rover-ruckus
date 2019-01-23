@@ -93,7 +93,7 @@ public class CraterMain extends LinearOpMode {
                     break;
 
                 case ALIGN_TO_GOLD:
-                    robot.findGoldLocation(visionManager, goldLocation);
+                    robot.craterFindGoldLocation(visionManager, goldLocation);
                     telemetry.addData("Status", "Robot driven to gold cube");
                     telemetry.update();
                     step = step.SAMPLE;
@@ -103,7 +103,7 @@ public class CraterMain extends LinearOpMode {
                  * Align the robot to the gold cube to push it in to the depot
                  */
                 case SAMPLE:
-                    robot.samplePID(visionManager, goldLocation);
+                    robot.craterSamplePID(visionManager, goldLocation);
                     telemetry.addData("Status", "Robot Pushed cube into depot");
                     telemetry.update();
                     step = step.MARKER;

@@ -86,7 +86,7 @@ public class DepotMain extends LinearOpMode {
                     break;
 
                 case STRAFE_OUT_LANDER:
-                    robot.drivetrain.strafeToPos(.4, 8, 2);
+                    robot.drivetrain.strafeToPos(.8, 8, 2);
                     robot.turn90();
                     telemetry.addData("Status", "Robot turned 90 degrees");
                     telemetry.update();
@@ -94,7 +94,7 @@ public class DepotMain extends LinearOpMode {
                     break;
 
                 case ALIGN_TO_GOLD:
-                    robot.findGoldLocation(visionManager, goldLocation);
+                    robot.depotFindGoldLocation(visionManager, goldLocation);
                     telemetry.addData("Status", "Robot driven to gold cube");
                     telemetry.update();
                     step = step.SAMPLE;
@@ -104,7 +104,7 @@ public class DepotMain extends LinearOpMode {
                  * Align the robot to the gold cube to push it in to the depot
                  */
                 case SAMPLE:
-                    robot.samplePID(visionManager, goldLocation);
+                    robot.depotSamplePID(visionManager, goldLocation);
                     telemetry.addData("Status", "Robot Pushed cube into depot");
                     telemetry.update();
                     step = step.MARKER;

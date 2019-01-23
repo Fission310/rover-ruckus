@@ -38,6 +38,8 @@ public class RCConfig {
     public static final String DISTANCE_SENSOR_BACK = "sensor_back";
     public static final String DISTANCE_SENSOR_SPONSOR = "sensor_sponsor";
 
+    // Misc
+    public static final String WEBCAM = "Webcam 1";
     //Legacy
     public static final String LEFT_BACK = "left_back";
     public static final String RIGHT_BACK = "right_back";

@@ -125,7 +125,7 @@ public class TeleopSlideMain extends OpMode {
          * Gamepad 1
          */
         yInput = Math.abs(gamepad1.left_stick_y) > .9 ? 1 * Math.signum(gamepad1.left_stick_y) : .8 * Math.signum(gamepad1.left_stick_y);
-        xInput = Math.abs(gamepad1.right_stick_x) > .9 ? 1 * Math.signum(gamepad1.right_stick_x) : .6 * Math.signum(gamepad1.right_stick_x);
+        xInput = Math.abs(gamepad1.right_stick_x) > .9 ? 1 * Math.signum(gamepad1.right_stick_x) : .8 * Math.signum(gamepad1.right_stick_x);
         slideInput = Math.abs(gamepad1.left_stick_x) > .9 ? 1 * Math.signum(gamepad1.left_stick_x) : .8 * Math.signum(gamepad1.left_stick_x);
 
         slowYInput = Range.clip(yInput * SLOW_MULTIPLIER, -1.0, 1.0);
@@ -165,13 +165,19 @@ public class TeleopSlideMain extends OpMode {
 //            }
 //        }
 
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+
         double[] positions = robot.drivetrain.getPositions();
-        double imu = robot.drivetrain.singleImu.getHeading();
-        telemetry.addData("Path2", "Running at %.2f :%.2f :%.2f",
+        double imuZAxis = robot.drivetrain.singleImu.getZAxis();
+        double imuYAxis = robot.drivetrain.singleImu.getYAxis();
+        double imuXAxis = robot.drivetrain.singleImu.getXAxis();
+        telemetry.addData("Encoder counts", "Running at %.2f :%.2f :%.2f",
                 positions[0],
                 positions[1],
                 positions[2]);
-        telemetry.addData("IMU", "imu" + imu);
+        telemetry.addData("IMU", "Z-axis: " + imuZAxis);
+        telemetry.addData("IMU", "Y-axis: " + imuYAxis);
+        telemetry.addData("IMU", "X-axis: " + imuXAxis);
     }
 
     @Override

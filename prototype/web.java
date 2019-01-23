@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.util.ThreadPool;
+import com.vuforia.CameraDevice;
 import com.vuforia.Frame;
 
 import java.io.File;
@@ -73,10 +74,9 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "webcam", group = "Concept")
+@TeleOp(name = "WebCam Test", group = "Concept")
 public class web extends LinearOpMode {
-    private static final String TAG = "AZg2Pg7/////AAABmUJNdV5U3UdZuILyo65XAwgrRZJyRDvOUmdlSJISRf2lUECnalP9t4Vq+TPV2IXxriMQEqJFLiWzA30Qs7Kyx9qYi3HYgACR8ifSGJWZRgCDFa46j2xEo1xBP5S5z3bDl/7evo6bhaf3z5y9pdc1LKUVWx4woR0VN36y/IvcNI8FU4rUA5Big4AB4XKIlYpESWAYTj8hnAQSlXkKrG3CDKv7F2IDbZmtCv2SpZgfZEj+OPNlPRO41izEPeMX/svz6UoaugAfOt3M7ZwyX/+ZBZRJfgDRA7OiEPFi4aoACzWUBY2mSODV1n+BJN3+GRR2arcgSDUIJ7mTJ2nwNVdNblXSj18nOVLlS1WpLxCWEDzo\n";
-
+    public static final String TAG = "Vuforia Navigation Sample";
 
     OpenGLMatrix lastLocation = null;
 
