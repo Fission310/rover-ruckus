@@ -26,7 +26,7 @@ public class Constants {
      */
     private static final double DRIVE_GEAR_REDUCTION = 1.0;
     private static final double DRIVETRAIN_GEAR_REDUCTION = 1.0 / 3.0;
-    private static final double ROTATION_GEAR_REDUCTION = 1.0 / 3.0;
+    private static final double ROTATION_GEAR_REDUCTION = 1.0;
     /**
      * Diameter of wheel in inches.
      */
