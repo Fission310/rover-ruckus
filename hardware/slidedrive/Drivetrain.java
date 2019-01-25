@@ -73,7 +73,7 @@ public class Drivetrain extends Mechanism {
         // Set motor direction (AndyMark configuration)
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        slideDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        slideDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set motor brake behavior
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

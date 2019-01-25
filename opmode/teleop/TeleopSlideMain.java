@@ -59,7 +59,7 @@ import static java.lang.Math.abs;
 public class TeleopSlideMain extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.0;
-    private static final double SLOW_MULTIPLIER = 0.5;
+    private static final double SLOW_MULTIPLIER = 0.4;
     private static final double LINEAR_SLIDES_SLOW_MULTIPLIER = 0.5;
 
     /* Private OpMode members. */
@@ -72,8 +72,8 @@ public class TeleopSlideMain extends OpMode {
     double yInput, xInput, slideInput; // Gamepad 1
     double linearSlidesInput, rotationInput; // Gamepad 2
     /* Applies slow or fast mode */
-    double slowYInput, slowXInput, slowSlide, leftTrigger, rightTrigger; // Gamepad 1
-    double slowLinearSlidesInput, slowRotationInput, acquirerIntake, acquirerOuttake; // Gamepad 2
+    double slowYInput, slowXInput, slowSlide, leftTrigger1,rightTrigger1; // Gamepad 1
+    double slowLinearSlidesInput, slowRotationInput, acquirerIntake, acquirerOuttake, leftTrigger2, rightTrigger2; // Gamepad 2
     /* Handle time complexities */
     boolean aButtonPressed = false, bButtonPressed = false, xButtonPressed = false, yButtonPressed = false;
     /* Handle button positions */
@@ -147,11 +147,15 @@ public class TeleopSlideMain extends OpMode {
         /**
          * Gamepad 2
          */
-//        // Sets racks power via the left and right triggers
-//        leftTrigger = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.signum(gamepad2.left_trigger) : -.8 * gamepad2.left_trigger;
-//        rightTrigger = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.signum(gamepad2.right_trigger) : .8 * gamepad2.right_trigger;
-////        robot.rack.setRackPower(leftTrigger + rightTrigger);
-//
+//      Sets rotation mechanism power via the left and right triggers
+        leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.signum(gamepad2.left_trigger) : -.8 * gamepad2.left_trigger;
+        rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.signum(gamepad2.right_trigger) : .8 * gamepad2.right_trigger;
+        robot.drawerSlides.setRotationPower(leftTrigger2 + rightTrigger2);
+
+//      Sets drawer slides power via the right joystick
+        linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .8 * Math.signum(gamepad2.right_stick_y);
+        robot.drawerSlides.setLinearSlidePower(linearSlidesInput);
+
 //        /**
 //         * Both Gamepads
 //         */

@@ -10,7 +10,7 @@ public class Constants {
     private static final double NEVEREST_40_GEAR_RATIO  = 40.0;
     private static final double NEVEREST_30_GEAR_RATIO  = 30.0;
     private static final double NEVEREST_20_GEAR_RATIO  = 20.0;
-    private static final double MODERN_ROBOTICS_GEAR_RATIO = 25.83;
+    private static final double MODERN_ROBOTICS_GEAR_RATIO = 53.475;
     private static final double PPR = 7.0;
     private static final double CPR = PPR * 4.0;
     /**

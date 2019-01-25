@@ -70,8 +70,8 @@ public class VisionManager {
         sampleDetector.downscale = 0.4; // How much to downscale the input frames
 
         // Optional Tuning
-        sampleDetector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
-        //sampleDetector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        sampleDetector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
+        sampleDetector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
         sampleDetector.maxAreaScorer.weight = 0.001;
 
         sampleDetector.ratioScorer.weight = 15;
@@ -211,8 +211,13 @@ public class VisionManager {
 
         goldDetector.yellowFilter = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW, 100);
         goldDetector.useDefaults();
-        goldDetector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
-        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        goldDetector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
+        goldDetector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        goldDetector.maxAreaScorer.weight = 0.005;
+
+        goldDetector.ratioScorer.weight = 5;
+        goldDetector.ratioScorer.perfectRatio = 1.0;
+
         vuforia.setDogeCVDetector(goldDetector);
         vuforia.enableDogeCV();
         vuforia.showDebug();
@@ -221,16 +226,16 @@ public class VisionManager {
 
     public void vuforiaSampleInit(HardwareMap hwMap) {
         baseVuforiaInit(hwMap, false);
-
         sampleDetector = new SamplingOrderDetector();
-        sampleDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
+        sampleDetector.init(hwMap.appContext,CameraViewDisplay.getInstance(), 0, true);
+        ;
         sampleDetector.useDefaults();
 
         sampleDetector.downscale = 0.4; // How much to downscale the input frames
 
         // Optional Tuning
-        sampleDetector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
-        //sampleDetector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        sampleDetector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
+        sampleDetector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
         sampleDetector.maxAreaScorer.weight = 0.001;
 
         sampleDetector.ratioScorer.weight = 15;
@@ -248,14 +253,14 @@ public class VisionManager {
 
         if (sample) {
             sampleDetector = new SamplingOrderDetector();
-            sampleDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
+            sampleDetector.init(hwMap.appContext,CameraViewDisplay.getInstance(), 0, true);
             sampleDetector.useDefaults();
 
             sampleDetector.downscale = 0.4; // How much to downscale the input frames
 
             // Optional Tuning
-            sampleDetector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
-            //sampleDetector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+            sampleDetector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
+            sampleDetector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
             sampleDetector.maxAreaScorer.weight = 0.001;
 
             sampleDetector.ratioScorer.weight = 15;
@@ -268,8 +273,8 @@ public class VisionManager {
             goldDetector = new GoldAlignDetector();
             goldDetector.init(hwMap.appContext,CameraViewDisplay.getInstance(), 0, true);
             goldDetector.useDefaults();
-            goldDetector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
-            //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+            goldDetector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
+            goldDetector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
             goldDetector.downscale = 0.8;
 
             // Set the detector
@@ -279,6 +284,7 @@ public class VisionManager {
         vuforia.showDebug();
         vuforia.start();
     }
+
     public void vuforiaLights(boolean turn) {
         CameraDevice.getInstance().setFlashTorchMode(turn);
     }

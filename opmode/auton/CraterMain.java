@@ -85,7 +85,7 @@ public class CraterMain extends LinearOpMode {
                     break;
 
                 case STRAFE_OUT_LANDER:
-                    robot.drivetrain.strafeToPos(.4, 8, 2);
+                    robot.drivetrain.strafeToPos(.4, -8, 2);
                     robot.turn90();
                     telemetry.addData("Status", "Robot turned 90 degrees");
                     telemetry.update();

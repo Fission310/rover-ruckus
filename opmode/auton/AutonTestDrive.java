@@ -58,6 +58,13 @@ public class AutonTestDrive extends LinearOpMode {
                     step++;
                     break;
 
+                case 2:
+                    telemetry.addData("Step 2", "Robot strafe");
+                    telemetry.update();
+                    robot.drivetrain.strafeToPos(.8, FieldConstants.FLOOR_TILE, 9);
+                    step++;
+                    break;
+
                 default: {
                     robot.drivetrain.drive(0, 0);
                     telemetry.addData("Status", "Robot default");

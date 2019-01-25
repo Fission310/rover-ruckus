@@ -11,7 +11,7 @@ public class RCConfig {
     public static final String SLIDE_DRIVE = "slide";
     public static final String LEFT_HANGER = "left_hanger";
     public static final String RIGHT_HANGER = "right_hanger";
-    public static final String LINEAR_SLIDES = "linear_slides";
+    public static final String DRAWER_SLIDES = "drawer";
     public static final String BACK_ROT = "back_rot";
     public static final String FRONT_ROT = "front_rot";
 

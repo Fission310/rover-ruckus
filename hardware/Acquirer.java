@@ -21,11 +21,6 @@ public class Acquirer extends Mechanism {
     private static final double SERVO_CENTER_POS = 1;
 
     /* Hardware members */
-    private DcMotor rotationBack;
-    private DcMotor rotationForward;
-
-    private DcMotor linearSlide;
-
     private CRServo rightIntakeMotor;
     private CRServo leftIntakeMotor;
 
@@ -55,42 +50,18 @@ public class Acquirer extends Mechanism {
         // Retrieve servos from hardware map and assign to instance vars
         rightIntakeMotor = hwMap.crservo.get(RCConfig.LEFT_ACQUIRER_INTAKE);
         leftIntakeMotor = hwMap.crservo.get(RCConfig.RIGHT_ACQUIRER_INTAKE);
-        rotationForward = hwMap.dcMotor.get(RCConfig.FRONT_ROT);
-        rotationBack = hwMap.dcMotor.get(RCConfig.BACK_ROT);
-        linearSlide = hwMap.dcMotor.get(RCConfig.LINEAR_SLIDES);
 
         //        acquirerFloor = hwMap.servo.get(RCConfig.ACQUIRER_FLOOR);
         acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
 
-        // Set braking behavior
-        rotationForward.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rotationBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         // Set polarity
         rightIntakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rotationForward.setDirection(DcMotorSimple.Direction.FORWARD);
-        rotationBack.setDirection(DcMotorSimple.Direction.FORWARD);
-        linearSlide.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set initial power
         rightIntakeMotor.setPower(0);
         leftIntakeMotor.setPower(0);
-        rotationForward.setPower(0);
-        rotationBack.setPower(0);
-        linearSlide.setPower(0);
 //        acquirerFloorInit();
-    }
-
-    public void encoderInit() {
-        rotationForward.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rotationBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        rotationForward.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rotationBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /**
@@ -101,23 +72,6 @@ public class Acquirer extends Mechanism {
         double sign = Math.signum(power);
         leftIntakeMotor.setPower(.7 * sign);
         rightIntakeMotor.setPower(.7 * sign);
-    }
-
-    /**
-     * Sets power for rotation motors.
-     * @param power        Motor power with range of (-1 to 1)
-     */
-    public void setRotationPower(double power) {
-        rotationForward.setPower(power);
-        rotationBack.setPower(power);
-    }
-
-    /**
-     * Sets power for linear slides motors.
-     * @param power        Motor power with range of (-1 to 1)
-     */
-    public void setLinearSlidePower(double power) {
-        linearSlide.setPower(power);
     }
 
     /**

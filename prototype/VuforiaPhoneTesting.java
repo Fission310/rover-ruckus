@@ -162,8 +162,8 @@ public class VuforiaPhoneTesting extends OpMode {
 
         detector.yellowFilter = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW, 100);
         detector.useDefaults();
-        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
-        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
+        detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
         vuforia.setDogeCVDetector(detector);
         vuforia.enableDogeCV();
         vuforia.showDebug();
