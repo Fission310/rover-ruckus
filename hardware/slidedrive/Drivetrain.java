@@ -411,6 +411,59 @@ public class Drivetrain extends Mechanism {
         slideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    public void strafeToPIDPos(double speed, double inches, double timeoutS) {
+        // Target position variables
+        int newTarget;
+
+        // Current heading angle of robot
+        double currentAngle = singleImu.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
+        // Determine new target position, and pass to motor controller
+        newTarget = slideDrive.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_30);
+        slideDrive.setTargetPosition(newTarget);
+
+        // Turn On RUN_TO_POSITION
+        slideDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Reset the timeout time
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+
+        // Loop until a condition is met
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeoutS) &&
+                slideDrive.isBusy()) {
+
+            // Get IMU angles
+            Orientation angles = singleImu.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+            // Heading angle
+            double gyroAngle = angles.firstAngle;
+
+            // Adjustment factor for heading
+            double p = (gyroAngle - currentAngle) * Constants.PCONSTANT;
+
+            // Set power of drivetrain motors accounting for adjustment
+            slideDrive.setPower(power);
+            leftFront.setPower(-p);
+            rightFront.setPower(p);
+
+            // Display info for the driver.
+            opMode.telemetry.addData("Path1", "Running to %7d", newTarget);
+            opMode.telemetry.addData("Path2", "Running at %7d",
+                    slideDrive.getCurrentPosition());
+            opMode.telemetry.addData("Heading: ", "%f", gyroAngle);
+            opMode.telemetry.update();
+        }
+
+        // Stop all motion
+        slideDrive.setPower(0);
+
+        // Turn off RUN_TO_POSITION
+        slideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     public double[] getPositions() {
         double[] positions = new double[3];
         positions[0] = leftFront.getCurrentPosition() / Constants.TICKS_PER_INCH_30;

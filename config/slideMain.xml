@@ -7,5 +7,11 @@
             <NeveRest40Gearmotor name="right" port="2" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
         </LynxModule>
+        <LynxModule name="Expansion Hub 2" port="2">
+            <Motor name="back_rot" port="0" />
+            <Motor name="front_rot" port="1" />
+            <Motor name="drawer" port="2" />
+            <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
+        </LynxModule>
     </LynxUsbDevice>
 </Robot>

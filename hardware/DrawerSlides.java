@@ -112,8 +112,9 @@ public class DrawerSlides extends Mechanism {
         int newForwardTarget, newBackTarget;
 
         // Determine new target position, and pass to motor controller
-        newForwardTarget = rotationForward.getCurrentPosition() + (int)(forward * Constants.INCHES_PER_TICK_MR);
-        newBackTarget = rotationBack.getCurrentPosition() + (int)(back * Constants.INCHES_PER_TICK_MR);
+        newForwardTarget = rotationForward.getCurrentPosition() + (int)(forward * Constants.TICKS_PER_INCH_53);
+        newBackTarget = rotationBack.getCurrentPosition() + (int)(back * Constants.TICKS_PER_INCH_53);
+        // Average out any differences (if any)
         int target = (newForwardTarget + newBackTarget) / 2;
 
         rotationForward.setTargetPosition(target);
@@ -134,7 +135,6 @@ public class DrawerSlides extends Mechanism {
 
             rotationForward.setPower(speed);
             rotationBack.setPower(speed);
-
 
             // Display info for the driver.
             opMode.telemetry.addData("Path2", "Running at %7d :%7d",
@@ -159,7 +159,7 @@ public class DrawerSlides extends Mechanism {
      * Sets power for linear slides motors.
      * @param power        Motor power with range of (-1 to 1)
      */
-    public void setLinearSlidePower(double power) {
+    public void setDrawerSlidePower(double power) {
         drawerSlide.setPower(power);
     }
 }

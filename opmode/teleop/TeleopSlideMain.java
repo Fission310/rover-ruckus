@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
-import org.firstinspires.ftc.teamcode.util.sensors.IMU;
 
 import static java.lang.Math.abs;
 
@@ -154,7 +152,7 @@ public class TeleopSlideMain extends OpMode {
 
 //      Sets drawer slides power via the right joystick
         linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .8 * Math.signum(gamepad2.right_stick_y);
-        robot.drawerSlides.setLinearSlidePower(linearSlidesInput);
+        robot.drawerSlides.setDrawerSlidePower(linearSlidesInput);
 
 //        /**
 //         * Both Gamepads

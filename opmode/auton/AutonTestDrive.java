@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
-@Autonomous(name="Test PID and IMU turn and drive straight 1/14/19", group="Test")
+@Autonomous(name="Test 1/24/19", group="Test")
 public class AutonTestDrive extends LinearOpMode {
 
     /* Private OpMode members */
@@ -50,18 +50,37 @@ public class AutonTestDrive extends LinearOpMode {
                     robot.drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE, FieldConstants.FLOOR_TILE, 5.00);
                     step++;
                     break;
-
                 case 1:
-                    telemetry.addData("Step 1", "Robot PID turn");
-                    telemetry.update();
-                    robot.drivetrain.turnPID(90);
+                    sleep(3000);
                     step++;
                     break;
 
                 case 2:
-                    telemetry.addData("Step 2", "Robot strafe");
+                    telemetry.addData("Step 2", "Robot PID turn");
                     telemetry.update();
-                    robot.drivetrain.strafeToPos(.8, FieldConstants.FLOOR_TILE, 9);
+                    robot.drivetrain.turnPID(90);
+                    step++;
+                    break;
+                case 3:
+                    sleep(3000);
+                    step++;
+                    break;
+
+                case 4:
+                    telemetry.addData("Step 4", "Robot strafe");
+                    telemetry.update();
+                    robot.drivetrain.strafeToPos(.8, FieldConstants.FLOOR_TILE, 5);
+                    step++;
+                    break;
+
+                case 5:
+                    sleep(3000);
+                    step++;
+                    break;
+                case 6:
+                    telemetry.addData("Step 5", "Robot strafe pid");
+                    telemetry.update();
+                    robot.drivetrain.strafeToPIDPos(.8, -FieldConstants.FLOOR_TILE, 5);
                     step++;
                     break;
 

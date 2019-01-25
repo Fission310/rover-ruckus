@@ -1,20 +1,14 @@
 package org.firstinspires.ftc.teamcode.prototype;
 
-import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.FieldConstants;
-import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
-import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
-import org.firstinspires.ftc.teamcode.util.SoundManager;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
-@Autonomous(name="Auton Doge Sampling Test", group="TEST")
+@Autonomous(name="Auton Doge Gold Align Test", group="TEST")
 //@Disabled
-public class AutonDogeCVTest extends LinearOpMode {
+public class AutonDogeCVGoldAlignTest extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -28,7 +22,7 @@ public class AutonDogeCVTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize CV
-        visionManager.vuforiaSampleInit(hardwareMap);
+        visionManager.vuforiaGoldAlignInit(hardwareMap);
         visionManager.vuforiaLights(true);
 
         // Wait until we're told to go
