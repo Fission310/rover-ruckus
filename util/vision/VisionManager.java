@@ -231,7 +231,7 @@ public class VisionManager {
         ;
         sampleDetector.useDefaults();
 
-        sampleDetector.downscale = 0.4; // How much to downscale the input frames
+        sampleDetector.downscale = 0.9; // How much to downscale the input frames
 
         // Optional Tuning
         sampleDetector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA

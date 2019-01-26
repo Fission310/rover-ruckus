@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.util.SoundManager;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 @Autonomous(name="Auton TF Test", group="TEST")
-@Disabled
+//@Disabled
 public class AutonTFTest extends LinearOpMode {
 
     /* Private OpMode members */
@@ -29,10 +29,11 @@ public class AutonTFTest extends LinearOpMode {
     public void runOpMode() {
         // Initialize CV
         visionManager.init(hardwareMap);
+        visionManager.vuforiaLights(true);
         visionManager.start();
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
-            telemetry.addData("Detector", "" + visionManager.getDetector());
+            telemetry.addData("Detector", "" + visionManager.getLocation());
             telemetry.addData("Status", "Waiting in Init");
             telemetry.update();
         }

@@ -47,7 +47,7 @@ public class AutonTestDrive extends LinearOpMode {
                 case 0:
                     telemetry.addData("Step 0", "Robot Drive one floor tile");
                     telemetry.update();
-                    robot.drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE, FieldConstants.FLOOR_TILE, 5.00);
+                    robot.drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE, -FieldConstants.FLOOR_TILE, 5.00);
                     step++;
                     break;
                 case 1:
@@ -80,7 +80,6 @@ public class AutonTestDrive extends LinearOpMode {
                 case 6:
                     telemetry.addData("Step 5", "Robot strafe pid");
                     telemetry.update();
-                    robot.drivetrain.strafeToPIDPos(.8, -FieldConstants.FLOOR_TILE, 5);
                     step++;
                     break;
 

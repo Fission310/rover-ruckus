@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.util.vision;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -202,4 +203,9 @@ public class TensorFlowManager {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
         tfodParameters.minimumConfidence = .25;
     }
+
+    public void vuforiaLights(boolean turn) {
+        CameraDevice.getInstance().setFlashTorchMode(turn);
+    }
+
 }

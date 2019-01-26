@@ -109,7 +109,7 @@ public class Drivetrain extends Mechanism {
         singleImu.init(hwMap, AxesOrder.ZYX,0D);
 
         // Set PID proportional value to start reducing power at about 50 degrees of rotation.
-        pidRotate = new PIDController(.0053, 0, 0);
+        pidRotate = new PIDController(.0045, 0, 0);
 
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
@@ -207,7 +207,8 @@ public class Drivetrain extends Mechanism {
     }
 
     /**
-     * Drive to a relative position using encoders and an IMU.
+     * Drive to a relative position using encoders and an IMU. Note (You must pass in the same
+     * distance for both left and right inches for this method to work correctly)
      *
      * Robot will stop moving if any of three conditions occur:
      * <ul>
@@ -462,6 +463,56 @@ public class Drivetrain extends Mechanism {
         // Turn off RUN_TO_POSITION
         slideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void odometryTurn(double speed, double leftInches, double rightInches, double timeoutS) {
+        // Target position variables
+        int newLeftTarget;
+        int newRightTarget;
+
+        // Determine new target position, and pass to motor controller
+        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_30);
+        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_30);
+        leftFront.setTargetPosition(newLeftTarget);
+        rightFront.setTargetPosition(newRightTarget);
+        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        // Turn On RUN_TO_POSITION
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Reset the timeout time
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+
+        // Loop until a condition is met
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeoutS) &&
+                leftFront.isBusy() && rightFront.isBusy()) {
+
+            // Set power of drivetrain motors accounting for adjustment
+            driveStraightPID(speed);
+
+            // Display info for the driver.
+            opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+            opMode.telemetry.addData("Path2", "Running at %7d :%7d",
+                    leftFront.getCurrentPosition(),
+                    rightFront.getCurrentPosition());
+
+            opMode.telemetry.update();
+        }
+
+        // Stop all motion
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Turn off RUN_TO_POSITION
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
     public double[] getPositions() {

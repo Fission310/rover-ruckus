@@ -76,7 +76,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 
 @TeleOp(name="Vuforia Phone Testing", group="DogeCV")
-//@Disabled
+@Disabled
 public class VuforiaPhoneTesting extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private static final float mmPerInch        = 25.4f;
