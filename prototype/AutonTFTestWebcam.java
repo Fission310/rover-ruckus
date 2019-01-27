@@ -1,20 +1,14 @@
 package org.firstinspires.ftc.teamcode.prototype;
 
-import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.FieldConstants;
-import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
-import org.firstinspires.ftc.teamcode.util.SoundManager;
-import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
-@Autonomous(name="Auton TF Test", group="TEST")
+@Autonomous(name="Auton TF Webcam Test", group="TEST")
 //@Disabled
-public class AutonTFTest extends LinearOpMode {
+public class AutonTFTestWebcam extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -28,7 +22,7 @@ public class AutonTFTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize CV
-        visionManager.init(hardwareMap, false);
+        visionManager.init(hardwareMap, true);
         visionManager.vuforiaLights(true);
         visionManager.start();
         // Wait until we're told to go

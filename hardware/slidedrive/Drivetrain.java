@@ -109,11 +109,11 @@ public class Drivetrain extends Mechanism {
         singleImu.init(hwMap, AxesOrder.ZYX,0D);
 
         // Set PID proportional value to start reducing power at about 50 degrees of rotation.
-        pidRotate = new PIDController(.0045, 0, 0);
+        pidRotate = new PIDController(.0025, 0.002, .0045);
 
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
-        pidDrive = new PIDController(.04, 0, 0);
+        pidDrive = new PIDController(.03, 0, 0);
     }
 
     /**
@@ -394,7 +394,7 @@ public class Drivetrain extends Mechanism {
             double p = (gyroAngle - currentAngle) * Constants.PCONSTANT;
 
             // Set power of drivetrain motors accounting for adjustment
-            slideDrive.setPower(p);
+            slideDrive.setPower(speed);
 
             // Display info for the driver.
             opMode.telemetry.addData("Path1", "Running to %7d", newTarget);
