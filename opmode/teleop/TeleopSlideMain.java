@@ -84,6 +84,9 @@ public class TeleopSlideMain extends OpMode {
 
     @Override
     public void init() {
+        robot.init(hardwareMap);
+        robot.drivetrain.encoderInit();
+        robot.drivetrain.imuInit(hardwareMap);
     }
 
     /**
@@ -103,9 +106,6 @@ public class TeleopSlideMain extends OpMode {
      */
     @Override
     public void start() {
-        robot.init(hardwareMap);
-        robot.drivetrain.encoderInit();
-        robot.drivetrain.imuInit(hardwareMap);
         runtime.reset();
     }
 

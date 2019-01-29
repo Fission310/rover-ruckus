@@ -270,7 +270,9 @@ public class Drivetrain extends Mechanism {
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
+    public void driveToPos(double speed, double distance, double timeoutS) {
+        driveToPos(speed, distance, distance, timeoutS);
+    }
     /**
      * Drive accurately using a PID loop.
      * @param speed         speed at which the motor shall turn

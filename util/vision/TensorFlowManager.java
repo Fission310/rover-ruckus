@@ -218,6 +218,8 @@ public class TensorFlowManager {
                             this.location = TFLocation.LEFT;
                         }
                     }
+                } else {
+                    this.location = TFLocation.NONE;
                 }
             }
         }

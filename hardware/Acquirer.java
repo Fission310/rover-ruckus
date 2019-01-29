@@ -107,4 +107,10 @@ public class Acquirer extends Mechanism {
     public void setAcquirerRotation(double rotations) {
         acquirerRotation.setPosition(rotations);
     }
+
+    /**
+     * Rotates the acquirer using the rotation servo while the drawer slides rotates to keep the
+     * minerals from falling out.
+     */
+    public void continuousAcquirerRotation(double distance) { }
 }

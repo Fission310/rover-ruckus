@@ -228,7 +228,6 @@ public class VisionManager {
         baseVuforiaInit(hwMap, false);
         sampleDetector = new SamplingOrderDetector();
         sampleDetector.init(hwMap.appContext,CameraViewDisplay.getInstance(), 0, true);
-        ;
         sampleDetector.useDefaults();
 
         sampleDetector.downscale = 0.9; // How much to downscale the input frames

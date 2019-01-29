@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <Robot type="FirstInspires-FTC">
+    <Webcam name="Webcam 1" serialNumber="5A8285A0" />
     <LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ2GCJ06" parentModuleAddress="1">
         <LynxModule name="Expansion Hub 1" port="1">
             <NeveRest40Gearmotor name="slide" port="0" />

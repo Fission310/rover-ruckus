@@ -143,8 +143,11 @@ public class RackNPinonLift extends Mechanism {
         // Determine new target position, and pass to motor controller
         leftTarget = leftRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_60);
         rightTarget = rightRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_60);
-        leftRackMotor.setTargetPosition(leftTarget);
-        rightRackMotor.setTargetPosition(rightTarget);
+        // Average out any differences (if any)
+        int target = (leftTarget + rightTarget) / 2;
+
+        leftRackMotor.setTargetPosition(target);
+        rightRackMotor.setTargetPosition(target);
 
         // Turn On RUN_TO_POSITION
         leftRackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);

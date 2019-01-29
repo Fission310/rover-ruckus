@@ -2,17 +2,11 @@ package org.firstinspires.ftc.teamcode.hardware.slidedrive;
 
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
-import org.firstinspires.ftc.teamcode.hardware.Acquirer;
-import org.firstinspires.ftc.teamcode.hardware.Constants;
 import org.firstinspires.ftc.teamcode.hardware.DrawerSlides;
-import org.firstinspires.ftc.teamcode.hardware.Marker;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
-import org.firstinspires.ftc.teamcode.hardware.RackNPinonLift;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
@@ -25,6 +19,11 @@ import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
  * may be common to more than one routine.
  */
 public class HardwareSlide extends Mechanism {
+
+    /* Constants */
+    private static final int RIGHT_TURN = 88;
+    private static final int DIAGONAL_TURN = 43;
+    private static final double DRIVE_SPEED = .3;
 
     /* Mechanisms */
     /**
@@ -116,7 +115,7 @@ public class HardwareSlide extends Mechanism {
 
     public void turn90() {
         if (opMode.opModeIsActive()) {
-            drivetrain.turnPID(-90);
+            drivetrain.turnPID(-RIGHT_TURN);
         }
     }
     /**
@@ -128,20 +127,20 @@ public class HardwareSlide extends Mechanism {
      */
     public void depotFindGoldLocation(VisionManager visionManager, SamplingOrderDetector.GoldLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE, -FieldConstants.TILE_HYPOTENUSE, 5);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE, 5);
 
             if (location == location.LEFT){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
-                drivetrain.turnPID(90);
-                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 5);
-                drivetrain.turnPID(-90);
+                drivetrain.turnPID(RIGHT_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE / 2, 5);
+                drivetrain.turnPID(-RIGHT_TURN);
             } else if (location == location.CENTER){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
             } else if (location == location.RIGHT){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
-                drivetrain.turnPID(-90);
-                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 5);
-                drivetrain.turnPID(90);
+                drivetrain.turnPID(-RIGHT_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE / 2, 5);
+                drivetrain.turnPID(RIGHT_TURN);
             } else if (location == location.UNKNOWN){
                 opMode.telemetry.addData("Detected None", "Value" + location);
             }
@@ -149,20 +148,20 @@ public class HardwareSlide extends Mechanism {
     }
     public void tfDepotFindGoldLocation(TensorFlowManager visionManager, TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE, -FieldConstants.TILE_HYPOTENUSE, 5);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE, 5);
 
             if (location == location.LEFT){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
-                drivetrain.turnPID(90);
-                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 5);
-                drivetrain.turnPID(-90);
+                drivetrain.turnPID(RIGHT_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE / 2, 5);
+                drivetrain.turnPID(-RIGHT_TURN);
             } else if (location == location.CENTER){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
             } else if (location == location.RIGHT){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
-                drivetrain.turnPID(-90);
-                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 5);
-                drivetrain.turnPID(90);
+                drivetrain.turnPID(-RIGHT_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE / 2, 5);
+                drivetrain.turnPID(RIGHT_TURN);
             } else if (location == location.NONE){
                 opMode.telemetry.addData("Detected None", "Value" + location);
             }
@@ -170,20 +169,20 @@ public class HardwareSlide extends Mechanism {
     }
     public void craterFindGoldLocation(VisionManager visionManager, SamplingOrderDetector.GoldLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE, -FieldConstants.TILE_HYPOTENUSE, 5);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE, 5);
 
             if (location == location.LEFT){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
-                drivetrain.turnPID(90);
-                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 5);
-                drivetrain.turnPID(-90);
+                drivetrain.turnPID(RIGHT_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE / 2, 5);
+                drivetrain.turnPID(-RIGHT_TURN);
             } else if (location == location.CENTER){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
             } else if (location == location.RIGHT){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
-                drivetrain.turnPID(-90);
-                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 5);
-                drivetrain.turnPID(90);
+                drivetrain.turnPID(-RIGHT_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE / 2, 5);
+                drivetrain.turnPID(RIGHT_TURN);
             } else if (location == location.UNKNOWN){
                 opMode.telemetry.addData("Detected None", "Value" + location);
             }
@@ -192,20 +191,20 @@ public class HardwareSlide extends Mechanism {
 
     public void tfCraterFindGoldLocation(TensorFlowManager visionManager, TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE, -FieldConstants.TILE_HYPOTENUSE, 5);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE, 5);
 
             if (location == location.LEFT){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
-                drivetrain.turnPID(90);
-                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 5);
-                drivetrain.turnPID(-90);
+                drivetrain.turnPID(RIGHT_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE / 2, 5);
+                drivetrain.turnPID(-RIGHT_TURN);
             } else if (location == location.CENTER){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
             } else if (location == location.RIGHT){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
-                drivetrain.turnPID(-90);
-                drivetrain.driveToPos(.3,FieldConstants.TILE_HYPOTENUSE / 2, FieldConstants.TILE_HYPOTENUSE / 2, 5);
-                drivetrain.turnPID(90);
+                drivetrain.turnPID(-RIGHT_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE / 2, 5);
+                drivetrain.turnPID(RIGHT_TURN);
             } else if (location == location.NONE){
                 opMode.telemetry.addData("Detected None", "Value" + location);
             }
@@ -222,83 +221,83 @@ public class HardwareSlide extends Mechanism {
      */
     public void depotSamplePID(VisionManager visionManager, SamplingOrderDetector.GoldLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE, -FieldConstants.TILE_HYPOTENUSE, 5);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE, 5);
             if (location == location.LEFT){
-                drivetrain.turnPID(45);
-                drivetrain.driveToPos(.3, -FieldConstants.FLOOR_TILE, -FieldConstants.FLOOR_TILE, 5);
-                drivetrain.turnPID(-90);
+                drivetrain.turnPID(DIAGONAL_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 5);
+                drivetrain.turnPID(-RIGHT_TURN);
             } else if (location == location.CENTER || location == location.UNKNOWN){
-                drivetrain.turnPID(-45);
+                drivetrain.turnPID(-DIAGONAL_TURN);
             } else if (location == location.RIGHT){
-                drivetrain.turnPID(-45);
-                drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE, -FieldConstants.TILE_HYPOTENUSE, 5);
+                drivetrain.turnPID(-DIAGONAL_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE, 5);
             }
         }
     }
 
     public void tfDepotSamplePID(TensorFlowManager visionManager, TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE, -FieldConstants.TILE_HYPOTENUSE, 5);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE, 5);
             if (location == location.LEFT){
-                drivetrain.turnPID(45);
-                drivetrain.driveToPos(.3, -FieldConstants.FLOOR_TILE, -FieldConstants.FLOOR_TILE, 5);
-                drivetrain.turnPID(-90);
+                drivetrain.turnPID(DIAGONAL_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 5);
+                drivetrain.turnPID(-RIGHT_TURN);
             } else if (location == location.CENTER || location == location.NONE){
-                drivetrain.turnPID(-45);
+                drivetrain.turnPID(-DIAGONAL_TURN);
             } else if (location == location.RIGHT){
-                drivetrain.turnPID(-45);
-                drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE, -FieldConstants.TILE_HYPOTENUSE, 5);
+                drivetrain.turnPID(-DIAGONAL_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE, 5);
             }
         }
     }
 
     public void craterSamplePID(VisionManager visionManager, SamplingOrderDetector.GoldLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE / 3.0, -FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
+            drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
             if (location == location.LEFT){
-                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE / 3.0, FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
-                drivetrain.turnPID(-45);
-                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 5);
-                drivetrain.turnPID(45);
+                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
+                drivetrain.turnPID(-DIAGONAL_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE, 5);
+                drivetrain.turnPID(DIAGONAL_TURN);
             } else if (location == location.CENTER || location == location.UNKNOWN){
-                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE / 3.0, FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
-                drivetrain.turnPID(-45);
-                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE * 1.5 , FieldConstants.TILE_HYPOTENUSE * 1.5, 5);
-                drivetrain.turnPID(45);
+                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
+                drivetrain.turnPID(-DIAGONAL_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE * 1.5, 5);
+                drivetrain.turnPID(DIAGONAL_TURN);
             } else if (location == location.RIGHT){
-                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE / 3.0, FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
-                drivetrain.turnPID(-45);
-                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE * 2.0, FieldConstants.TILE_HYPOTENUSE * 2.0, 5);
-                drivetrain.turnPID(45);
+                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
+                drivetrain.turnPID(-DIAGONAL_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE * 2.0, 5);
+                drivetrain.turnPID(DIAGONAL_TURN);
             }
         }
     }
 
     public void tfCraterSamplePID(TensorFlowManager visionManager, TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.3, -FieldConstants.TILE_HYPOTENUSE / 3.0, -FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
+            drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
             if (location == location.LEFT){
-                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE / 3.0, FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
-                drivetrain.turnPID(-45);
-                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE, FieldConstants.TILE_HYPOTENUSE, 5);
-                drivetrain.turnPID(45);
+                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
+                drivetrain.turnPID(-DIAGONAL_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE, 5);
+                drivetrain.turnPID(DIAGONAL_TURN);
             } else if (location == location.CENTER || location == location.NONE){
-                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE / 3.0, FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
-                drivetrain.turnPID(-45);
-                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE * 1.5 , FieldConstants.TILE_HYPOTENUSE * 1.5, 5);
-                drivetrain.turnPID(45);
+                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
+                drivetrain.turnPID(-DIAGONAL_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE * 1.5, 5);
+                drivetrain.turnPID(DIAGONAL_TURN);
             } else if (location == location.RIGHT){
-                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE / 3.0, FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
-                drivetrain.turnPID(-45);
-                drivetrain.driveToPos(.3, FieldConstants.TILE_HYPOTENUSE * 2.0, FieldConstants.TILE_HYPOTENUSE * 2.0, 5);
-                drivetrain.turnPID(45);
+                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE / 3.0, 5);
+                drivetrain.turnPID(-DIAGONAL_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE * 2.0, 5);
+                drivetrain.turnPID(DIAGONAL_TURN);
             }
         }
     }
 
     public void driveToDepot() {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE * 3.0, FieldConstants.FLOOR_TILE * 3.0, 5);
+            drivetrain.driveToPos(.5,FieldConstants.FLOOR_TILE * 3.0, 5);
 
         }
     }
@@ -331,14 +330,12 @@ public class HardwareSlide extends Mechanism {
 
     public void driveToCrater() {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE * 3.5, FieldConstants.FLOOR_TILE * 3.5, 7);
-
+            drivetrain.driveToPos(.5,FieldConstants.FLOOR_TILE * 3.5, 7);
         }
     }
     public void craterDriveToCrater() {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE * 4, -FieldConstants.FLOOR_TILE * 4, 7);
-
+            drivetrain.driveToPos(.5,-FieldConstants.FLOOR_TILE * 4, 7);
         }
     }
 }

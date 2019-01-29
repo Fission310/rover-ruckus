@@ -45,16 +45,16 @@ public class AutonTestDrive extends LinearOpMode {
         while (opModeIsActive()) {
             switch (step) {
                 case 0:
+                    robot.drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE, 5.00);
                     telemetry.addData("Step 0", "Robot Drive one floor tile");
                     telemetry.update();
-                    robot.drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE, -FieldConstants.FLOOR_TILE, 5.00);
                     step++;
                     break;
                 case 1:
                     sleep(2000);
                     telemetry.addData("Step 0", "Robot Drive one floor tile negative speed");
                     telemetry.update();
-                    robot.drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE, FieldConstants.FLOOR_TILE, 5.00);
+                    robot.drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE, 5.00);
                     step++;
                     break;
 
