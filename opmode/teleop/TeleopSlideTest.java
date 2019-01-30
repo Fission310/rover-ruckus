@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
-import org.firstinspires.ftc.teamcode.util.sensors.IMU;
 
 import static java.lang.Math.abs;
 
@@ -55,11 +53,11 @@ import static java.lang.Math.abs;
  * BACK:
  *
  */
-@TeleOp(name = "IMU & Encoder Test", group = "Teleop")
+@TeleOp(name = "Teleop: Scaled Slide", group = "Teleop")
 public class TeleopSlideTest extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.0;
-    private static final double SLOW_MULTIPLIER = 0.5;
+    private static final double SLOW_MULTIPLIER = 0.4;
     private static final double LINEAR_SLIDES_SLOW_MULTIPLIER = 0.5;
 
     /* Private OpMode members. */
@@ -72,16 +70,23 @@ public class TeleopSlideTest extends OpMode {
     double yInput, xInput, slideInput; // Gamepad 1
     double linearSlidesInput, rotationInput; // Gamepad 2
     /* Applies slow or fast mode */
-    double slowYInput, slowXInput, slowSlide, leftTrigger, rightTrigger; // Gamepad 1
-    double slowLinearSlidesInput, slowRotationInput, acquirerIntake, acquirerOuttake; // Gamepad 2
+    double slowYInput, slowXInput, slowSlide, leftTrigger1,rightTrigger1; // Gamepad 1
+    double slowLinearSlidesInput, slowRotationInput, acquirerIntake, acquirerOuttake, leftTrigger2, rightTrigger2; // Gamepad 2
     /* Handle time complexities */
-    boolean aButtonPressed, bButtonPressed, xButtonPressed;
+    boolean aButtonPressed = false, bButtonPressed = false, xButtonPressed = false, yButtonPressed = false;
+    /* Handle button positions */
+    boolean left, right;
+    double currentAcquirerRotation = 0;
+
 
     /* Applies brake behavior */
     boolean brake = false;
 
     @Override
     public void init() {
+        robot.init(hardwareMap);
+        robot.drivetrain.encoderInit();
+        robot.drivetrain.imuInit(hardwareMap);
     }
 
     /**
@@ -101,9 +106,6 @@ public class TeleopSlideTest extends OpMode {
      */
     @Override
     public void start() {
-        robot.init(hardwareMap);
-        robot.drivetrain.encoderInit();
-        robot.drivetrain.imuInit(hardwareMap);
         runtime.reset();
     }
 
@@ -112,10 +114,59 @@ public class TeleopSlideTest extends OpMode {
      * according to gamepad input.
      * @see OpMode#loop()
      */
-
     @Override
     public void loop() {
         // Adds runtime data to telemetry
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+
+        /**
+         * Gamepad 1
+         */
+        yInput = gamepad1.left_stick_y;
+        xInput = gamepad1.right_stick_x;
+        slideInput = gamepad1.left_stick_x;
+
+        slowYInput = Range.clip(yInput * SLOW_MULTIPLIER, -1.0, 1.0);
+        slowXInput = Range.clip(xInput * SLOW_MULTIPLIER, -1.0, 1.0);
+        slowSlide = Range.clip(slideInput * SLOW_MULTIPLIER, -1.0, 1.0);
+
+        if (gamepad1.left_bumper) {
+            robot.drivetrain.driveSlideScaled(slowYInput, slowXInput, slowSlide);
+            telemetry.addData("GP 1 Status", "slowYInput: " + slowYInput);
+            telemetry.addData("GP 1 Status", "slowXInput: " + slowXInput);
+            telemetry.addData("GP 1 Status", "slowSlide: " + slowSlide);
+        } else {
+            robot.drivetrain.driveSlideScaled(yInput, xInput, slideInput);
+            telemetry.addData("GP 1 Status", "yInput: " + yInput);
+            telemetry.addData("GP 1 Status", "xInput: " + xInput);
+            telemetry.addData("GP 1 Status", "slideInput: " + slideInput);
+        }
+
+        /**
+         * Gamepad 2
+         */
+//      Sets rotation mechanism power via the left and right triggers
+        leftTrigger2 = gamepad2.left_trigger;
+        rightTrigger2 = gamepad2.right_trigger;
+        robot.drawerSlides.setScaledRotationPower(leftTrigger2 + rightTrigger2);
+
+//      Sets drawer slides power via the right joystick
+        linearSlidesInput = gamepad2.right_stick_y;
+        robot.drawerSlides.setScaledDrawerSlidePower(linearSlidesInput);
+
+//        /**
+//         * Both Gamepads
+//         */
+//        if (gamepad1.x || gamepad2.x) {
+//            if(!xButtonPressed) {
+//                robot.marker.markerLeft();
+//                xButtonPressed = !xButtonPressed;
+//            } else {
+//                robot.marker.markerRight();
+//                xButtonPressed = !xButtonPressed;
+//            }
+//        }
+
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
         double[] positions = robot.drivetrain.getPositions();
@@ -132,7 +183,5 @@ public class TeleopSlideTest extends OpMode {
     }
 
     @Override
-    public void stop()
-    {
-    }
+    public void stop() { }
 }
