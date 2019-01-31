@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.DrawerSlides;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
+import org.firstinspires.ftc.teamcode.hardware.RackNPinonLift;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
@@ -41,7 +42,7 @@ public class HardwareSlide extends Mechanism {
     /**
      * Instance variable containing robot's rack and pinion lift.
      */
-//    public RackNPinonLift rack;
+    public RackNPinonLift rack;
     /**
      * Instance variable containing robot's marker.
      */
@@ -56,7 +57,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain();
         drawerSlides = new DrawerSlides();
 //        acquirer = new Acquirer();
-//        rack = new RackNPinonLift();
+        rack = new RackNPinonLift();
 //        marker = new Marker();
     }
     /**
@@ -70,7 +71,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain(opMode);
         drawerSlides = new DrawerSlides(opMode);
 //        acquirer = new Acquirer(opMode);
-//        rack = new RackNPinonLift(opMode);
+        rack = new RackNPinonLift(opMode);
 //        marker = new Marker(opMode);
     }
 
@@ -82,7 +83,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain.init(hwMap);
 //        acquirer.init(hwMap);
         drawerSlides.init(hwMap);
-//        rack.init(hwMap);
+        rack.init(hwMap);
 //        marker.init(hwMap);
     }
 
