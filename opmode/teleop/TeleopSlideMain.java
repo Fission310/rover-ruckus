@@ -141,6 +141,7 @@ public class TeleopSlideMain extends OpMode {
             telemetry.addData("GP 1 Status", "xInput: " + xInput);
             telemetry.addData("GP 1 Status", "slideInput: " + slideInput);
         }
+
         leftTrigger1 = Math.abs(gamepad1.left_trigger) > .9 ? -1 * Math.signum(gamepad1.left_trigger) : -.8 * gamepad1.left_trigger;
         rightTrigger1 = Math.abs(gamepad1.right_trigger) > .9 ? 1 * Math.signum(gamepad1.right_trigger) : .8 * gamepad1.right_trigger;
         robot.rack.setRackPower(leftTrigger1 + rightTrigger1);
@@ -174,15 +175,11 @@ public class TeleopSlideMain extends OpMode {
 
         double[] positions = robot.drivetrain.getPositions();
         double imuZAxis = robot.drivetrain.singleImu.getZAxis();
-        double imuYAxis = robot.drivetrain.singleImu.getYAxis();
-        double imuXAxis = robot.drivetrain.singleImu.getXAxis();
         telemetry.addData("Encoder counts", "Running at %.2f :%.2f :%.2f",
                 positions[0],
                 positions[1],
                 positions[2]);
         telemetry.addData("IMU", "Z-axis: " + imuZAxis);
-        telemetry.addData("IMU", "Y-axis: " + imuYAxis);
-        telemetry.addData("IMU", "X-axis: " + imuXAxis);
     }
 
     @Override
