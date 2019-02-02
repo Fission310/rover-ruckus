@@ -110,7 +110,7 @@ public class HardwareSlide extends Mechanism {
      */
     public void land() {
         if (opMode.opModeIsActive()) {
-//            rack.rackToPos(.4, FieldConstants.HANG_HEIGHT);
+            rack.rackToPos(.8, FieldConstants.HANG_HEIGHT);
         }
     }
 

@@ -83,7 +83,7 @@ public class DepotMainTF extends LinearOpMode {
                  */
                 case FIND_GOLD_LOCATION:
                     goldLocation = visionManager.getDoubleMineralLocation();
-                    while (runtime.seconds() <= 15 && goldLocation == TensorFlowManager.TFLocation.NONE && ROTATIONS < 14) {
+                    while (runtime.seconds() <= 18 && goldLocation == TensorFlowManager.TFLocation.NONE && ROTATIONS < 14) {
                         goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
                         ROTATIONS += 2;
                         robot.drivetrain.turnPID(2);
@@ -135,7 +135,7 @@ public class DepotMainTF extends LinearOpMode {
                  * Extend arm and drive up to the crater
                  */
                 case PARK:
-                    robot.driveToCrater();
+                    robot.driveToDepot();
                     telemetry.addData("Status", "Robot drove to crater");
                     telemetry.update();
                     step = step.DEFAULT;

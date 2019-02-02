@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 
-@Autonomous(name="PID Test 1/26/19", group="Test")
+@Autonomous(name="PID Test 2/01/19", group="Test")
 public class AutonPIDTest extends LinearOpMode {
 
     /* Private OpMode members */
@@ -55,7 +55,7 @@ public class AutonPIDTest extends LinearOpMode {
                     sleep(2000);
                     telemetry.addData("Step 2", "Robot PID turn");
                     telemetry.update();
-                    robot.drivetrain.turnPID(90);
+                    robot.drivetrain.turnPID(88);
                     step++;
                     break;
                 case 3:
@@ -72,11 +72,11 @@ public class AutonPIDTest extends LinearOpMode {
 
                 case 5:
                     sleep(3000);
-                    robot.drivetrain.turnPID(90);
+                    robot.drivetrain.turnPID(88);
                     sleep(1000);
-                    robot.drivetrain.turnPID(90);
+                    robot.drivetrain.turnPID(88);
                     sleep(1000);
-                    robot.drivetrain.turnPID(90);
+                    robot.drivetrain.turnPID(88);
                     sleep(1000);
                     step++;
                     break;

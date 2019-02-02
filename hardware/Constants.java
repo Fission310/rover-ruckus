@@ -32,6 +32,7 @@ public class Constants {
      */
     private static final double WHEEL_DIAMETER_INCHES_4 = 4.0;
     private static final double WHEEL_DIAMETER_INCHES_2 = 2.0;
+    private static final double PINION_INCHES = 1.0 / 2.0;
     /**
      * Calculated ticks per inch.
      */
@@ -39,6 +40,7 @@ public class Constants {
     public static final double INCHES_PER_TICK_40 = ((WHEEL_DIAMETER_INCHES_4 * Math.PI) / (TICKS_PER_MOTOR_40 * DRIVETRAIN_GEAR_REDUCTION));
     public static final double INCHES_PER_TICK_30 = ((WHEEL_DIAMETER_INCHES_4 * Math.PI) / (TICKS_PER_MOTOR_30 * DRIVE_GEAR_REDUCTION));
     public static final double INCHES_PER_TICK_53 = ((WHEEL_DIAMETER_INCHES_2 * Math.PI) / (TICKS_PER_MOTOR_53 * ROTATION_GEAR_REDUCTION));
+    public static final double INCHES_PER_TICK_RACK_PINION = ((PINION_INCHES * Math.PI) / (TICKS_PER_MOTOR_60 * DRIVE_GEAR_REDUCTION));
     /**
      * Calculated inch per tick.
      */
@@ -46,6 +48,7 @@ public class Constants {
     public static final double TICKS_PER_INCH_40 = 1.0 / INCHES_PER_TICK_40;
     public static final double TICKS_PER_INCH_30 = 1.0 / INCHES_PER_TICK_30;
     public static final double TICKS_PER_INCH_53 = 1.0 / INCHES_PER_TICK_53;
+    public static final double TICKS_PER_INCH_RACK_PINION = 1.0 / INCHES_PER_TICK_RACK_PINION;
     /**
      * Drive speed when using encoders.
      */

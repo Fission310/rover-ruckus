@@ -174,11 +174,15 @@ public class TeleopSlideMain extends OpMode {
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
         double[] positions = robot.drivetrain.getPositions();
+        double[] rackPositions = robot.rack.getPositions();
         double imuZAxis = robot.drivetrain.singleImu.getZAxis();
         telemetry.addData("Encoder counts", "Running at %.2f :%.2f :%.2f",
                 positions[0],
                 positions[1],
                 positions[2]);
+        telemetry.addData("Rack & Pinion counts", "Running at %.2f :%.2f",
+                rackPositions[0],
+                rackPositions[1]);
         telemetry.addData("IMU", "Z-axis: " + imuZAxis);
     }
 

@@ -141,8 +141,8 @@ public class RackNPinonLift extends Mechanism {
         int leftTarget, rightTarget;
 
         // Determine new target position, and pass to motor controller
-        leftTarget = leftRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_60);
-        rightTarget = rightRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_60);
+        leftTarget = leftRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_RACK_PINION);
+        rightTarget = rightRackMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_RACK_PINION);
         // Average out any differences (if any)
         int target = (leftTarget + rightTarget) / 2;
 
@@ -181,5 +181,13 @@ public class RackNPinonLift extends Mechanism {
         rightRackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public double[] getPositions() {
+        double[] positions = new double[2];
+        positions[0] = leftRackMotor.getCurrentPosition() / Constants.TICKS_PER_INCH_RACK_PINION;
+        positions[1] = rightRackMotor.getCurrentPosition() / Constants.TICKS_PER_INCH_RACK_PINION;
+
+        return positions;
     }
 }
