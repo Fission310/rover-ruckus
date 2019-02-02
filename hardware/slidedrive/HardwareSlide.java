@@ -24,6 +24,7 @@ public class HardwareSlide extends Mechanism {
     /* Constants */
     private static final int RIGHT_TURN = 88;
     private static final int DIAGONAL_TURN = 43;
+    private static final int STRAFE = 6;
     private static final double DRIVE_SPEED = .3;
 
     /* Mechanisms */
@@ -42,7 +43,7 @@ public class HardwareSlide extends Mechanism {
     /**
      * Instance variable containing robot's rack and pinion lift.
      */
-    public RackNPinonLift rack;
+//    public RackNPinonLift rack;
     /**
      * Instance variable containing robot's marker.
      */
@@ -57,7 +58,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain();
         drawerSlides = new DrawerSlides();
 //        acquirer = new Acquirer();
-        rack = new RackNPinonLift();
+//        rack = new RackNPinonLift();
 //        marker = new Marker();
     }
     /**
@@ -71,7 +72,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain(opMode);
         drawerSlides = new DrawerSlides(opMode);
 //        acquirer = new Acquirer(opMode);
-        rack = new RackNPinonLift(opMode);
+//        rack = new RackNPinonLift(opMode);
 //        marker = new Marker(opMode);
     }
 
@@ -83,7 +84,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain.init(hwMap);
 //        acquirer.init(hwMap);
         drawerSlides.init(hwMap);
-        rack.init(hwMap);
+//        rack.init(hwMap);
 //        marker.init(hwMap);
     }
 
@@ -110,7 +111,7 @@ public class HardwareSlide extends Mechanism {
      */
     public void land() {
         if (opMode.opModeIsActive()) {
-            rack.rackToPos(.8, FieldConstants.HANG_HEIGHT);
+//            rack.rackToPos(.8, -FieldConstants.HANG_HEIGHT);
         }
     }
 
@@ -238,7 +239,7 @@ public class HardwareSlide extends Mechanism {
 
     public void tfDepotSamplePID(TensorFlowManager visionManager, TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE, 5);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE + STRAFE, 5);
             if (location == location.LEFT){
                 drivetrain.turnPID(DIAGONAL_TURN);
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 5);

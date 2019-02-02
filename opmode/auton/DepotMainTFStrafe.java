@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode.auton;
 
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -8,10 +7,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.opmode.Steps;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
-import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
-@Autonomous(name="Main TF Depot: D;S;M;P", group="Slide Depot")
-public class DepotMainTF extends LinearOpMode {
+@Autonomous(name="Main TF Strafe Depot: D;S;M;P", group="Slide Depot")
+public class DepotMainTFStrafe extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -84,21 +82,47 @@ public class DepotMainTF extends LinearOpMode {
                  */
                 case FIND_GOLD_LOCATION:
 //                    robot.drivetrain.turnPID(35);
-                    goldLocation = visionManager.getDoubleMineralLocation();
-
-                    while (goldLocation == TensorFlowManager.TFLocation.NONE && ROTATIONS < 18) {
-                        ROTATIONS += 2;
-                        robot.drivetrain.turnPID(2);
-                        sleep(200);
-                        goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
+                    boolean left = false;
+                    boolean right = false;
+                    boolean center = false;
+                    sleep(500);
+                    mineral = visionManager.getDetector();
+                    if (mineral == TensorFlowManager.TFDetector.GOLD) {
+                        center = true;
                     }
-                    goldLocation = visionManager.getDoubleMineralLocation();
+
+                    robot.drivetrain.driveToPos(.3, -7.0,3.0);
+                    robot.drivetrain.strafeToPos(.3,24,3);
+                    sleep(500);
+
+                    mineral = visionManager.getDetector();
+                    if (mineral == TensorFlowManager.TFDetector.GOLD) {
+                        right = true;
+                    }
+                    robot.drivetrain.strafeToPos(.3,-48,3);
+                    sleep(500);
+
+                    mineral = visionManager.getDetector();
+                    if (mineral == TensorFlowManager.TFDetector.GOLD) {
+                        left = true;
+                    }
+                    robot.drivetrain.strafeToPos(.3,24,3);
+                    
+                    if (left == true) {
+                        goldLocation = TensorFlowManager.TFLocation.LEFT;
+                    } else if (center == true) {
+                        goldLocation = TensorFlowManager.TFLocation.CENTER;
+                    } else if (right == true) {
+                        goldLocation = TensorFlowManager.TFLocation.RIGHT;
+                    }
+
+//                    goldLocation = visionManager.getDoubleMineralLocation();
 //                    while (runtime.seconds() <= 20 && mineral != TensorFlowManager.TFDetector.GOLD) {
 //                        mineral = visionManager.getDetector();
 //                        ROTATIONS += 35;
 //                        robot.drivetrain.turnPID(-35);
 //                    }
-                    robot.drivetrain.turnPID(-ROTATIONS);
+//                    robot.drivetrain.turnPID(-ROTATIONS);
 //
 //                    if (ROTATIONS < 2) {
 //                        goldLocation = TensorFlowManager.TFLocation.LEFT;
