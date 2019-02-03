@@ -83,31 +83,52 @@ public class DepotMainTFStrafe extends LinearOpMode {
                 case FIND_GOLD_LOCATION:
                     sleep(500);
                     mineral = visionManager.getDetector();
+                    ElapsedTime elapsedTime = new ElapsedTime();
+                    while(elapsedTime.seconds() < 1) ;
                     if (mineral == TensorFlowManager.TFDetector.GOLD) {
-                        goldLocation = TensorFlowManager.TFLocation.CENTER;
+                        robot.drivetrain.driveToPos(.5, -16.0,3.0);
+                        this.goldLocation = TensorFlowManager.TFLocation.CENTER;
+                        robot.drivetrain.driveToPos(.5, 16.0,3.0);
                     }
+                    telemetry.addData("Gold Cube Detactor found:", mineral);
+                    telemetry.update();
 
                     robot.drivetrain.driveToPos(.4, -7.0,3.0);
-                    robot.drivetrain.strafeToPos(.5,24,4);
+                    robot.drivetrain.strafeToPos(.5,30,4);
 
                     sleep(500);
                     mineral = visionManager.getDetector();
+                    ElapsedTime elapsedTimes = new ElapsedTime();
+                    while(elapsedTimes.seconds() < 1) ;
                     if (mineral == TensorFlowManager.TFDetector.GOLD) {
-                        goldLocation = TensorFlowManager.TFLocation.RIGHT;
+                        robot.drivetrain.driveToPos(.5, -16.0,3.0);
+                        this.goldLocation = TensorFlowManager.TFLocation.RIGHT;
+                        robot.drivetrain.driveToPos(.5, 16.0,3.0);
                     }
+                    telemetry.addData("Gold Cube Detactor found:", mineral);
+                    telemetry.update();
 
-                    robot.drivetrain.strafeToPos(.5,-48,4);
+                    robot.drivetrain.strafeToPos(.5,-60,4);
 
                     sleep(500);
                     mineral = visionManager.getDetector();
+                    ElapsedTime elapsedTimesss = new ElapsedTime();
+                    while(elapsedTimesss.seconds() < 1) ;
                     if (mineral == TensorFlowManager.TFDetector.GOLD) {
-                        goldLocation = TensorFlowManager.TFLocation.LEFT;
+                        robot.drivetrain.driveToPos(.5, -16.0,3.0);
+                        this.goldLocation = TensorFlowManager.TFLocation.LEFT;
+                        robot.drivetrain.driveToPos(.5, 16.0,3.0);
                     }
-                    robot.drivetrain.strafeToPos(.5,24,4);
+                    telemetry.addData("Gold Cube Detactor found:", mineral);
+                    telemetry.update();
+
+                    robot.drivetrain.strafeToPos(.5,30,4);
 
                     telemetry.addData("Gold Cube location found:", goldLocation);
                     telemetry.update();
                     step = step.ALIGN_TO_GOLD;
+                    telemetry.addData("Gold Cube location found:", goldLocation);
+
                     break;
 
                 case ALIGN_TO_GOLD:

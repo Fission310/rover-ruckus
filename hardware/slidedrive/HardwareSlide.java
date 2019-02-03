@@ -151,19 +151,18 @@ public class HardwareSlide extends Mechanism {
     }
     public void tfDepotFindGoldLocation(TensorFlowManager visionManager, TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE, 5);
 
             if (location == location.LEFT){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
                 drivetrain.turnPID(RIGHT_TURN);
-                drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE / 2, 5);
+                drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.TILE_HYPOTENUSE / 2, 5);
                 drivetrain.turnPID(-RIGHT_TURN);
             } else if (location == location.CENTER){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
             } else if (location == location.RIGHT){
                 opMode.telemetry.addData("Detected Gold", "Value" + location);
                 drivetrain.turnPID(-RIGHT_TURN);
-                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE / 2, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE / 2, 5);
                 drivetrain.turnPID(RIGHT_TURN);
             } else if (location == location.NONE){
                 opMode.telemetry.addData("Detected None", "Value" + location);

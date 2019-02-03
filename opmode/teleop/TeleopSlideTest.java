@@ -161,15 +161,15 @@ public class TeleopSlideTest extends OpMode {
 //        /**
 //         * Both Gamepads
 //         */
-//        if (gamepad1.x || gamepad2.x) {
-//            if(!xButtonPressed) {
-//                robot.marker.markerLeft();
-//                xButtonPressed = !xButtonPressed;
-//            } else {
-//                robot.marker.markerRight();
-//                xButtonPressed = !xButtonPressed;
-//            }
-//        }
+        if (gamepad1.x || gamepad2.x) {
+            if(!xButtonPressed) {
+                robot.marker.markerLeft();
+                xButtonPressed = !xButtonPressed;
+            } else {
+                robot.marker.markerRight();
+                xButtonPressed = !xButtonPressed;
+            }
+        }
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 

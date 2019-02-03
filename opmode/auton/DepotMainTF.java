@@ -89,8 +89,9 @@ public class DepotMainTF extends LinearOpMode {
                     while (goldLocation == TensorFlowManager.TFLocation.NONE && ROTATIONS < 18) {
                         ROTATIONS += 2;
                         robot.drivetrain.turnPID(2);
-                        sleep(200);
                         goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
+                        ElapsedTime elapsedTime = new ElapsedTime();
+                        while(elapsedTime.seconds() < 1) ;
                     }
                     goldLocation = visionManager.getDoubleMineralLocation();
 //                    while (runtime.seconds() <= 20 && mineral != TensorFlowManager.TFDetector.GOLD) {

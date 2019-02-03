@@ -54,9 +54,9 @@ public class DrawerSlides extends Mechanism {
         drawerSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set polarity
-        rotationForward.setDirection(DcMotorSimple.Direction.FORWARD);
-        rotationBack.setDirection(DcMotorSimple.Direction.FORWARD);
-        drawerSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+        rotationForward.setDirection(DcMotorSimple.Direction.REVERSE);
+        rotationBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        drawerSlide.setDirection(DcMotorSimple.Direction.REVERSE );
 
         // Set initial power
         rotationForward.setPower(0);

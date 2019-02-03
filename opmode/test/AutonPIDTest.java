@@ -1,19 +1,13 @@
-package org.firstinspires.ftc.teamcode.opmode.auton;
+package org.firstinspires.ftc.teamcode.opmode.test;
 
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
-import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
-import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
-@Autonomous(name="Test 1/26/19", group="Test")
-public class AutonTestDrive extends LinearOpMode {
+@Autonomous(name="PID Test 2/01/19", group="Test")
+public class AutonPIDTest extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -45,18 +39,14 @@ public class AutonTestDrive extends LinearOpMode {
         while (opModeIsActive()) {
             switch (step) {
                 case 0:
-//                    robot.rack.rackToPos(.3, 4);
-                    sleep(3000);
-                    robot.drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE, 5.00);
                     telemetry.addData("Step 0", "Robot Drive one floor tile");
                     telemetry.update();
+//                    robot.drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE, -FieldConstants.FLOOR_TILE, 5.00);
                     step++;
                     break;
                 case 1:
-                    sleep(2000);
                     telemetry.addData("Step 0", "Robot Drive one floor tile negative speed");
                     telemetry.update();
-                    robot.drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE, 5.00);
                     step++;
                     break;
 
@@ -64,7 +54,7 @@ public class AutonTestDrive extends LinearOpMode {
                     sleep(2000);
                     telemetry.addData("Step 2", "Robot PID turn");
                     telemetry.update();
-                    robot.drivetrain.turnPID(90);
+                    robot.drivetrain.turnPID(88);
                     step++;
                     break;
                 case 3:
@@ -75,12 +65,18 @@ public class AutonTestDrive extends LinearOpMode {
                 case 4:
                     telemetry.addData("Step 4", "Robot strafe");
                     telemetry.update();
-                    robot.drivetrain.strafeToPos(.8, FieldConstants.FLOOR_TILE, 5);
+//                    robot.drivetrain.strafeToPos(.8, FieldConstants.FLOOR_TILE, 5);
                     step++;
                     break;
 
                 case 5:
                     sleep(3000);
+                    robot.drivetrain.turnPID(88);
+                    sleep(1000);
+                    robot.drivetrain.turnPID(88);
+                    sleep(1000);
+                    robot.drivetrain.turnPID(88);
+                    sleep(1000);
                     step++;
                     break;
                 case 6:
