@@ -112,7 +112,7 @@ public class HardwareSlide extends Mechanism {
      */
     public void land() {
         if (opMode.opModeIsActive()) {
-//            rack.rackToPos(.8, -FieldConstants.HANG_HEIGHT);
+//            rack.rackToPos(.8, FieldConstants.HANG_HEIGHT);
         }
     }
 
@@ -243,13 +243,13 @@ public class HardwareSlide extends Mechanism {
             drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE + STRAFE, 5);
             if (location == location.LEFT){
                 drivetrain.turnPID(DIAGONAL_TURN);
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE, 5);
                 drivetrain.turnPID(-RIGHT_TURN);
             } else if (location == location.CENTER || location == location.NONE){
                 drivetrain.turnPID(-DIAGONAL_TURN);
             } else if (location == location.RIGHT){
                 drivetrain.turnPID(-DIAGONAL_TURN);
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE, 5);
             }
         }
     }
@@ -332,7 +332,7 @@ public class HardwareSlide extends Mechanism {
 
     public void driveToDepot() {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.5,FieldConstants.FLOOR_TILE * 3.0, 5);
+            drivetrain.driveToPos(.5,FieldConstants.FLOOR_TILE * 4.0, 6);
 
         }
     }

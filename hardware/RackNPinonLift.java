@@ -164,7 +164,7 @@ public class RackNPinonLift extends Mechanism {
                 leftRackMotor.isBusy() && rightRackMotor.isBusy()) {
 
             // Set power of rack and pinion motors accounting for adjustment
-            setRackPower(speed);
+            setRackPower(-speed);
 
             // Display info for the driver.
             opMode.telemetry.addData("Path1", "Running to %7d :%7d", leftTarget, rightTarget);

@@ -105,7 +105,7 @@ public class DepotMainTFStrafe extends LinearOpMode {
                     }
                     robot.drivetrain.strafeToPos(.5,24,4);
 
-                    telemetry.addData("Gold Cube location after start", goldLocation);
+                    telemetry.addData("Gold Cube location found:", goldLocation);
                     telemetry.update();
                     step = step.ALIGN_TO_GOLD;
                     break;

@@ -142,16 +142,16 @@ public class TeleopSlideMain extends OpMode {
             telemetry.addData("GP 1 Status", "slideInput: " + slideInput);
         }
 
-        leftTrigger1 = Math.abs(gamepad1.left_trigger) > .9 ? -1 * Math.signum(gamepad1.left_trigger) : -.8 * gamepad1.left_trigger;
-        rightTrigger1 = Math.abs(gamepad1.right_trigger) > .9 ? 1 * Math.signum(gamepad1.right_trigger) : .8 * gamepad1.right_trigger;
+        leftTrigger1 = Math.abs(gamepad1.left_trigger) > .9 ? -1 * Math.abs(gamepad1.left_trigger) : -.8 * gamepad1.left_trigger;
+        rightTrigger1 = Math.abs(gamepad1.right_trigger) > .9 ? 1 * Math.abs(gamepad1.right_trigger) : .8 * gamepad1.right_trigger;
 //        robot.rack.setRackPower(leftTrigger1 + rightTrigger1);
 
         /**
          * Gamepad 2
          */
 //      Sets rotation mechanism power via the left and right triggers
-        leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.signum(gamepad2.left_trigger) : -.8 * gamepad2.left_trigger;
-        rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.signum(gamepad2.right_trigger) : .8 * gamepad2.right_trigger;
+        leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.abs(gamepad2.right_stick_y): -.8 * gamepad2.left_trigger;
+        rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.abs(gamepad2.right_stick_y): .8 * gamepad2.right_trigger;
         robot.drawerSlides.setRotationPower(leftTrigger2 + rightTrigger2);
 
 //      Sets drawer slides power via the right joystick
