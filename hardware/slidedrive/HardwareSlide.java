@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.DrawerSlides;
+import org.firstinspires.ftc.teamcode.hardware.Marker;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.RackNPinonLift;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
@@ -47,7 +48,7 @@ public class HardwareSlide extends Mechanism {
     /**
      * Instance variable containing robot's marker.
      */
-//    public Marker marker;
+    public Marker marker;
 
     /* Miscellaneous mechanisms */
 
@@ -59,7 +60,7 @@ public class HardwareSlide extends Mechanism {
         drawerSlides = new DrawerSlides();
 //        acquirer = new Acquirer();
 //        rack = new RackNPinonLift();
-//        marker = new Marker();
+        marker = new Marker();
     }
     /**
      * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
@@ -73,7 +74,7 @@ public class HardwareSlide extends Mechanism {
         drawerSlides = new DrawerSlides(opMode);
 //        acquirer = new Acquirer(opMode);
 //        rack = new RackNPinonLift(opMode);
-//        marker = new Marker(opMode);
+        marker = new Marker(opMode);
     }
 
     /**
@@ -85,7 +86,7 @@ public class HardwareSlide extends Mechanism {
 //        acquirer.init(hwMap);
         drawerSlides.init(hwMap);
 //        rack.init(hwMap);
-//        marker.init(hwMap);
+        marker.init(hwMap);
     }
 
     /**
@@ -297,6 +298,38 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
+    public TensorFlowManager.TFLocation tfSlideSample(TensorFlowManager visionManager, TensorFlowManager.TFDetector mineral) {
+        TensorFlowManager.TFLocation goldLocation = TensorFlowManager.TFLocation.NONE;
+        mineral = visionManager.getDetector();
+        if (mineral == TensorFlowManager.TFDetector.GOLD) {
+            goldLocation = TensorFlowManager.TFLocation.CENTER;
+        }
+
+        // drive forward
+        drivetrain.driveToPos(.4, -7.0,3.0);
+        // slide to the left
+        drivetrain.strafeToPos(.5,24,4);
+
+        // scan for mineral
+        opMode.sleep(500);
+        mineral = visionManager.getDetector();
+        if (mineral == TensorFlowManager.TFDetector.GOLD) {
+            goldLocation = TensorFlowManager.TFLocation.RIGHT;
+        }
+        // slide to the right
+        drivetrain.strafeToPos(.5,-48,4);
+
+        // scan for mineral
+        opMode.sleep(500);
+        mineral = visionManager.getDetector();
+        if (mineral == TensorFlowManager.TFDetector.GOLD) {
+            goldLocation = TensorFlowManager.TFLocation.LEFT;
+        }
+        drivetrain.strafeToPos(.5,24,4);
+
+        return goldLocation;
+    }
+
     public void driveToDepot() {
         if (opMode.opModeIsActive()) {
             drivetrain.driveToPos(.5,FieldConstants.FLOOR_TILE * 3.0, 5);
@@ -314,14 +347,14 @@ public class HardwareSlide extends Mechanism {
      */
     public void dropMarker() {
         if (opMode.opModeIsActive()) {
-//            marker.markerLeft();
+            marker.markerLeft();
         }
     }
 
     public void craterDropMarker() {
         if (opMode.opModeIsActive()) {
             drivetrain.turnPID(180);
-//            marker.markerLeft();
+            marker.markerLeft();
 
         }
     }

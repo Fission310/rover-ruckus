@@ -81,58 +81,30 @@ public class DepotMainTFStrafe extends LinearOpMode {
                  * Figure out where the gold cube is.
                  */
                 case FIND_GOLD_LOCATION:
-//                    robot.drivetrain.turnPID(35);
-                    boolean left = false;
-                    boolean right = false;
-                    boolean center = false;
                     sleep(500);
                     mineral = visionManager.getDetector();
                     if (mineral == TensorFlowManager.TFDetector.GOLD) {
-                        center = true;
-                    }
-
-                    robot.drivetrain.driveToPos(.3, -7.0,3.0);
-                    robot.drivetrain.strafeToPos(.3,24,3);
-                    sleep(500);
-
-                    mineral = visionManager.getDetector();
-                    if (mineral == TensorFlowManager.TFDetector.GOLD) {
-                        right = true;
-                    }
-                    robot.drivetrain.strafeToPos(.3,-48,3);
-                    sleep(500);
-
-                    mineral = visionManager.getDetector();
-                    if (mineral == TensorFlowManager.TFDetector.GOLD) {
-                        left = true;
-                    }
-                    robot.drivetrain.strafeToPos(.3,24,3);
-                    
-                    if (left == true) {
-                        goldLocation = TensorFlowManager.TFLocation.LEFT;
-                    } else if (center == true) {
                         goldLocation = TensorFlowManager.TFLocation.CENTER;
-                    } else if (right == true) {
+                    }
+
+                    robot.drivetrain.driveToPos(.4, -7.0,3.0);
+                    robot.drivetrain.strafeToPos(.5,24,4);
+
+                    sleep(500);
+                    mineral = visionManager.getDetector();
+                    if (mineral == TensorFlowManager.TFDetector.GOLD) {
                         goldLocation = TensorFlowManager.TFLocation.RIGHT;
                     }
 
-//                    goldLocation = visionManager.getDoubleMineralLocation();
-//                    while (runtime.seconds() <= 20 && mineral != TensorFlowManager.TFDetector.GOLD) {
-//                        mineral = visionManager.getDetector();
-//                        ROTATIONS += 35;
-//                        robot.drivetrain.turnPID(-35);
-//                    }
-//                    robot.drivetrain.turnPID(-ROTATIONS);
-//
-//                    if (ROTATIONS < 2) {
-//                        goldLocation = TensorFlowManager.TFLocation.LEFT;
-//                    } else if (ROTATIONS < 16) {
-//                        goldLocation = TensorFlowManager.TFLocation.CENTER;
-//                    } else {
-//                        goldLocation = TensorFlowManager.TFLocation.RIGHT;
-//                    }
-//
-//                    robot.drivetrain.turnPID(-35);
+                    robot.drivetrain.strafeToPos(.5,-48,4);
+
+                    sleep(500);
+                    mineral = visionManager.getDetector();
+                    if (mineral == TensorFlowManager.TFDetector.GOLD) {
+                        goldLocation = TensorFlowManager.TFLocation.LEFT;
+                    }
+                    robot.drivetrain.strafeToPos(.5,24,4);
+
                     telemetry.addData("Gold Cube location after start", goldLocation);
                     telemetry.update();
                     step = step.ALIGN_TO_GOLD;
