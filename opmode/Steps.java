@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode.opmode;
  */
 public class Steps {
     public enum State {
+        HANG_AND_SAMPLE,
         LAND,
         EXTEND_LIFT,
         STRAFE_OUT_LANDER,

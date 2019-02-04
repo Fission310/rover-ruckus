@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.opmode.Steps;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
-@Autonomous(name="Main TF Strafe Depot: D;S;M;P", group="Slide Depot")
+@Autonomous(name="TF Webcam Strafe Depot: D;S;M;P", group="Slide Depot")
 public class DepotMainTFStrafe extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -132,7 +132,7 @@ public class DepotMainTFStrafe extends LinearOpMode {
                     break;
 
                 case ALIGN_TO_GOLD:
-                    robot.tfDepotFindGoldLocation(visionManager, goldLocation);
+                    robot.tfDepotFindGoldLocation(goldLocation);
                     telemetry.addData("Status", "Robot driven to gold cube");
                     telemetry.update();
                     step = step.SAMPLE;
@@ -142,7 +142,7 @@ public class DepotMainTFStrafe extends LinearOpMode {
                  * Align the robot to the gold cube to push it in to the depot
                  */
                 case SAMPLE:
-                    robot.tfDepotSamplePID(visionManager, goldLocation);
+                    robot.tfDepotSamplePID(goldLocation);
                     telemetry.addData("Status", "Robot Pushed cube into depot");
                     telemetry.update();
                     step = step.MARKER;
