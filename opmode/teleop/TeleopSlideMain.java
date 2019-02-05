@@ -73,10 +73,11 @@ public class TeleopSlideMain extends OpMode {
     double slowYInput, slowXInput, slowSlide, leftTrigger1,rightTrigger1; // Gamepad 1
     double slowLinearSlidesInput, slowRotationInput, acquirerIntake, acquirerOuttake, leftTrigger2, rightTrigger2; // Gamepad 2
     /* Handle time complexities */
-    boolean aButtonPressed = false, bButtonPressed = false, xButtonPressed = false, yButtonPressed = false;
+    boolean aButtonPressed, bButtonPressed, xButtonPressed, yButtonPressed;
     /* Handle button positions */
     boolean left, right;
     double currentAcquirerRotation = 0;
+    double markerRotation = 0;
 
 
     /* Applies brake behavior */
@@ -158,16 +159,43 @@ public class TeleopSlideMain extends OpMode {
         linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .8 * Math.signum(gamepad2.right_stick_y);
         robot.drawerSlides.setDrawerSlidePower(linearSlidesInput);
 
-//        /**
-//         * Both Gamepads
-//         */
-        if (gamepad1.x || gamepad2.x) {
-            if(!xButtonPressed) {
+        //        if (gamepad1.x || gamepad2.x) {
+//            if(!bButtonPressed) {
+//                robot.acquirer.acquirerRotationInit();
+//                xButtonPressed = !xButtonPressed;
+//            } else {
+//                robot.acquirer.acquirerRotationSet();
+//                xButtonPressed = !xButtonPressed;
+//            }
+//        }
+
+//      Sets acquirer  power via the right and left bumper
+//        if (gamepad2.left_bumper) {
+//            robot.acquirer.setIntakePower(-1);
+//        } else if (gamepad2.right_bumper) {
+//            robot.acquirer.setIntakePower(1);
+//        }
+
+        /**
+         * Both Gamepads
+         */
+//        if (gamepad1.x || gamepad2.x) {
+//            if(!bButtonPressed) {
+//                robot.acquirer.acquirerRotationInit();
+//                xButtonPressed = !xButtonPressed;
+//            } else {
+//                robot.acquirer.acquirerRotationSet();
+//                xButtonPressed = !xButtonPressed;
+//            }
+//        }
+
+        if (gamepad1.b || gamepad2.b) {
+            if(!bButtonPressed) {
                 robot.marker.markerLeft();
-                xButtonPressed = !xButtonPressed;
+                bButtonPressed = !bButtonPressed;
             } else {
                 robot.marker.markerRight();
-                xButtonPressed = !xButtonPressed;
+                bButtonPressed = !bButtonPressed;
             }
         }
 

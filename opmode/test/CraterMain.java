@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auton;
+package org.firstinspires.ftc.teamcode.opmode.test;
 
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.ftccommon.SoundPlayer;
@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.opmode.Steps;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 @Autonomous(name="Main Crater: D;S;M;P", group="Slide Crater")
+@Disabled
 public class CraterMain extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -110,7 +111,7 @@ public class CraterMain extends LinearOpMode {
                     break;
 
                 case DRIVE_TO_DEPOT:
-                    robot.driveToDepot();
+                    robot.driveToCrater(true);
                     telemetry.addData("Status", "Robot drives to depot");
                     telemetry.update();
                     step = step.MARKER;
@@ -120,7 +121,7 @@ public class CraterMain extends LinearOpMode {
                  * Drop the marker
                  */
                 case MARKER:
-                    robot.craterDropMarker();
+                    robot.dropMarker();
                     telemetry.addData("Status", "Robot dropped marker");
                     telemetry.update();
                     step = step.ALIGN_TO_WALL;
@@ -140,7 +141,7 @@ public class CraterMain extends LinearOpMode {
                  * Extend arm and drive up to the crater
                  */
                 case PARK:
-                    robot.driveToCrater();
+                    robot.driveToCrater(false);
                     telemetry.addData("Status", "Robot drove to crater");
                     telemetry.update();
                     step = step.DEFAULT;

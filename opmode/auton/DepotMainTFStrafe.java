@@ -132,7 +132,7 @@ public class DepotMainTFStrafe extends LinearOpMode {
                     break;
 
                 case ALIGN_TO_GOLD:
-                    robot.tfDepotFindGoldLocation(goldLocation);
+                    robot.tfFindGoldLocation(goldLocation);
                     telemetry.addData("Status", "Robot driven to gold cube");
                     telemetry.update();
                     step = step.SAMPLE;
@@ -172,7 +172,7 @@ public class DepotMainTFStrafe extends LinearOpMode {
                  * Extend arm and drive up to the crater
                  */
                 case PARK:
-                    robot.driveToDepot();
+                    robot.driveToCrater(false);
                     telemetry.addData("Status", "Robot drove to crater");
                     telemetry.update();
                     step = step.DEFAULT;

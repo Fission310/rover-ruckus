@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.opmode.Steps;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
-@Autonomous(name="Main TF Center Test Depot: D;S;M;P", group="Slide Depot")
+@Autonomous(name="TF Center Test Depot: D;S;M;P", group="Slide Depot")
 public class DepotMainTFTest extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();

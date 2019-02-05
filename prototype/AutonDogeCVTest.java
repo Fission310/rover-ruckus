@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.util.SoundManager;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 @Autonomous(name="Auton Doge Sampling Test", group="TEST")
-//@Disabled
+@Disabled
 public class AutonDogeCVTest extends LinearOpMode {
 
     /* Private OpMode members */

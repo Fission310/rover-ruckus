@@ -54,7 +54,7 @@ import static java.lang.Math.abs;
  *
  */
 @TeleOp(name = "Teleop: Scaled Slide", group = "Teleop")
-public class TeleopSlideTest extends OpMode {
+public class TeleopSlideScaled extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.0;
     private static final double SLOW_MULTIPLIER = 0.4;

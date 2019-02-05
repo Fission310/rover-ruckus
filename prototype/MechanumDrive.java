@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import static java.lang.Math.abs;
 
 @TeleOp(name="Mechanum Drive", group="test")
-//@Disabled
+@Disabled
 public class MechanumDrive extends LinearOpMode {
     private static final double ANALOG_THRESHOLD = 0.2;
     private static final double SLOW_MULTIPLIER = 0.5;

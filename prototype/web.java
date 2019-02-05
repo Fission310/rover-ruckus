@@ -75,6 +75,7 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
  * is explained below.
  */
 @TeleOp(name = "WebCam Test", group = "Concept")
+@Disabled
 public class web extends LinearOpMode {
     public static final String TAG = "Vuforia Navigation Sample";
 

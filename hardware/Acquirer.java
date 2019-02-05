@@ -30,9 +30,8 @@ public class Acquirer extends Mechanism {
     /**
      * Default constructor for Acquirer.
      */
-    public Acquirer(){
+    public Acquirer(){ }
 
-    }
     /**
      * Overloaded constructor for Acquirer. Sets the OpMode context.
      *
@@ -70,8 +69,8 @@ public class Acquirer extends Mechanism {
      */
     public void setIntakePower(double power) {
         double sign = Math.signum(power);
-        leftIntakeMotor.setPower(.7 * sign);
-        rightIntakeMotor.setPower(.7 * sign);
+        leftIntakeMotor.setPower(.6 * sign);
+        rightIntakeMotor.setPower(.6 * sign);
     }
 
     /**

@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.prototype;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
 @Autonomous(name="Auton TF Webcam Test", group="TEST")
-//@Disabled
+@Disabled
 public class AutonTFTestWebcam extends LinearOpMode {
 
     /* Private OpMode members */

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.hardware.RCConfig;
 
 @TeleOp(name = "Servo", group = "Concept")
+@Disabled
 public class servo extends LinearOpMode {
 
     private Servo test;

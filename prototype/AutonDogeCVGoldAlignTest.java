@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.prototype;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 @Autonomous(name="Auton Doge Gold Align Test", group="TEST")
-//@Disabled
+@Disabled
 public class AutonDogeCVGoldAlignTest extends LinearOpMode {
 
     /* Private OpMode members */
