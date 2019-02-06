@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 
-@Autonomous(name="PID Test 2/06/19", group="Test")
-public class AutonPIDTest extends LinearOpMode {
+@Autonomous(name="Rotate90 Test", group="Test")
+public class Rotate90 extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -40,50 +40,18 @@ public class AutonPIDTest extends LinearOpMode {
         while (opModeIsActive()) {
             switch (step) {
                 case 0:
-                    telemetry.addData("Step 0", "Robot Drive one floor tile");
+                    telemetry.addData("Rotate 90", "Robot rotate 90");
                     telemetry.update();
-                    robot.drivetrain.driveToPosNoBuiltInPID(.5, -FieldConstants.FLOOR_TILE * 2.0, -FieldConstants.FLOOR_TILE * 2.0, 10.00);
+                    robot.drivetrain.turnPID(88);
                     step++;
                     break;
                 case 1:
-                    step++;
-                    break;
-
-                case 2:
-                    sleep(2000);
-                    telemetry.addData("Step 2", "Robot PID turn");
+                    sleep(4000);
+                    telemetry.addData("Rotate 90", "Robot rotate 90");
                     telemetry.update();
-                    robot.drivetrain.turnPID(88);
+                    robot.drivetrain.turnPID((int)robot.drivetrain.singleImu.getDeltaStartingAngle());
                     step++;
                     break;
-                case 3:
-                    sleep(2000);
-                    step++;
-                    break;
-
-                case 4:
-                    telemetry.addData("Step 4", "Robot strafe");
-                    telemetry.update();
-//                    robot.drivetrain.strafeToPos(.8, FieldConstants.FLOOR_TILE, 5);
-                    step++;
-                    break;
-
-                case 5:
-                    sleep(3000);
-                    robot.drivetrain.turnPID(88);
-                    sleep(1000);
-                    robot.drivetrain.turnPID(88);
-                    sleep(1000);
-                    robot.drivetrain.turnPID(88);
-                    sleep(1000);
-                    step++;
-                    break;
-                case 6:
-                    telemetry.addData("Step 5", "Robot strafe pid");
-                    telemetry.update();
-                    step++;
-                    break;
-
                 default: {
                     robot.drivetrain.drive(0, 0);
                     telemetry.addData("Status", "Robot default");

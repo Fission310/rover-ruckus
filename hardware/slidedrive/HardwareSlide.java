@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
+import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.DrawerSlides;
 import org.firstinspires.ftc.teamcode.hardware.Marker;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
@@ -27,7 +28,7 @@ public class HardwareSlide extends Mechanism {
     private static final int RIGHT_TURN = 88;
     private static final int DIAGONAL_TURN = 43;
     private static final int STRAFE = 6;
-    private static final double DRIVE_SPEED = .3;
+    private static final double DRIVE_SPEED = .4;
 
     /* Mechanisms */
     /**

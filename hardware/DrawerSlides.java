@@ -173,4 +173,13 @@ public class DrawerSlides extends Mechanism {
         double scaledPower = scaleInput(power);
         drawerSlide.setPower(scaledPower);
     }
+
+    public double encoderCounts() {
+        double newForwardTarget = rotationForward.getCurrentPosition();
+        double newBackTarget = rotationBack.getCurrentPosition();
+        // Average out any differences (if any)
+        double target = (newForwardTarget + newBackTarget) / 2;
+
+        return target;
+    }
 }

@@ -19,6 +19,7 @@ import java.util.Locale;
 public class SingleIMU {
     public double x_location, y_location, init_heading = 0D;
     public double globalAngle;
+    public static double startingAngle;
 
     public BNO055IMU imu;
     public AxesOrder axesOrder;
@@ -50,6 +51,28 @@ public class SingleIMU {
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
+    public void setStartingAngle() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        startingAngle = angles.firstAngle;
+    }
+
+    public double getDeltaStartingAngle() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        // calculates the difference from when we first initialized the rotation to where we are at now
+        double deltaAngle = angles.firstAngle - startingAngle;
+
+        if (deltaAngle < -180) deltaAngle += 360;
+        else if (deltaAngle > 180) deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        // set new last angle to current angle
+        lastAngles = angles;
+
+        double returnAngle = globalAngle;
+        resetAngle();
+        return returnAngle;
+    }
     /**
      * Resets the cumulative angle tracking to zero.
      */

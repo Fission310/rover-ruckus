@@ -143,20 +143,30 @@ public class TeleopSlideMain extends OpMode {
             telemetry.addData("GP 1 Status", "slideInput: " + slideInput);
         }
 
-        leftTrigger1 = Math.abs(gamepad1.left_trigger) > .9 ? -1 * Math.abs(gamepad1.left_trigger) : -.8 * gamepad1.left_trigger;
-        rightTrigger1 = Math.abs(gamepad1.right_trigger) > .9 ? 1 * Math.abs(gamepad1.right_trigger) : .8 * gamepad1.right_trigger;
+//        leftTrigger1 = Math.abs(gamepad1.left_trigger) > .9 ? -1 * Math.abs(gamepad1.left_trigger) : -.8 * gamepad1.left_trigger;
+//        rightTrigger1 = Math.abs(gamepad1.right_trigger) > .9 ? 1 * Math.abs(gamepad1.right_trigger) : .8 * gamepad1.right_trigger;
+        leftTrigger1 = gamepad1.left_trigger;
+        rightTrigger1 = gamepad1.right_trigger;
 //        robot.rack.setRackPower(leftTrigger1 + rightTrigger1);
 
         /**
          * Gamepad 2
          */
 //      Sets rotation mechanism power via the left and right triggers
-        leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.abs(gamepad2.right_stick_y): -.8 * gamepad2.left_trigger;
-        rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.abs(gamepad2.right_stick_y): .8 * gamepad2.right_trigger;
+        leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.abs(gamepad2.right_stick_y): -.9 * gamepad2.left_trigger;
+        rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.abs(gamepad2.right_stick_y): .9 * gamepad2.right_trigger;
+//        if (robot.drawerSlides.encoderCounts() < 1) {
+//            robot.drawerSlides.setRotationPower(rightTrigger2);
+//        } else if (robot.drawerSlides.encoderCounts() > 1000){
+//            robot.drawerSlides.setRotationPower(leftTrigger2);
+//        } else {
+//            robot.drawerSlides.setRotationPower(leftTrigger2 + rightTrigger2);
+//        }
         robot.drawerSlides.setRotationPower(leftTrigger2 + rightTrigger2);
 
 //      Sets drawer slides power via the right joystick
-        linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .8 * Math.signum(gamepad2.right_stick_y);
+//        linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .9 * Math.signum(gamepad2.right_stick_y);
+        linearSlidesInput = gamepad2.right_stick_y;
         robot.drawerSlides.setDrawerSlidePower(linearSlidesInput);
 
         //        if (gamepad1.x || gamepad2.x) {
@@ -210,7 +220,9 @@ public class TeleopSlideMain extends OpMode {
                 positions[2]);
 //        telemetry.addData("Rack & Pinion counts", "Running at %.2f :%.2f",
 //                rackPositions[0],
-//                rackPositions[1]);
+//                rackPositions[1]); encoderCounts
+        telemetry.addData("Rotational Arm Encoder counts", "Running at %.2f",
+                robot.drawerSlides.encoderCounts());
         telemetry.addData("IMU", "Z-axis: " + imuZAxis);
     }
 
