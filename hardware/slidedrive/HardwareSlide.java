@@ -46,7 +46,7 @@ public class HardwareSlide extends Mechanism {
     /**
      * Instance variable containing robot's rack and pinion lift.
      */
-//    public RackNPinonLift rack;
+    public RackNPinonLift rack;
     /**
      * Instance variable containing robot's marker.
      */
@@ -61,7 +61,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain();
         drawerSlides = new DrawerSlides();
 //        acquirer = new Acquirer();
-//        rack = new RackNPinonLift();
+        rack = new RackNPinonLift();
         marker = new Marker();
     }
     /**
@@ -75,7 +75,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain(opMode);
         drawerSlides = new DrawerSlides(opMode);
 //        acquirer = new Acquirer(opMode);
-//        rack = new RackNPinonLift(opMode);
+        rack = new RackNPinonLift(opMode);
         marker = new Marker(opMode);
     }
 
@@ -87,7 +87,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain.init(hwMap);
 //        acquirer.init(hwMap);
         drawerSlides.init(hwMap);
-//        rack.init(hwMap);
+        rack.init(hwMap);
         marker.init(hwMap);
     }
 

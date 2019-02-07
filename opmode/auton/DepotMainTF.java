@@ -106,6 +106,16 @@ public class DepotMainTF extends LinearOpMode {
                     if (ROTATIONS > 0) { robot.drivetrain.turnPID(-ROTATIONS); }
                     telemetry.addData("Gold Cube location", goldLocation);
                     telemetry.update();
+                    step = step.TURN_OFF_CV;
+                    break;
+                /**
+                 * Turn off CV.
+                 */
+                case TURN_OFF_CV:
+                    visionManager.vuforiaLights(false);
+                    visionManager.stop();
+                    telemetry.addData("Status", "Turn off CV");
+                    telemetry.update();
                     step = step.STRAFE_OUT_LANDER;
                     break;
                 /**

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.util.motion;
 
 /**
  * This class handles all PID related methods for opMode use.

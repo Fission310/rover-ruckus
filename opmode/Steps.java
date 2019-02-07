@@ -16,6 +16,7 @@ public class Steps {
         RETRACT_DRAWER_SLIDES,
         SCORE_IN_LANDER,
         FIND_GOLD_LOCATION,
+        TURN_OFF_CV,
         ALIGN_TO_GOLD,
         SAMPLE,
         DRIVE_TO_DEPOT,

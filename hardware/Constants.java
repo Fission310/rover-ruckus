@@ -30,7 +30,7 @@ public class Constants {
     /**
      * Diameter of wheel in inches.
      */
-    private static final double WHEEL_DIAMETER_INCHES_4 = 4.0;
+    public static final double WHEEL_DIAMETER_INCHES_4 = 4.0;
     private static final double WHEEL_DIAMETER_INCHES_2 = 2.0;
     private static final double PINION_INCHES = 1.0 / 2.0;
     /**

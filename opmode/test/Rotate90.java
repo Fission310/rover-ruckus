@@ -47,7 +47,7 @@ public class Rotate90 extends LinearOpMode {
                     break;
                 case 1:
                     sleep(4000);
-                    telemetry.addData("Rotate 90", "Robot rotate 90");
+                    telemetry.addData("Rotate 9 0", "Robot rotate 90");
                     telemetry.update();
                     robot.drivetrain.turnPID((int)robot.drivetrain.singleImu.getDeltaStartingAngle());
                     step++;
