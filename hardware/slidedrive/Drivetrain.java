@@ -108,7 +108,7 @@ public class Drivetrain extends Mechanism {
 
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
-        pidDrive = new PIDController(.04, .02, .005);
+        pidDrive = new PIDController(.04, .02, .03);
     }
 
     public void resetDeltaAngle() {
