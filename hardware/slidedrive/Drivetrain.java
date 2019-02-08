@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware.slidedrive;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -110,6 +111,9 @@ public class Drivetrain extends Mechanism {
         pidDrive = new PIDController(.04, .02, .005);
     }
 
+    public void resetDeltaAngle() {
+        singleImu.resetStartingAngle();
+    }
     /**
      * Sets motors zero power behavior. Indicate whether the drivetrain should be in float or brake mode.
      * Float mode allows for free rotations after the initial drive.

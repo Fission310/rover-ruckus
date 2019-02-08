@@ -60,7 +60,7 @@ public class HardwareSlide extends Mechanism {
     public HardwareSlide(){
         drivetrain = new Drivetrain();
         drawerSlides = new DrawerSlides();
-//        acquirer = new Acquirer();
+        acquirer = new Acquirer();
         rack = new RackNPinonLift();
         marker = new Marker();
     }
@@ -74,7 +74,7 @@ public class HardwareSlide extends Mechanism {
         this.opMode = opMode;
         drivetrain = new Drivetrain(opMode);
         drawerSlides = new DrawerSlides(opMode);
-//        acquirer = new Acquirer(opMode);
+        acquirer = new Acquirer(opMode);
         rack = new RackNPinonLift(opMode);
         marker = new Marker(opMode);
     }
@@ -85,7 +85,7 @@ public class HardwareSlide extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         drivetrain.init(hwMap);
-//        acquirer.init(hwMap);
+        acquirer.init(hwMap);
         drawerSlides.init(hwMap);
         rack.init(hwMap);
         marker.init(hwMap);

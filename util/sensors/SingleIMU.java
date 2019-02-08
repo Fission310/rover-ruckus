@@ -55,6 +55,9 @@ public class SingleIMU {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         startingAngle = angles.firstAngle;
     }
+    public void resetStartingAngle() {
+        startingAngle = 0;
+    }
 
     public double getDeltaStartingAngle() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);

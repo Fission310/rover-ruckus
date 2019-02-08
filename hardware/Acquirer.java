@@ -47,8 +47,8 @@ public class Acquirer extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
-        rightIntakeMotor = hwMap.crservo.get(RCConfig.LEFT_ACQUIRER_INTAKE);
-//        leftIntakeMotor = hwMap.crservo.get(RCConfig.RIGHT_ACQUIRER_INTAKE);
+        rightIntakeMotor = hwMap.crservo.get(RCConfig.RIGHT_ACQUIRER_INTAKE);
+//        leftIntakeMotor = hwMap.crservo.get(RCConfig.LEFT_ACQUIRER_INTAKE);
 
         //        acquirerFloor = hwMap.servo.get(RCConfig.ACQUIRER_FLOOR);
         acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);

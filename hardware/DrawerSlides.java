@@ -184,8 +184,8 @@ public class DrawerSlides extends Mechanism {
 
     public double[] getPositions() {
         double[] positions = new double[2];
-        positions[0] = rotationForward.getCurrentPosition() / Constants.TICKS_PER_INCH_53;
-        positions[1] = rotationBack.getCurrentPosition() / Constants.TICKS_PER_INCH_53;
+        positions[0] = rotationForward.getCurrentPosition();
+        positions[1] = rotationBack.getCurrentPosition();
 
         return positions;
     }

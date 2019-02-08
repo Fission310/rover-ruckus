@@ -27,6 +27,7 @@ public class Rotate90 extends LinearOpMode {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
         robot.imuInit(hardwareMap);
+        robot.drivetrain.resetDeltaAngle();
 
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {

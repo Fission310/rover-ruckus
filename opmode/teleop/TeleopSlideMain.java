@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
@@ -68,12 +69,16 @@ public class TeleopSlideMain extends OpMode {
 
     /* Holds gamepad joystick's values */
     double yInput, xInput, slideInput; // Gamepad 1
-    double linearSlidesInput, rotationInput, acquirerRotation; // Gamepad 2
+    double linearSlidesInput, rotationInput; // Gamepad 2
+    double acquirerRotation = 0; // Both Gamepad 1 & 2
+
     /* Applies slow or fast mode */
     double slowYInput, slowXInput, slowSlide, leftTrigger1,rightTrigger1; // Gamepad 1
     double slowLinearSlidesInput, slowRotationInput, acquirerIntake, acquirerOuttake, leftTrigger2, rightTrigger2; // Gamepad 2
+
     /* Handle time complexities */
     boolean aButtonPressed, bButtonPressed, xButtonPressed, yButtonPressed;
+
     /* Handle button positions */
     boolean left, right;
     double currentAcquirerRotation = 0;
@@ -153,9 +158,11 @@ public class TeleopSlideMain extends OpMode {
          * Gamepad 2
          */
 //      Sets rotation mechanism power via the left and right triggers
-        leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.abs(gamepad2.right_stick_y): -.999 * gamepad2.left_trigger;
-        rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.abs(gamepad2.right_stick_y): .999 * gamepad2.right_trigger;
-//        if (robot.drawerSlides.encoderCounts() < 1) {
+//        leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.abs(gamepad2.right_stick_y): -.999 * gamepad2.left_trigger;
+//        rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.abs(gamepad2.right_stick_y): .999 * gamepad2.right_trigger;
+        leftTrigger2 = -gamepad2.left_trigger;
+        rightTrigger2 = gamepad2.right_trigger;
+// if (robot.drawerSlides.encoderCounts() < 1) {
 //            robot.drawerSlides.setRotationPower(rightTrigger2);
 //        } else if (robot.drawerSlides.encoderCounts() > 1000){
 //            robot.drawerSlides.setRotationPower(leftTrigger2);
@@ -169,46 +176,48 @@ public class TeleopSlideMain extends OpMode {
         linearSlidesInput = gamepad2.right_stick_y;
         robot.drawerSlides.setDrawerSlidePower(linearSlidesInput);
 
-//        acquirerRotation = gamepad2.right_stick_y;
-//        robot.marker.setPosition(gamepad2.left_stick_y);
-        //        if (gamepad1.x || gamepad2.x) {
-//            if(!bButtonPressed) {
-//                robot.acquirer.acquirerRotationInit();
-//                xButtonPressed = !xButtonPressed;
-//            } else {
-//                robot.acquirer.acquirerRotationSet();
-//                xButtonPressed = !xButtonPressed;
-//            }
-//        }
-
 //      Sets acquirer  power via the right and left bumper
-        if (gamepad2.left_bumper) {
-            robot.acquirer.setIntakePower(-1);
-        } else if (gamepad2.right_bumper) {
-            robot.acquirer.setIntakePower(1);
-        } else {
-            robot.acquirer.setIntakePower(0);
-        }
+        if (gamepad2.left_bumper) { robot.acquirer.setIntakePower(-1); }
+        else if (gamepad2.right_bumper) { robot.acquirer.setIntakePower(1); }
+        else { robot.acquirer.setIntakePower(0); }
 
         /**
          * Both Gamepads
          */
-//        if (gamepad1.x || gamepad2.x) {
-//            if(!bButtonPressed) {
-//                robot.acquirer.acquirerRotationInit();
-//                xButtonPressed = !xButtonPressed;
-//            } else {
-//                robot.acquirer.acquirerRotationSet();
-//                xButtonPressed = !xButtonPressed;
-//            }
-//        }
+
+        if (gamepad1.dpad_up || gamepad2.dpad_up || gamepad1.dpad_right || gamepad2.dpad_right) {
+            acquirerRotation += .1;
+        } else if (gamepad1.dpad_down || gamepad2.dpad_down || gamepad1.dpad_left || gamepad2.dpad_left) {
+            acquirerRotation -= .1;
+        }
+        acquirerRotation = Range.clip(acquirerRotation, Servo.MIN_POSITION, Servo.MAX_POSITION);
+        robot.acquirer.setAcquirerRotation(acquirerRotation);
+
+
+        if (gamepad1.x || gamepad2.x) {
+            if (!xButtonPressed) {
+                robot.acquirer.acquirerRotationSet();
+                xButtonPressed = true;
+            } else { }
+        } else {
+            robot.acquirer.acquirerRotationInit();
+            xButtonPressed = false;
+        }
 
         if (gamepad1.b || gamepad2.b) {
-            robot.marker.markerLeft();
-        }
-        if (gamepad1.a || gamepad2.a) {
+            if (!bButtonPressed) {
+                robot.marker.markerLeft();
+                bButtonPressed = true;
+            } else { }
+        } else {
             robot.marker.markerRight();
+            bButtonPressed = false;
         }
+//        if (gamepad1.b || gamepad2.b) {
+//            robot.marker.markerLeft();
+//        } else if (gamepad1.a || gamepad2.a) {
+//            robot.marker.markerRight();
+//        }
 
         double[] positions = robot.drivetrain.getPositions();
         double[] rackPositions = robot.rack.getPositions();

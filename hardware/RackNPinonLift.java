@@ -175,8 +175,8 @@ public class RackNPinonLift extends Mechanism {
 
     public double[] getPositions() {
         double[] positions = new double[2];
-        positions[0] = leftRackMotor.getCurrentPosition() / Constants.TICKS_PER_INCH_RACK_PINION;
-        positions[1] = rightRackMotor.getCurrentPosition() / Constants.TICKS_PER_INCH_RACK_PINION;
+        positions[0] = leftRackMotor.getCurrentPosition();
+        positions[1] = rightRackMotor.getCurrentPosition();
 
         return positions;
     }
