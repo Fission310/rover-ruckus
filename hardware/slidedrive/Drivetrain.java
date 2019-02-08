@@ -37,7 +37,7 @@ public class Drivetrain extends Mechanism {
     public PIDController pidRotate, pidDrive;
     public SingleIMU singleImu = new SingleIMU();
 
-    private double power = .30;
+    private double power = .40;
 
     /**
      * Default constructor for Drivetrain.

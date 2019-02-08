@@ -22,7 +22,7 @@ public class Acquirer extends Mechanism {
 
     /* Hardware members */
     private CRServo rightIntakeMotor;
-    private CRServo leftIntakeMotor;
+//    private CRServo leftIntakeMotor;
 
 //    private Servo acquirerFloor;
     private Servo acquirerRotation;
@@ -48,18 +48,18 @@ public class Acquirer extends Mechanism {
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
         rightIntakeMotor = hwMap.crservo.get(RCConfig.LEFT_ACQUIRER_INTAKE);
-        leftIntakeMotor = hwMap.crservo.get(RCConfig.RIGHT_ACQUIRER_INTAKE);
+//        leftIntakeMotor = hwMap.crservo.get(RCConfig.RIGHT_ACQUIRER_INTAKE);
 
         //        acquirerFloor = hwMap.servo.get(RCConfig.ACQUIRER_FLOOR);
         acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
 
         // Set polarity
         rightIntakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        leftIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set initial power
         rightIntakeMotor.setPower(0);
-        leftIntakeMotor.setPower(0);
+//        leftIntakeMotor.setPower(0);
 //        acquirerFloorInit();
     }
 
@@ -69,8 +69,8 @@ public class Acquirer extends Mechanism {
      */
     public void setIntakePower(double power) {
         double sign = Math.signum(power);
-        leftIntakeMotor.setPower(.6 * sign);
-        rightIntakeMotor.setPower(.6 * sign);
+//        leftIntakeMotor.setPower(.6 * sign);
+        rightIntakeMotor.setPower(power);
     }
 
     /**

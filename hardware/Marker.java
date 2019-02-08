@@ -60,4 +60,8 @@ public class Marker extends Mechanism {
     public void markerNeutral() {
         marker.setPosition(MARKER_NEUTRAL_POS);
     }
+
+    public void setPosition(double value) {
+        marker.setPosition(value);
+    }
 }

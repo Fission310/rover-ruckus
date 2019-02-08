@@ -46,7 +46,7 @@ public class DepotMainTF extends LinearOpMode {
 
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
-            goldLocation = visionManager.getDoubleMineralLocation();
+            goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
             telemetry.addData("Status", "Waiting in Init");
             telemetry.update();
         }

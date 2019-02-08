@@ -42,7 +42,7 @@ public class HardwareSlide extends Mechanism {
     /**
      * Instance variable containing robot's acquirer.
      */
-//    public Acquirer acquirer;
+    public Acquirer acquirer;
     /**
      * Instance variable containing robot's rack and pinion lift.
      */

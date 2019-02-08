@@ -68,7 +68,7 @@ public class TeleopSlideMain extends OpMode {
 
     /* Holds gamepad joystick's values */
     double yInput, xInput, slideInput; // Gamepad 1
-    double linearSlidesInput, rotationInput; // Gamepad 2
+    double linearSlidesInput, rotationInput, acquirerRotation; // Gamepad 2
     /* Applies slow or fast mode */
     double slowYInput, slowXInput, slowSlide, leftTrigger1,rightTrigger1; // Gamepad 1
     double slowLinearSlidesInput, slowRotationInput, acquirerIntake, acquirerOuttake, leftTrigger2, rightTrigger2; // Gamepad 2
@@ -145,7 +145,7 @@ public class TeleopSlideMain extends OpMode {
 
 //        leftTrigger1 = Math.abs(gamepad1.left_trigger) > .9 ? -1 * Math.abs(gamepad1.left_trigger) : -.8 * gamepad1.left_trigger;
 //        rightTrigger1 = Math.abs(gamepad1.right_trigger) > .9 ? 1 * Math.abs(gamepad1.right_trigger) : .8 * gamepad1.right_trigger;
-        leftTrigger1 = gamepad1.left_trigger;
+        leftTrigger1 = -gamepad1.left_trigger;
         rightTrigger1 = gamepad1.right_trigger;
         robot.rack.setRackPower(leftTrigger1 + rightTrigger1);
 
@@ -153,8 +153,8 @@ public class TeleopSlideMain extends OpMode {
          * Gamepad 2
          */
 //      Sets rotation mechanism power via the left and right triggers
-        leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.abs(gamepad2.right_stick_y): -.9 * gamepad2.left_trigger;
-        rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.abs(gamepad2.right_stick_y): .9 * gamepad2.right_trigger;
+        leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.abs(gamepad2.right_stick_y): -.999 * gamepad2.left_trigger;
+        rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.abs(gamepad2.right_stick_y): .999 * gamepad2.right_trigger;
 //        if (robot.drawerSlides.encoderCounts() < 1) {
 //            robot.drawerSlides.setRotationPower(rightTrigger2);
 //        } else if (robot.drawerSlides.encoderCounts() > 1000){
@@ -169,6 +169,8 @@ public class TeleopSlideMain extends OpMode {
         linearSlidesInput = gamepad2.right_stick_y;
         robot.drawerSlides.setDrawerSlidePower(linearSlidesInput);
 
+//        acquirerRotation = gamepad2.right_stick_y;
+//        robot.marker.setPosition(gamepad2.left_stick_y);
         //        if (gamepad1.x || gamepad2.x) {
 //            if(!bButtonPressed) {
 //                robot.acquirer.acquirerRotationInit();
@@ -180,11 +182,13 @@ public class TeleopSlideMain extends OpMode {
 //        }
 
 //      Sets acquirer  power via the right and left bumper
-//        if (gamepad2.left_bumper) {
-//            robot.acquirer.setIntakePower(-1);
-//        } else if (gamepad2.right_bumper) {
-//            robot.acquirer.setIntakePower(1);
-//        }
+        if (gamepad2.left_bumper) {
+            robot.acquirer.setIntakePower(-1);
+        } else if (gamepad2.right_bumper) {
+            robot.acquirer.setIntakePower(1);
+        } else {
+            robot.acquirer.setIntakePower(0);
+        }
 
         /**
          * Both Gamepads
@@ -200,29 +204,28 @@ public class TeleopSlideMain extends OpMode {
 //        }
 
         if (gamepad1.b || gamepad2.b) {
-            if(!bButtonPressed) {
-                robot.marker.markerLeft();
-                bButtonPressed = !bButtonPressed;
-            } else {
-                robot.marker.markerRight();
-                bButtonPressed = !bButtonPressed;
-            }
+            robot.marker.markerLeft();
         }
-
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        if (gamepad1.a || gamepad2.a) {
+            robot.marker.markerRight();
+        }
 
         double[] positions = robot.drivetrain.getPositions();
         double[] rackPositions = robot.rack.getPositions();
+        double[] drawerSlides = robot.drawerSlides.getPositions();
         double imuZAxis = robot.drivetrain.singleImu.getZAxis();
-        telemetry.addData("Encoder counts", "Running at %.2f :%.2f :%.2f",
+        telemetry.addData("Drivetrain Encoder counts", "Running at %.2f :%.2f :%.2f",
                 positions[0],
                 positions[1],
                 positions[2]);
         telemetry.addData("Rack & Pinion counts", "Running at %.2f :%.2f",
                 rackPositions[0],
                 rackPositions[1]);
-        telemetry.addData("Rotational Arm Encoder counts", "Running at %.2f",
+        telemetry.addData("Rotational Arm Avg Encoder counts", "Running at %.2f",
                 robot.drawerSlides.encoderCounts());
+        telemetry.addData("Rotational Arm Encoder counts", "Running at %.2f :%.2f",
+                drawerSlides[0],
+                drawerSlides[1]);
         telemetry.addData("IMU", "Z-axis: " + imuZAxis);
     }
 
