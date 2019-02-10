@@ -24,8 +24,8 @@ import static java.lang.Math.abs;
  * B:
  * Left bumper:     Decelerates robot (slow factor)
  * Right bumper:
- * Left trigger:    Lowers the rack and pinion mechanism
- * Right trigger:   Extends the rack and pinion mechanism
+ * Left trigger:    Lowers the lift and pinion mechanism
+ * Right trigger:   Extends the lift and pinion mechanism
  * DPAD_UP:
  * DPAD_DOWN:
  * DPAD_LEFT:
@@ -154,7 +154,7 @@ public class TeleopSlideMain extends OpMode {
 //        rightTrigger1 = Math.abs(gamepad1.right_trigger) > .9 ? 1 * Math.abs(gamepad1.right_trigger) : .8 * gamepad1.right_trigger;
         leftTrigger1 = -gamepad1.left_trigger;
         rightTrigger1 = gamepad1.right_trigger;
-        robot.rack.setRackPower(leftTrigger1 + rightTrigger1);
+        robot.lift.setLiftPower(leftTrigger1 + rightTrigger1);
 
         /**
          * Gamepad 2
@@ -221,7 +221,7 @@ public class TeleopSlideMain extends OpMode {
         }
 
         double[] positions = robot.drivetrain.getPositions();
-        double[] rackPositions = robot.rack.getPositions();
+        double[] rackPositions = robot.lift.getPositions();
         double[] drawerSlides = robot.drawerSlides.getPositions();
         double imuZAxis = robot.drivetrain.singleImu.getZAxis();
         telemetry.addData("Drivetrain Encoder counts", "Running at %.2f :%.2f :%.2f",

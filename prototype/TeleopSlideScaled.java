@@ -142,7 +142,7 @@ public class TeleopSlideScaled extends OpMode {
         // Sets racks power via the left and right triggers
         leftTrigger = gamepad1.left_trigger > .9 ? -1 : -.5 * gamepad1.left_trigger;
         rightTrigger = gamepad1.right_trigger > .9 ? 1 : .5 * gamepad1.right_trigger;
-//        robot.rack.setRackPower(leftTrigger + rightTrigger);
+//        robot.lift.setLiftPower(leftTrigger + rightTrigger);
 
         // Changes the brake mode
         brake = gamepad1.right_bumper;

@@ -9,8 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.DrawerSlides;
 import org.firstinspires.ftc.teamcode.hardware.Marker;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
-import org.firstinspires.ftc.teamcode.hardware.RackNPinonLift;
-import org.firstinspires.ftc.teamcode.util.path.Field;
+import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
@@ -44,9 +43,9 @@ public class HardwareSlide extends Mechanism {
      */
     public Acquirer acquirer;
     /**
-     * Instance variable containing robot's rack and pinion lift.
+     * Instance variable containing robot's lift and pinion lift.
      */
-    public RackNPinonLift rack;
+    public Lift lift;
     /**
      * Instance variable containing robot's marker.
      */
@@ -61,7 +60,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain();
         drawerSlides = new DrawerSlides();
         acquirer = new Acquirer();
-        rack = new RackNPinonLift();
+        lift = new Lift();
         marker = new Marker();
     }
     /**
@@ -75,7 +74,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain(opMode);
         drawerSlides = new DrawerSlides(opMode);
         acquirer = new Acquirer(opMode);
-        rack = new RackNPinonLift(opMode);
+        lift = new Lift(opMode);
         marker = new Marker(opMode);
     }
 
@@ -87,7 +86,7 @@ public class HardwareSlide extends Mechanism {
         drivetrain.init(hwMap);
         acquirer.init(hwMap);
         drawerSlides.init(hwMap);
-        rack.init(hwMap);
+        lift.init(hwMap);
         marker.init(hwMap);
     }
 
@@ -110,11 +109,11 @@ public class HardwareSlide extends Mechanism {
     }
 
     /**
-     * Autonomous action for landing the robot using the rack and pinion mechanism.
+     * Autonomous action for landing the robot using the lift and pinion mechanism.
      */
     public void land() {
         if (opMode.opModeIsActive()) {
-//            rack.rackToPos(.8, FieldConstants.HANG_HEIGHT);
+//            lift.liftToPos(.8, FieldConstants.HANG_HEIGHT);
         }
     }
 

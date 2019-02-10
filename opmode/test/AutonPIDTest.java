@@ -92,5 +92,6 @@ public class AutonPIDTest extends LinearOpMode {
                 break;
             }
         }
-        }
+        if (isStopRequested() || !opModeIsActive()) { }
+    }
 }

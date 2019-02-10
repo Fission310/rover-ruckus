@@ -40,7 +40,7 @@ public class AutonTestDrive extends LinearOpMode {
         while (opModeIsActive()) {
             switch (step) {
                 case 0:
-//                    robot.rack.rackToPos(.3, 4);
+//                    robot.lift.liftToPos(.3, 4);
                     telemetry.addData("Step 0", "Robot Drive one floor tile");
                     telemetry.update();
                     robot.drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE * 2, 5.00);
@@ -92,5 +92,6 @@ public class AutonTestDrive extends LinearOpMode {
                 break;
             }
         }
-        }
+        if (isStopRequested() || !opModeIsActive()) { }
+    }
 }
