@@ -84,7 +84,6 @@ public class TeleopSlideMain extends OpMode {
     double currentAcquirerRotation = 0;
     double markerRotation = 0;
 
-
     /* Applies brake behavior */
     boolean brake = false;
 
@@ -93,6 +92,9 @@ public class TeleopSlideMain extends OpMode {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
         robot.drivetrain.imuInit(hardwareMap);
+
+        xButtonPressed = false;
+        bButtonPressed = false;
     }
 
     /**
@@ -158,10 +160,10 @@ public class TeleopSlideMain extends OpMode {
          * Gamepad 2
          */
 //      Sets rotation mechanism power via the left and right triggers
-//        leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.abs(gamepad2.right_stick_y): -.999 * gamepad2.left_trigger;
-//        rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.abs(gamepad2.right_stick_y): .999 * gamepad2.right_trigger;
-        leftTrigger2 = -gamepad2.left_trigger;
-        rightTrigger2 = gamepad2.right_trigger;
+        leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.abs(gamepad2.right_stick_y): -8 * gamepad2.left_trigger;
+        rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.abs(gamepad2.right_stick_y): 8 * gamepad2.right_trigger;
+//        leftTrigger2 = -gamepad2.left_trigger;
+//        rightTrigger2 = gamepad2.right_trigger;
 // if (robot.drawerSlides.encoderCounts() < 1) {
 //            robot.drawerSlides.setRotationPower(rightTrigger2);
 //        } else if (robot.drawerSlides.encoderCounts() > 1000){
@@ -172,13 +174,13 @@ public class TeleopSlideMain extends OpMode {
         robot.drawerSlides.setRotationPower(leftTrigger2 + rightTrigger2);
 
 //      Sets drawer slides power via the right joystick
-//        linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .9 * Math.signum(gamepad2.right_stick_y);
-        linearSlidesInput = gamepad2.right_stick_y;
+        linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .9 * Math.signum(gamepad2.right_stick_y);
+//        linearSlidesInput = gamepad2.right_stick_y;
         robot.drawerSlides.setDrawerSlidePower(linearSlidesInput);
 
 //      Sets acquirer  power via the right and left bumper
-        if (gamepad2.left_bumper) { robot.acquirer.setIntakePower(-1); }
-        else if (gamepad2.right_bumper) { robot.acquirer.setIntakePower(1); }
+        if (gamepad2.left_bumper) { robot.acquirer.setIntakePower(-0.9); }
+        else if (gamepad2.right_bumper) { robot.acquirer.setIntakePower(-0.9); }
         else { robot.acquirer.setIntakePower(0); }
 
         /**
@@ -200,8 +202,10 @@ public class TeleopSlideMain extends OpMode {
                 xButtonPressed = true;
             } else { }
         } else {
-            robot.acquirer.acquirerRotationInit();
-            xButtonPressed = false;
+            if (xButtonPressed) {
+                robot.acquirer.acquirerRotationInit();
+                xButtonPressed = false;
+            }
         }
 
         if (gamepad1.b || gamepad2.b) {
@@ -210,14 +214,11 @@ public class TeleopSlideMain extends OpMode {
                 bButtonPressed = true;
             } else { }
         } else {
-            robot.marker.markerRight();
-            bButtonPressed = false;
+            if (bButtonPressed) {
+                robot.marker.markerRight();
+                bButtonPressed = false;
+            }
         }
-//        if (gamepad1.b || gamepad2.b) {
-//            robot.marker.markerLeft();
-//        } else if (gamepad1.a || gamepad2.a) {
-//            robot.marker.markerRight();
-//        }
 
         double[] positions = robot.drivetrain.getPositions();
         double[] rackPositions = robot.rack.getPositions();

@@ -44,7 +44,7 @@ public class AutonTFTest extends LinearOpMode {
         /**
          * Figure out where the gold cube is and drive towards it.
          */
-        while (runtime.seconds() <= 30 && opModeIsActive()) {
+        while (opModeIsActive()) {
             telemetry.addData("Location", "" + visionManager.getDoubleMineralLocation());
 //        location = visionManager.getLocation();
 //        telemetry.addData("Gold Cube location after start", location);

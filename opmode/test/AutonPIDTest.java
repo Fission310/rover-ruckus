@@ -42,7 +42,7 @@ public class AutonPIDTest extends LinearOpMode {
                 case 0:
                     telemetry.addData("Step 0", "Robot Drive one floor tile");
                     telemetry.update();
-                    robot.drivetrain.driveToPosNoBuiltInPID(.5, -FieldConstants.FLOOR_TILE * 2.0, -FieldConstants.FLOOR_TILE * 2.0, 10.00);
+                    robot.drivetrain.driveToPosNoBuiltInPID(-.5, -FieldConstants.FLOOR_TILE * 2.0, -FieldConstants.FLOOR_TILE * 2.0, 10.00);
                     step++;
                     break;
                 case 1:

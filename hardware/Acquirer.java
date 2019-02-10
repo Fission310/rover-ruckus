@@ -72,6 +72,15 @@ public class Acquirer extends Mechanism {
 //        leftIntakeMotor.setPower(.6 * sign);
         rightIntakeMotor.setPower(power);
     }
+    public void setVexIntakePower(double power) {
+        double sign = Math.signum(power);
+//        leftIntakeMotor.setPower(.6 * sign);
+        if (power != 0.0) {
+            rightIntakeMotor.setPower(1 * sign);
+        } else {
+            rightIntakeMotor.setPower(0);
+        }
+    }
 
     /**
      * Inits the acquirer floor servo to not allow gold cubes to pass.

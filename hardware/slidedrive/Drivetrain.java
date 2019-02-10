@@ -108,7 +108,7 @@ public class Drivetrain extends Mechanism {
 
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
-        pidDrive = new PIDController(.04, .02, .03);
+        pidDrive = new PIDController(.2, .0, .0);
     }
 
     public void resetDeltaAngle() {
@@ -224,10 +224,11 @@ public class Drivetrain extends Mechanism {
         // Target position variables
         int newLeftTarget;
         int newRightTarget;
-
+//        int avgTarget;
         // Determine new target position, and pass to motor controller
         newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_30);
         newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_30);
+//        avgTarget = (int)(newLeftTarget + newRightTarget);
         leftFront.setTargetPosition(newLeftTarget);
         rightFront.setTargetPosition(newRightTarget);
         setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
