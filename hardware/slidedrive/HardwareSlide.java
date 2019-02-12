@@ -24,8 +24,8 @@ import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 public class HardwareSlide extends Mechanism {
 
     /* Constants */
-    private static final int RIGHT_TURN = 88;
-    private static final int DIAGONAL_TURN = 43;
+    private static final int RIGHT_TURN = 89;
+    private static final int DIAGONAL_TURN = 44;
     private static final int STRAFE = 6;
     private static final double DRIVE_SPEED = .4;
 
@@ -153,9 +153,9 @@ public class HardwareSlide extends Mechanism {
     public void tfFindGoldLocation(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
             if (location == location.LEFT){
-                drivetrain.strafeToPos(.8,FieldConstants.TILE_HYPOTENUSE / 2.0,4);
+                drivetrain.strafeToPos(1,FieldConstants.TILE_HYPOTENUSE / 2.0,4);
             } else if (location == location.RIGHT){
-                drivetrain.strafeToPos(.8,-FieldConstants.TILE_HYPOTENUSE / 2.0,4);
+                drivetrain.strafeToPos(1,-FieldConstants.TILE_HYPOTENUSE / 2.0,4);
             } else if (location == location.NONE){
                 opMode.telemetry.addData("Detected None", "Robot will take center path");
             }
@@ -323,7 +323,7 @@ public class HardwareSlide extends Mechanism {
             if (crater) {
                 drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE * 4, 7);
             } else {
-                drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE * 4, 7);
+                drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE * 4, 7);
             }
         }
     }

@@ -220,11 +220,12 @@ public class Drivetrain extends Mechanism {
      * @param rightInches   number of inches to move on the right side
      * @param timeoutS      amount of time before the move should stop
      */
+
     public void driveToPos(double speed, double leftInches, double rightInches, double timeoutS) {
         // Target position variables
         int newLeftTarget;
         int newRightTarget;
-//        int avgTarget;
+//      int avgTarget;
         // Determine new target position, and pass to motor controller
         newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_30);
         newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_30);
@@ -269,6 +270,18 @@ public class Drivetrain extends Mechanism {
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
+//    public void drivetoPos2(double speed, double distance, double timeout) {
+//
+//        int newLeftTarget;
+//        int newRightTarget;
+//        int newLeftTarget2;
+//        int newRightTarget2;
+//
+//        newLeftTarget = leftFront.getCurrentPosition() + (int) (distance * Constants.TICKS_PER_INCH_30;
+//        newRightTarget = rightFront.getCurrentPosition() + (int) (distance * Constants.)
+//    }
+
     public void driveToPos(double speed, double distance, double timeoutS) {
         driveToPos(speed, distance, distance, timeoutS);
     }
@@ -298,7 +311,7 @@ public class Drivetrain extends Mechanism {
                 leftFront.getCurrentPosition() < newLeftTarget && rightFront.getCurrentPosition() < newRightTarget) {
 
             // Set power of drivetrain motors accounting for adjustment
-            driveStraightPID(speed);
+
 
             // Display info for the driver.
             opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
@@ -366,8 +379,8 @@ public class Drivetrain extends Mechanism {
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(0, 90);
-        pidRotate.setOutputRange(.20, power);
-        pidRotate.setTolerance(2);
+        pidRotate.setOutputRange(.2, power);
+        pidRotate.setTolerance(1);
         pidRotate.enable();
 
         // getAngle() returns + when rotating counter clockwise (left) and - when rotating

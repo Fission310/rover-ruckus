@@ -113,7 +113,6 @@ public class DepotMainTF extends LinearOpMode {
                  */
                 case TURN_OFF_CV:
                     visionManager.vuforiaLights(false);
-                    visionManager.stop();
                     telemetry.addData("Status", "Turn off CV");
                     telemetry.update();
                     step = step.STRAFE_OUT_LANDER;
