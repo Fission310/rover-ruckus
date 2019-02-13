@@ -110,7 +110,6 @@ public class CraterMainTF extends LinearOpMode {
                  */
                 case TURN_OFF_CV:
                     visionManager.vuforiaLights(false);
-                    visionManager.stop();
                     telemetry.addData("Status", "Turn off CV");
                     telemetry.update();
                     step = step.STRAFE_OUT_LANDER;
@@ -119,7 +118,7 @@ public class CraterMainTF extends LinearOpMode {
                  * Slide out of lander.
                  */
                 case STRAFE_OUT_LANDER:
-                    robot.drivetrain.strafeToPos(.8, FieldConstants.TILE_HYPOTENUSE / 2, 3);
+                    robot.strafeOutOfLander();
                     telemetry.addData("Status", "Robot strafed");
                     telemetry.update();
                     step = step.TURN_90;

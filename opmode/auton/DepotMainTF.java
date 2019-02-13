@@ -46,7 +46,7 @@ public class DepotMainTF extends LinearOpMode {
 
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
-            goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
+            goldLocation = visionManager.getDoubleMineralLocation();
             telemetry.addData("Status", "Waiting in Init");
             telemetry.update();
         }
@@ -121,7 +121,7 @@ public class DepotMainTF extends LinearOpMode {
                  * Slide out of lander.
                  */
                 case STRAFE_OUT_LANDER:
-                    robot.drivetrain.strafeToPos(.8, FieldConstants.TILE_HYPOTENUSE / 2, 3);
+                    robot.strafeOutOfLander();
                     telemetry.addData("Status", "Robot strafed");
                     telemetry.update();
                     step = step.TURN_90;
@@ -139,6 +139,7 @@ public class DepotMainTF extends LinearOpMode {
                  * Align the robot to the gold cube to push it in to the depot
                  */
                 case ALIGN_TO_GOLD:
+                    robot.drivetrain.driveToPos(.4, FieldConstants.TILE_HYPOTENUSE / 3);
                     robot.tfFindGoldLocation(goldLocation);
                     telemetry.addData("Status", "Robot aligned to gold cube");
                     telemetry.update();

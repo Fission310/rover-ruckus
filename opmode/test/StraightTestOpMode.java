@@ -8,8 +8,7 @@
 //import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 //import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 //
-//import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveBase;
-//import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveREV;
+//import org.firstinspires.ftc.teamcode.hardware.slidedrive.StandardTrackingWheelLocalizer;
 //import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 //
 ///*
@@ -21,7 +20,7 @@
 //    @Override
 //    public void runOpMode() throws InterruptedException {
 //        FtcDashboard dashboard = FtcDashboard.getInstance();
-//        SampleMecanumDriveBase drive = new SampleMecanumDriveREV(hardwareMap);
+//        StandardTrackingWheelLocalizer drive = new StandardTrackingWheelLocalizer(hardwareMap);
 //
 //        Trajectory trajectory = drive.trajectoryBuilder()
 //                .forward(60)

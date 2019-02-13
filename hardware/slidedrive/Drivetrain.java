@@ -30,6 +30,8 @@ import org.firstinspires.ftc.teamcode.util.sensors.SingleIMU;
  */
 public class Drivetrain extends Mechanism {
 
+    private final double WHEEL_BASE = 15;
+
     /* Hardware members */
     private DcMotor leftFront;
     private DcMotor rightFront;
@@ -108,7 +110,7 @@ public class Drivetrain extends Mechanism {
 
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
-        pidDrive = new PIDController(.2, .0, .0);
+        pidDrive = new PIDController(.1, .0, .0);
     }
 
     public void resetDeltaAngle() {
@@ -284,6 +286,20 @@ public class Drivetrain extends Mechanism {
 
     public void driveToPos(double speed, double distance, double timeoutS) {
         driveToPos(speed, distance, distance, timeoutS);
+    }
+
+    public void driveToPos(double speed, double inches) {
+        int newLeftTarget;
+
+        // Determine new target position, and pass to motor controller
+        newLeftTarget = leftFront.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_30);
+
+        while(Math.abs(leftFront.getCurrentPosition() - newLeftTarget) > 10){
+            leftFront.setPower(speed*inches/Math.abs(inches));
+            rightFront.setPower(speed*inches/Math.abs(inches));
+        }
+        leftFront.setPower(0);
+        rightFront.setPower(0);
     }
 
     public void driveToPosNoBuiltInPID(double speed, double leftInches, double rightInches, double timeoutS) {
@@ -528,14 +544,20 @@ public class Drivetrain extends Mechanism {
         slideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void odometryTurn(double speed, double leftInches, double rightInches, double timeoutS) {
+    public void odometryTurn(double speed, double radius, double angle, double timeoutS) {
         // Target position variables
-        int newLeftTarget;
-        int newRightTarget;
+        int newLeftTarget = 0;
+        int newRightTarget = 0;
+
+        if (angle < 0) {
+            newLeftTarget = leftFront.getCurrentPosition() + (int)((radius + WHEEL_BASE) * Constants.TICKS_PER_INCH_30);
+            newRightTarget = rightFront.getCurrentPosition() + (int)(radius * Constants.TICKS_PER_INCH_30);
+        } else if (angle >= 0) {
+            newLeftTarget = leftFront.getCurrentPosition() + (int)(radius * Constants.TICKS_PER_INCH_30);
+            newRightTarget = rightFront.getCurrentPosition() + (int)((radius + WHEEL_BASE) * Constants.TICKS_PER_INCH_30);
+        }
 
         // Determine new target position, and pass to motor controller
-        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_30);
-        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_30);
         leftFront.setTargetPosition(newLeftTarget);
         rightFront.setTargetPosition(newRightTarget);
         setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -554,7 +576,8 @@ public class Drivetrain extends Mechanism {
                 leftFront.isBusy() && rightFront.isBusy()) {
 
             // Set power of drivetrain motors accounting for adjustment
-            driveStraightPID(speed);
+            leftFront.setPower(Math.abs(speed));
+            rightFront.setPower(Math.abs(speed));
 
             // Display info for the driver.
             opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);

@@ -78,6 +78,7 @@ public class TeleopSlideMain extends OpMode {
 
     /* Handle time complexities */
     boolean aButtonPressed, bButtonPressed, xButtonPressed, yButtonPressed;
+    boolean aButtonCounts, bButtonCounts, xButtonCounts, yButtonCounts;
 
     /* Handle button positions */
     boolean left, right;
@@ -92,9 +93,6 @@ public class TeleopSlideMain extends OpMode {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
         robot.drivetrain.imuInit(hardwareMap);
-
-        xButtonPressed = false;
-        bButtonPressed = false;
     }
 
     /**
@@ -197,28 +195,22 @@ public class TeleopSlideMain extends OpMode {
 
 
         if (gamepad1.x || gamepad2.x) {
+            xButtonCounts = !xButtonCounts;
             if (!xButtonPressed) {
-                robot.acquirer.acquirerRotationSet();
+                if (xButtonCounts) { robot.acquirer.acquirerRotationSet(); }
+                else { robot.acquirer.acquirerRotationInit(); }
                 xButtonPressed = true;
             } else { }
-        } else {
-            if (xButtonPressed) {
-                robot.acquirer.acquirerRotationInit();
-                xButtonPressed = false;
-            }
-        }
+        } else { if (xButtonPressed) { xButtonPressed = false; } }
 
         if (gamepad1.b || gamepad2.b) {
+            bButtonCounts = !bButtonCounts;
             if (!bButtonPressed) {
-                robot.marker.markerLeft();
+                if (bButtonCounts) { robot.marker.markerLeft(); }
+                else { robot.marker.markerRight(); }
                 bButtonPressed = true;
             } else { }
-        } else {
-            if (bButtonPressed) {
-                robot.marker.markerRight();
-                bButtonPressed = false;
-            }
-        }
+        } else { if (bButtonPressed) { bButtonPressed = false; } }
 
         double[] positions = robot.drivetrain.getPositions();
         double[] rackPositions = robot.lift.getPositions();
