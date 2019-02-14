@@ -68,15 +68,12 @@ public class Acquirer extends Mechanism {
      * @param power        Motor power with range of (-1 to 1)
      */
     public void setIntakePower(double power) {
-        double sign = Math.signum(power);
-//        leftIntakeMotor.setPower(.6 * sign);
         rightIntakeMotor.setPower(power);
     }
     public void setVexIntakePower(double power) {
         double sign = Math.signum(power);
-//        leftIntakeMotor.setPower(.6 * sign);
         if (power != 0.0) {
-            rightIntakeMotor.setPower(1 * sign);
+            rightIntakeMotor.setPower(.6 * sign);
         } else {
             rightIntakeMotor.setPower(0);
         }

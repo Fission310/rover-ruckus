@@ -159,8 +159,15 @@ public class TeleopSlideMain extends OpMode {
          */
 //      Sets rotation mechanism power via the left and right triggers
         leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.abs(gamepad2.right_stick_y): -.8 * gamepad2.left_trigger;
-        rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.abs(gamepad2.right_stick_y): .8 * gamepad2.right_trigger;
-//        leftTrigger2 = -gamepad2.left_trigger;
+        rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.abs(gamepad2.right_stick_y): .7 * gamepad2.right_trigger;
+//        if (Math.abs(gamepad2.right_trigger) < .3) {
+//            rightTrigger2 = gamepad2.right_trigger + .2;
+//        } else if ((Math.abs(gamepad2.right_trigger) >= .3) && (Math.abs(gamepad2.right_trigger) < .9)) {
+//            rightTrigger2 = gamepad2.right_trigger;
+//        } else {
+//
+//        }
+            //        leftTrigger2 = -gamepad2.left_trigger;
 //        rightTrigger2 = gamepad2.right_trigger;
 // if (robot.drawerSlides.encoderCounts() < 1) {
 //            robot.drawerSlides.setRotationPower(rightTrigger2);
