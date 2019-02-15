@@ -184,7 +184,7 @@ public class HardwareSlide extends Mechanism {
 
     public void tfCraterSamplePID(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE / 3.0);
+            drivetrain.driveToPos(DRIVE_SPEED,FieldConstants.TILE_HYPOTENUSE );
             opMode.sleep(200);
             drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.TILE_HYPOTENUSE / 5.0, 3);
             drivetrain.turnPID(-DIAGONAL_TURN);
@@ -193,6 +193,7 @@ public class HardwareSlide extends Mechanism {
                 drivetrain.strafeToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE, 5);
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 3.0, 5);
             } else if (location == location.CENTER || location == location.NONE){
+                //drive forward one floor tile, then correct position by strafing, then go forward again to depot
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 5);
                 drivetrain.strafeToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE * 1.5, 5);
                 drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 3.0, 5);
