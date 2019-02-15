@@ -163,7 +163,7 @@ public class CraterMainTF extends LinearOpMode {
                  * Align to wall
                  */
                 case ALIGN_TO_WALL:
-                    robot.alignToWall();
+                    robot.alignToWall(true);
                     telemetry.addData("Status", "Robot align to wall");
                     telemetry.update();
                     step = step.PARK;

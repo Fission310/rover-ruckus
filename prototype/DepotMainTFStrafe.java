@@ -164,7 +164,7 @@ public class DepotMainTFStrafe extends LinearOpMode {
                  * Align to wall
                  */
                 case ALIGN_TO_WALL:
-                    robot.alignToWall();
+                    robot.alignToWall(false);
                     telemetry.addData("Status", "Robot align to wall");
                     telemetry.update();
                     step = step.PARK;

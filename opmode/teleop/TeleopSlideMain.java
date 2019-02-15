@@ -81,6 +81,7 @@ public class TeleopSlideMain extends OpMode {
     boolean aButtonCounts, bButtonCounts, xButtonCounts, yButtonCounts;
 
     /* Handle button positions */
+    boolean drivetrainSlowMode, linearSlidesSlowMode;
     boolean left, right;
     double currentAcquirerRotation = 0;
     double markerRotation = 0;
@@ -136,7 +137,9 @@ public class TeleopSlideMain extends OpMode {
         slowXInput = Range.clip(xInput * SLOW_MULTIPLIER, -1.0, 1.0);
         slowSlide = Range.clip(slideInput * SLOW_MULTIPLIER, -1.0, 1.0);
 
-        if (gamepad1.left_bumper) {
+        drivetrainSlowMode = gamepad1.left_stick_button;
+
+        if (drivetrainSlowMode || gamepad1.left_bumper) {
             robot.drivetrain.driveSlide(slowYInput, slowXInput, slowSlide);
             telemetry.addData("GP 1 Status", "slowYInput: " + slowYInput);
             telemetry.addData("GP 1 Status", "slowXInput: " + slowXInput);
@@ -179,13 +182,18 @@ public class TeleopSlideMain extends OpMode {
         robot.drawerSlides.setRotationPower(leftTrigger2 + rightTrigger2);
 
 //      Sets drawer slides power via the right joystick
-        linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .9 * Math.signum(gamepad2.right_stick_y);
+        linearSlidesSlowMode = gamepad2.right_stick_button;
+        if (linearSlidesSlowMode) {
+            linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? .7 * Math.signum(gamepad2.right_stick_y) : .6 * Math.signum(gamepad2.right_stick_y);
+        } else {
+            linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .9 * Math.signum(gamepad2.right_stick_y);
+        }
 //        linearSlidesInput = gamepad2.right_stick_y;
         robot.drawerSlides.setDrawerSlidePower(linearSlidesInput);
 
 //      Sets acquirer  power via the right and left bumper
-        if (gamepad2.left_bumper) { robot.acquirer.setIntakePower(-0.9); }
-        else if (gamepad2.right_bumper) { robot.acquirer.setIntakePower(-0.9); }
+        if (gamepad2.left_bumper) { robot.acquirer.setIntakePower(0.6); }
+        else if (gamepad2.right_bumper) { robot.acquirer.setIntakePower(-0.6); }
         else { robot.acquirer.setIntakePower(0); }
 
         /**

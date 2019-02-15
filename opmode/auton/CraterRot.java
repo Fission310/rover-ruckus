@@ -1,21 +1,16 @@
-package org.firstinspires.ftc.teamcode.opmode.test;
+package org.firstinspires.ftc.teamcode.opmode.auton;
 
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
-import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.opmode.Steps;
-import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
+import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
-@Autonomous(name="Main Depot: D;S;M;P", group="Slide Depot")
-@Disabled
-public class DepotMain extends LinearOpMode {
+@Autonomous(name="Crater Rot: D;S;M;P", group="Slide Depot")
+public class CraterRot extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -23,12 +18,14 @@ public class DepotMain extends LinearOpMode {
     private HardwareSlide robot = new HardwareSlide(this);
 
     /* Vision Manager*/
-    private VisionManager visionManager = new VisionManager();
+    private TensorFlowManager visionManager = new TensorFlowManager();
 
     /* Gold Location*/
-    private SamplingOrderDetector.GoldLocation goldLocation;
+    private TensorFlowManager.TFLocation goldLocation = TensorFlowManager.TFLocation.NONE;
 
-    private Steps.State step = Steps.State.LAND;
+    private Steps.State step = Steps.State.HANG_AND_SAMPLE;
+
+    private int ROTATIONS = 0;
 
     /**
      * Runs the autonomous routine.
@@ -40,16 +37,13 @@ public class DepotMain extends LinearOpMode {
         robot.drivetrain.encoderInit();
 
         // Initialize CV
-//        visionManager.samplingInit(hardwareMap);
-//        visionManager.vuforiaInit(hardwareMap);
-        visionManager.vuforiaSampleInit(hardwareMap);
-//        goldLocation = visionManager.getGoldLocation();
+        visionManager.init(hardwareMap, false);
         visionManager.vuforiaLights(true);
-        telemetry.addData("Gold Cube location before start", goldLocation);
+        visionManager.start();
 
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
-            telemetry.addData("Location", "gold cube location:" + goldLocation);
+            goldLocation = visionManager.getDoubleMineralLocation();
             telemetry.addData("Status", "Waiting in Init");
             telemetry.update();
         }
@@ -60,6 +54,21 @@ public class DepotMain extends LinearOpMode {
         while (opModeIsActive()) {
             switch (step) {
                 /**
+                 * Hang and scan for the gold mineral location.
+                 */
+                case HANG_AND_SAMPLE:
+                    if (goldLocation != TensorFlowManager.TFLocation.NONE) {
+                        telemetry.addData("Gold Location found during init. location:", goldLocation);
+                    } else {
+                        goldLocation = visionManager.getDoubleMineralLocation();
+                        ElapsedTime elapsedTime = new ElapsedTime();
+                        while(elapsedTime.seconds() < 1) ;
+                    }
+                    telemetry.addData("Gold Location", goldLocation);
+                    telemetry.update();
+                    step = step.LAND;
+                    break;
+                /**
                  * Land and wait for the robot to fully drop and stabilize.
                  */
                 case LAND:
@@ -68,49 +77,79 @@ public class DepotMain extends LinearOpMode {
                     telemetry.update();
                     step = step.IMU_INIT;
                     break;
-
+                /**
+                 * IMU Init.
+                 */
                 case IMU_INIT:
                     robot.imuInit(hardwareMap);
                     telemetry.addData("Imu", "Initialized");
                     telemetry.update();
                     step = step.FIND_GOLD_LOCATION;
                     break;
-
                 /**
                  * Figure out where the gold cube is.
                  */
                 case FIND_GOLD_LOCATION:
-                    goldLocation = (goldLocation != goldLocation.UNKNOWN) ? goldLocation : visionManager.getGoldLocation();
-                    telemetry.addData("Gold Cube location after start", goldLocation);
+                    /**
+                     * Makes sure that the gold location is found.
+                     */
+                    while (goldLocation == TensorFlowManager.TFLocation.NONE && ROTATIONS < 18 && runtime.seconds() > 15) {
+                        ROTATIONS += 2;
+                        robot.drivetrain.turnPID(2);
+                        goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
+                        ElapsedTime elapsedTime = new ElapsedTime();
+                        while(elapsedTime.seconds() < 1) ;
+                    }
+                    if (ROTATIONS > 0) { robot.drivetrain.turnPID(-ROTATIONS); }
+                    telemetry.addData("Gold Cube location", goldLocation);
+                    telemetry.update();
+                    step = step.TURN_OFF_CV;
+                    break;
+                /**
+                 * Turn off CV.
+                 */
+                case TURN_OFF_CV:
+                    visionManager.vuforiaLights(false);
+                    telemetry.addData("Status", "Turn off CV");
                     telemetry.update();
                     step = step.STRAFE_OUT_LANDER;
                     break;
-
+                /**
+                 * Slide out of lander.
+                 */
                 case STRAFE_OUT_LANDER:
-                    robot.drivetrain.strafeToPos(.8, -8, 2);
+                    robot.strafeOutOfLander();
+                    telemetry.addData("Status", "Robot strafed");
+                    telemetry.update();
+                    step = step.TURN_90;
+                    break;
+                /**
+                 * Rotate 90 degrees; Robot faces backwards for the marker mechanism.
+                 */
+                case TURN_90:
                     robot.turn90();
-                    telemetry.addData("Status", "Robot turned 90 degrees");
+                    telemetry.addData("Robot rotates 90", "");
                     telemetry.update();
                     step = step.ALIGN_TO_GOLD;
                     break;
-
-                case ALIGN_TO_GOLD:
-                    robot.depotFindGoldLocation(visionManager, goldLocation);
-                    telemetry.addData("Status", "Robot driven to gold cube");
-                    telemetry.update();
-                    step = step.SAMPLE;
-                    break;
-
                 /**
                  * Align the robot to the gold cube to push it in to the depot
                  */
+                case ALIGN_TO_GOLD:
+                    robot.tfFindGoldLocation(goldLocation);
+                    telemetry.addData("Status", "Robot aligned to gold cube");
+                    telemetry.update();
+                    step = step.SAMPLE;
+                    break;
+                /**
+                 * Push the gold cube into the depot
+                 */
                 case SAMPLE:
-                    robot.depotSamplePID(visionManager, goldLocation);
+                    robot.tfCraterSamplePID(goldLocation);
                     telemetry.addData("Status", "Robot Pushed cube into depot");
                     telemetry.update();
                     step = step.MARKER;
                     break;
-
                 /**
                  * Drop the marker
                  */
@@ -120,22 +159,20 @@ public class DepotMain extends LinearOpMode {
                     telemetry.update();
                     step = step.ALIGN_TO_WALL;
                     break;
-
                 /**
                  * Align to wall
                  */
                 case ALIGN_TO_WALL:
-                    robot.alignToWall();
+                    robot.alignToWall(true);
                     telemetry.addData("Status", "Robot align to wall");
                     telemetry.update();
                     step = step.PARK;
                     break;
-
                 /**
                  * Extend arm and drive up to the crater
                  */
                 case PARK:
-                    robot.driveToCrater(false);
+                    robot.driveToCrater(true);
                     telemetry.addData("Status", "Robot drove to crater");
                     telemetry.update();
                     step = step.DEFAULT;
@@ -151,9 +188,6 @@ public class DepotMain extends LinearOpMode {
         }
 
         // Stop CV
-        if (isStopRequested() || !opModeIsActive()) {
-            visionManager.vuforiaStop();
-            visionManager.samplingStop();
-        }
+        if (isStopRequested() || !opModeIsActive()) { visionManager.stop(); }
     }
 }

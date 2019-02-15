@@ -139,7 +139,6 @@ public class DepotMainTF extends LinearOpMode {
                  * Align the robot to the gold cube to push it in to the depot
                  */
                 case ALIGN_TO_GOLD:
-                    robot.drivetrain.driveToPos(.4, FieldConstants.TILE_HYPOTENUSE / 3);
                     robot.tfFindGoldLocation(goldLocation);
                     telemetry.addData("Status", "Robot aligned to gold cube");
                     telemetry.update();
@@ -167,7 +166,7 @@ public class DepotMainTF extends LinearOpMode {
                  * Align to wall
                  */
                 case ALIGN_TO_WALL:
-                    robot.alignToWall();
+                    robot.alignToWall(false);
                     telemetry.addData("Status", "Robot align to wall");
                     telemetry.update();
                     step = step.PARK;

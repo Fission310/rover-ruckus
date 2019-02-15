@@ -234,7 +234,6 @@ public class Drivetrain extends Mechanism {
 //        avgTarget = (int)(newLeftTarget + newRightTarget);
         leftFront.setTargetPosition(newLeftTarget);
         rightFront.setTargetPosition(newRightTarget);
-        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
 
         // Turn On RUN_TO_POSITION
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -289,10 +288,11 @@ public class Drivetrain extends Mechanism {
     }
 
     public void driveToPos(double speed, double inches) {
-        int newLeftTarget;
+        int newLeftTarget, newRightTarget;
 
         // Determine new target position, and pass to motor controller
         newLeftTarget = leftFront.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_30);
+        newRightTarget = rightFront.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_30);
 
         while(Math.abs(leftFront.getCurrentPosition() - newLeftTarget) > 10){
             leftFront.setPower(speed*inches/Math.abs(inches));
@@ -300,6 +300,52 @@ public class Drivetrain extends Mechanism {
         }
         leftFront.setPower(0);
         rightFront.setPower(0);
+    }
+
+    public void driveToPosRunToPosition(double speed, double leftInches, double rightInches, double timeoutS) {
+        // Target position variables
+        int newLeftTarget;
+        int newRightTarget;
+//      int avgTarget;
+        // Determine new target position, and pass to motor controller
+        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_30);
+        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_30);
+//        avgTarget = (int)(newLeftTarget + newRightTarget);
+        leftFront.setTargetPosition(newLeftTarget);
+        rightFront.setTargetPosition(newRightTarget);
+
+        // Turn On RUN_TO_POSITION
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Reset the timeout time
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+
+        // Loop until a condition is met
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeoutS) &&
+                leftFront.isBusy() && rightFront.isBusy()) {
+
+
+            // Display info for the driver.
+            opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+            opMode.telemetry.addData("Path2", "Running at %7d :%7d",
+                    leftFront.getCurrentPosition(),
+                    rightFront.getCurrentPosition());
+
+            opMode.telemetry.update();
+        }
+
+        // Stop all motion
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+
+        // Turn off RUN_TO_POSITION
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void driveToPosNoBuiltInPID(double speed, double leftInches, double rightInches, double timeoutS) {
@@ -314,7 +360,6 @@ public class Drivetrain extends Mechanism {
         newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_30);
         leftFront.setTargetPosition(newLeftTarget);
         rightFront.setTargetPosition(newRightTarget);
-        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
 
         // Reset the timeout time
         ElapsedTime runtime = new ElapsedTime();
@@ -341,7 +386,6 @@ public class Drivetrain extends Mechanism {
         // Stop all motion
         leftFront.setPower(0);
         rightFront.setPower(0);
-        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Turn off RUN_TO_POSITION
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -372,6 +416,7 @@ public class Drivetrain extends Mechanism {
      * @param angle         number of degrees to turn
      */
     public void turnPID(int angle) { pidDriveRotate(angle, power); }
+    public void turn180PID(int angle) { pidRotate180(angle, power); }
 
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
@@ -395,6 +440,49 @@ public class Drivetrain extends Mechanism {
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(0, 90);
+        pidRotate.setOutputRange(.2, power);
+        pidRotate.setTolerance(1);
+        pidRotate.enable();
+
+        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+        // clockwise (right).
+
+        // rotate until turn is completed.
+
+        if (degrees < 0) { // On right turn we have to get off zero first.
+            while (opMode.opModeIsActive() && singleImu.getAngle() == 0) {
+                leftFront.setPower(-power);
+                rightFront.setPower(power);
+                opMode.sleep(100);
+            } do {
+                power = pidRotate.performPID(singleImu.getAngle()); // power will be - on right turn.
+                leftFront.setPower(power);
+                rightFront.setPower(-power);
+            } while (opMode.opModeIsActive() && !pidRotate.onTarget());
+        } else do { // left turn.
+            power = pidRotate.performPID(singleImu.getAngle()); // power will be + on left turn.
+            leftFront.setPower(power);
+            rightFront.setPower(-power);
+        } while (opMode.opModeIsActive() && !pidRotate.onTarget());
+
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // wait for rotation to stop.
+        opMode.sleep(500);
+
+        // reset angle tracking on new heading.
+        singleImu.resetAngle();
+    }
+
+    private void pidRotate180(int degrees, double power) {
+        singleImu.resetAngle();
+        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        pidRotate.reset();
+        pidRotate.setSetpoint(degrees);
+        pidRotate.setInputRange(0, 180);
         pidRotate.setOutputRange(.2, power);
         pidRotate.setTolerance(1);
         pidRotate.enable();
