@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
@@ -69,14 +70,21 @@ public class TeleopSlideScaled extends OpMode {
     /* Holds gamepad joystick's values */
     double yInput, xInput, slideInput; // Gamepad 1
     double linearSlidesInput, rotationInput; // Gamepad 2
+    double acquirerRotation = 0; // Both Gamepad 1 & 2
+
     /* Applies slow or fast mode */
     double slowYInput, slowXInput, slowSlide, leftTrigger1,rightTrigger1; // Gamepad 1
     double slowLinearSlidesInput, slowRotationInput, acquirerIntake, acquirerOuttake, leftTrigger2, rightTrigger2; // Gamepad 2
+
     /* Handle time complexities */
-    boolean aButtonPressed = false, bButtonPressed = false, xButtonPressed = false, yButtonPressed = false;
+    boolean aButtonPressed, bButtonPressed, xButtonPressed, yButtonPressed;
+    boolean aButtonCounts, bButtonCounts, xButtonCounts, yButtonCounts;
+
     /* Handle button positions */
+    boolean drivetrainSlowMode, linearSlidesSlowMode;
     boolean left, right;
     double currentAcquirerRotation = 0;
+    double markerRotation = 0;
 
 
     /* Applies brake behavior */
@@ -156,20 +164,19 @@ public class TeleopSlideScaled extends OpMode {
 
 //      Sets drawer slides power via the right joystick
         linearSlidesInput = gamepad2.right_stick_y;
-        robot.drawerSlides.setScaledDrawerSlidePower(linearSlidesInput);
+        robot.drawerSlides.setScaledDrawerSlidePower(-linearSlidesInput);
 
-//        /**
-//         * Both Gamepads
-//         */
-        if (gamepad1.x || gamepad2.x) {
-            if(!xButtonPressed) {
-                robot.marker.markerLeft();
-                xButtonPressed = !xButtonPressed;
-            } else {
-                robot.marker.markerRight();
-                xButtonPressed = !xButtonPressed;
-            }
+        /**
+         * Both Gamepads
+         */
+
+        if (gamepad1.dpad_up || gamepad2.dpad_up || gamepad1.dpad_right || gamepad2.dpad_right) {
+            acquirerRotation += .05;
+        } else if (gamepad1.dpad_down || gamepad2.dpad_down || gamepad1.dpad_left || gamepad2.dpad_left) {
+            acquirerRotation -= .05;
         }
+        acquirerRotation = Range.clip(acquirerRotation, Servo.MIN_POSITION, Servo.MAX_POSITION);
+        robot.acquirer.setAcquirerRotation(acquirerRotation);
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 

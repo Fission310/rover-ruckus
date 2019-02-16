@@ -186,10 +186,10 @@ public class TeleopSlideMain extends OpMode {
         if (linearSlidesSlowMode) {
             linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? .7 * Math.signum(gamepad2.right_stick_y) : .6 * Math.signum(gamepad2.right_stick_y);
         } else {
-            linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .9 * Math.signum(gamepad2.right_stick_y);
+            linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .8 * Math.signum(gamepad2.right_stick_y);
         }
 //        linearSlidesInput = gamepad2.right_stick_y;
-        robot.drawerSlides.setDrawerSlidePower(linearSlidesInput);
+        robot.drawerSlides.setDrawerSlidePower(-linearSlidesInput);
 
 //      Sets acquirer  power via the right and left bumper
         if (gamepad2.left_bumper) { robot.acquirer.setIntakePower(0.6); }
@@ -201,9 +201,9 @@ public class TeleopSlideMain extends OpMode {
          */
 
         if (gamepad1.dpad_up || gamepad2.dpad_up || gamepad1.dpad_right || gamepad2.dpad_right) {
-            acquirerRotation += .1;
+            acquirerRotation += .05;
         } else if (gamepad1.dpad_down || gamepad2.dpad_down || gamepad1.dpad_left || gamepad2.dpad_left) {
-            acquirerRotation -= .1;
+            acquirerRotation -= .05;
         }
         acquirerRotation = Range.clip(acquirerRotation, Servo.MIN_POSITION, Servo.MAX_POSITION);
         robot.acquirer.setAcquirerRotation(acquirerRotation);
@@ -244,8 +244,8 @@ public class TeleopSlideMain extends OpMode {
                 drawerSlides[0],
                 drawerSlides[1]);
         telemetry.addData("IMU", "Z-axis: " + imuZAxis);
-        telemetry.addData("Power of Left Lift Motor",  robot.lift.getLeftPower());
-        telemetry.addData("Power of Right Lift Motor",  robot.lift.getRightPower());
+//        telemetry.addData("Power of Left Lift Motor",  robot.lift.getLeftPower());
+//        telemetry.addData("Power of Right Lift Motor",  robot.lift.getRightPower());
     }
 
     @Override

@@ -62,7 +62,7 @@ public class CraterMainTF extends LinearOpMode {
                     } else {
                         goldLocation = visionManager.getDoubleMineralLocation();
                         ElapsedTime elapsedTime = new ElapsedTime();
-                        while(elapsedTime.seconds() < 1) ;
+                        while(elapsedTime.seconds() < 2) ;
                     }
                     telemetry.addData("Gold Location", goldLocation);
                     telemetry.update();
@@ -82,6 +82,8 @@ public class CraterMainTF extends LinearOpMode {
                  */
                 case IMU_INIT:
                     robot.imuInit(hardwareMap);
+//                    robot.drivetrain.resetDeltaAngle();
+//                    robot.drivetrain.imuStartingRot();
                     telemetry.addData("Imu", "Initialized");
                     telemetry.update();
                     step = step.FIND_GOLD_LOCATION;

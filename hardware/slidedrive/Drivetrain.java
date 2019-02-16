@@ -103,7 +103,6 @@ public class Drivetrain extends Mechanism {
         // Retrieve and initialize the IMU
         singleImu.init(hwMap, AxesOrder.ZYX,0D);
         // Set the starting angle to make automating hanging easier
-        singleImu.setStartingAngle();
 
         // Set PID proportional value to start reducing power at about 50 degrees of rotation.
         pidRotate = new PIDController(.0025, 0.002, .0045);
@@ -111,6 +110,10 @@ public class Drivetrain extends Mechanism {
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
         pidDrive = new PIDController(.1, .0, .0);
+    }
+
+    public void imuStartingRot() {
+        singleImu.setStartingAngle();
     }
 
     public void resetDeltaAngle() {
@@ -272,16 +275,6 @@ public class Drivetrain extends Mechanism {
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-//    public void drivetoPos2(double speed, double distance, double timeout) {
-//
-//        int newLeftTarget;
-//        int newRightTarget;
-//        int newLeftTarget2;
-//        int newRightTarget2;
-//
-//        newLeftTarget = leftFront.getCurrentPosition() + (int) (distance * Constants.TICKS_PER_INCH_30;
-//        newRightTarget = rightFront.getCurrentPosition() + (int) (distance * Constants.)
-//    }
 
     public void driveToPos(double speed, double distance, double timeoutS) {
         driveToPos(speed, distance, distance, timeoutS);
@@ -303,19 +296,12 @@ public class Drivetrain extends Mechanism {
 
     }
 
-
-
-
     public void driveToPosBackwards(double speed, double leftInches, double rightInches, double timeoutS) {
         // Target position variables
         int newLeftTarget;
         int newRightTarget;
 //      int avgTarget;
         // Determine new target position, and pass to motor controller
-
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-
         newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_30);
         newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_30);
 //        avgTarget = (int)(newLeftTarget + newRightTarget);
@@ -336,7 +322,7 @@ public class Drivetrain extends Mechanism {
                 leftFront.isBusy() && rightFront.isBusy()) {
 
             // Set power of drivetrain motors accounting for adjustment
-            driveStraightPID(speed);
+            driveStraightPID2(speed);
 
             // Display info for the driver.
             opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
@@ -357,18 +343,13 @@ public class Drivetrain extends Mechanism {
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
-
     }
 
     public void driveToPosBackwards(double speed, double distance, double timeoutS) {
         driveToPosBackwards(speed, distance, distance, timeoutS);
     }
 
-
-        public void driveToPosRunToPosition(double speed, double leftInches, double rightInches, double timeoutS) {
+    public void driveToPosRunToPosition(double speed, double leftInches, double rightInches, double timeoutS) {
         // Target position variables
         int newLeftTarget;
         int newRightTarget;
@@ -477,6 +458,19 @@ public class Drivetrain extends Mechanism {
         rightFront.setPower(-speed);
     }
 
+    public void driveStraightPID2(double speed) {
+        // Set up parameters for driving in a straight line.
+        pidDrive.setSetpoint(0);
+        pidDrive.setOutputRange(0, power);
+        pidDrive.setInputRange(-90, 90);
+        pidDrive.enable();
+
+        double corrections = pidDrive.performPID(singleImu.getAngle());
+
+        leftFront.setPower(-speed);
+        rightFront.setPower(-speed + Math.signum(speed) * corrections);
+    }
+
     /**
      * Turn to a specified angle accurately using a PID loop.
      * @param angle         number of degrees to turn
@@ -507,7 +501,7 @@ public class Drivetrain extends Mechanism {
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(0, 90);
         pidRotate.setOutputRange(.2, power);
-        pidRotate.setTolerance(1);
+        pidRotate.setTolerance(.8);
         pidRotate.enable();
 
         // getAngle() returns + when rotating counter clockwise (left) and - when rotating
@@ -550,7 +544,7 @@ public class Drivetrain extends Mechanism {
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(0, 180);
         pidRotate.setOutputRange(.2, power);
-        pidRotate.setTolerance(1);
+        pidRotate.setTolerance(.8);
         pidRotate.enable();
 
         // getAngle() returns + when rotating counter clockwise (left) and - when rotating

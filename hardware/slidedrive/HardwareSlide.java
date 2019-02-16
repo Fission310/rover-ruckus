@@ -119,7 +119,9 @@ public class HardwareSlide extends Mechanism {
 
     public void strafeOutOfLander() {
         if (opMode.opModeIsActive()) {
+            drivetrain.driveToPos(.4, 5);
             drivetrain.strafeToPos(.5, FieldConstants.TILE_HYPOTENUSE / 2, 3);
+            drivetrain.driveToPos(.4, -5, 3.0);
         }
     }
 

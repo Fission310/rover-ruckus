@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmode.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 
-@Autonomous(name="ant", group="Test")
-public class ant extends LinearOpMode {
+@Autonomous(name="DriveStraightTest", group="Test")
+public class DriveStraightTest extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -40,21 +41,21 @@ public class ant extends LinearOpMode {
         while (opModeIsActive()) {
             switch (step) {
                 case 0:
-                    robot.drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE * 2);
+                    robot.drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE * 2, 5);
                     telemetry.addData("Step 0", "Robot Drive one floor tile");
                     telemetry.update();
                     step++;
                     break;
                 case 1:
                     sleep(1000);
-                    robot.drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE * 2);
+                    robot.drivetrain.driveToPosBackwards(.5, FieldConstants.FLOOR_TILE * 2, 5);
                     telemetry.addData("Step 0", "Robot Drive one floor tile negative speed");
                     telemetry.update();
                     step++;
                     break;
 
                 default: {
-                    robot.drivetrain.drive(0, 0);
+                    robot.drivetrain.driveToPos(0, 0, 5);
                     telemetry.addData("Status", "Robot default");
                     telemetry.update();
                 }
