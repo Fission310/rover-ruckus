@@ -63,9 +63,11 @@ public class DepotMainTF extends LinearOpMode {
                     if (goldLocation != TensorFlowManager.TFLocation.NONE) {
                         telemetry.addData("Gold Location found during init. location:", goldLocation);
                     } else {
+                        telemetry.addData("Gold Location not found during init. location:", "trying again");
+                        //try to find gold location again
                         goldLocation = visionManager.getDoubleMineralLocation();
                         ElapsedTime elapsedTime = new ElapsedTime();
-                        while(elapsedTime.seconds() < 1) ;
+                        while(elapsedTime.seconds() < 2) ;
                     }
                     telemetry.addData("Gold Location", goldLocation);
                     telemetry.update();
@@ -96,7 +98,10 @@ public class DepotMainTF extends LinearOpMode {
                     /**
                      * Makes sure that the gold location is found.
                      */
+                    //if gold location was not found during init
                     while (goldLocation == TensorFlowManager.TFLocation.NONE && ROTATIONS < 18 && runtime.seconds() > 15) {
+                        telemetry.addData("Gold Location not found during init. location:", "trying again");
+                        telemetry.update();
                         ROTATIONS += 2;
                         robot.drivetrain.turnPID(2);
                         goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
@@ -122,7 +127,7 @@ public class DepotMainTF extends LinearOpMode {
                  */
                 case STRAFE_OUT_LANDER:
                     robot.strafeOutOfLander();
-                    telemetry.addData("Status", "Robot strafed");
+                    telemetry.addData("Status", "Robot strafed out of lander");
                     telemetry.update();
                     step = step.TURN_90;
                     break;
@@ -131,7 +136,7 @@ public class DepotMainTF extends LinearOpMode {
                  */
                 case TURN_90:
                     robot.turn90();
-                    telemetry.addData("Robot rotates 90", "");
+                    telemetry.addData("Robot rotates 90 after strafing out of lander", "");
                     telemetry.update();
                     step = step.ALIGN_TO_GOLD;
                     break;
@@ -139,7 +144,7 @@ public class DepotMainTF extends LinearOpMode {
                  * Align the robot to the gold cube to push it in to the depot
                  */
                 case ALIGN_TO_GOLD:
-                    robot.tfFindGoldLocation(goldLocation);
+                    robot.tfRotateFindGoldLocation(goldLocation);
                     telemetry.addData("Status", "Robot aligned to gold cube");
                     telemetry.update();
                     step = step.SAMPLE;

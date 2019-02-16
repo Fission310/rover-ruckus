@@ -235,7 +235,7 @@ public class TeleopSlideMain extends OpMode {
                 positions[0],
                 positions[1],
                 positions[2]);
-        telemetry.addData("Rack & Pinion counts", "Running at %.2f :%.2f",
+        telemetry.addData("Lift Encoder counts", "Running at %.2f :%.2f",
                 rackPositions[0],
                 rackPositions[1]);
         telemetry.addData("Rotational Arm Avg Encoder counts", "Running at %.2f",
@@ -244,6 +244,8 @@ public class TeleopSlideMain extends OpMode {
                 drawerSlides[0],
                 drawerSlides[1]);
         telemetry.addData("IMU", "Z-axis: " + imuZAxis);
+        telemetry.addData("Power of Left Lift Motor",  robot.lift.getLeftPower());
+        telemetry.addData("Power of Right Lift Motor",  robot.lift.getRightPower());
     }
 
     @Override

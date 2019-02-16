@@ -180,4 +180,12 @@ public class Lift extends Mechanism {
 
         return positions;
     }
+
+    public double getLeftPower() {
+        return leftLiftMotor.getPower();
+    }
+
+    public double getRightPower() {
+        return rightLiftMotor.getPower();
+    }
 }

@@ -300,9 +300,75 @@ public class Drivetrain extends Mechanism {
         }
         leftFront.setPower(0);
         rightFront.setPower(0);
+
     }
 
-    public void driveToPosRunToPosition(double speed, double leftInches, double rightInches, double timeoutS) {
+
+
+
+    public void driveToPosBackwards(double speed, double leftInches, double rightInches, double timeoutS) {
+        // Target position variables
+        int newLeftTarget;
+        int newRightTarget;
+//      int avgTarget;
+        // Determine new target position, and pass to motor controller
+
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_30);
+        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_30);
+//        avgTarget = (int)(newLeftTarget + newRightTarget);
+        leftFront.setTargetPosition(newLeftTarget);
+        rightFront.setTargetPosition(newRightTarget);
+
+        // Turn On RUN_TO_POSITION
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Reset the timeout time
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+
+        // Loop until a condition is met
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeoutS) &&
+                leftFront.isBusy() && rightFront.isBusy()) {
+
+            // Set power of drivetrain motors accounting for adjustment
+            driveStraightPID(speed);
+
+            // Display info for the driver.
+            opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+            opMode.telemetry.addData("Path2", "Running at %7d :%7d",
+                    leftFront.getCurrentPosition(),
+                    rightFront.getCurrentPosition());
+
+            opMode.telemetry.update();
+        }
+
+        // Stop all motion
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Turn off RUN_TO_POSITION
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+
+    }
+
+    public void driveToPosBackwards(double speed, double distance, double timeoutS) {
+        driveToPosBackwards(speed, distance, distance, timeoutS);
+    }
+
+
+        public void driveToPosRunToPosition(double speed, double leftInches, double rightInches, double timeoutS) {
         // Target position variables
         int newLeftTarget;
         int newRightTarget;
