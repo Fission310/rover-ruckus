@@ -95,8 +95,9 @@ public class CraterMainTF extends LinearOpMode {
                     /**
                      * Makes sure that the gold location is found.
                      */
-                    while (goldLocation == TensorFlowManager.TFLocation.NONE && ROTATIONS < 18 && runtime.seconds() > 15) {
-                        ROTATIONS += 2;
+                    //while (goldLocation == TensorFlowManager.TFLocation.NONE && ROTATIONS < 18 && runtime.seconds() > 15) {
+                    //ROTATIONS += 2;
+                    if (goldLocation == TensorFlowManager.TFLocation.NONE) {
                         robot.drivetrain.turnPID(2);
                         goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
                         ElapsedTime elapsedTime = new ElapsedTime();

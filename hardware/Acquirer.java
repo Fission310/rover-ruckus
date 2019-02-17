@@ -61,6 +61,7 @@ public class Acquirer extends Mechanism {
         rightIntakeMotor.setPower(0);
 //        leftIntakeMotor.setPower(0);
 //        acquirerFloorInit();
+        acquirerRotationInit();
     }
 
     /**
@@ -73,7 +74,7 @@ public class Acquirer extends Mechanism {
     public void setVexIntakePower(double power) {
         double sign = Math.signum(power);
         if (power != 0.0) {
-            rightIntakeMotor.setPower(.6 * sign);
+            rightIntakeMotor.setPower(.8 * sign);
         } else {
             rightIntakeMotor.setPower(0);
         }
@@ -97,10 +98,11 @@ public class Acquirer extends Mechanism {
     /**
      * Inits the acquirer rotation servo to fit inside the sizing cube.
      */
-    public void acquirerRotationInit() {
-        acquirerRotation.setPosition(SERVO_INIT_POS);
-    }
+    public void acquirerRotationInit() { acquirerRotation.setPosition(SERVO_INIT_POS); }
 
+    public void acquirerRotationMid() {
+        acquirerRotation.setPosition(0.5);
+    }
     /**
      * Moves the acquirer rotation servo to set angle to acquire.
      */
@@ -112,6 +114,11 @@ public class Acquirer extends Mechanism {
     public void setAcquirerRotation(double rotations) {
         acquirerRotation.setPosition(rotations);
     }
+
+    public double getAcquirerRotation() {
+        return acquirerRotation.getPosition();
+    }
+
 
     /**
      * Rotates the acquirer using the rotation servo while the drawer slides rotates to keep the

@@ -48,6 +48,7 @@ public class DepotMainTF extends LinearOpMode {
         while (!opModeIsActive() && !isStopRequested()) {
             goldLocation = visionManager.getDoubleMineralLocation();
             telemetry.addData("Status", "Waiting in Init");
+            telemetry.addData("Gold location:", goldLocation);
             telemetry.update();
         }
 
@@ -60,17 +61,13 @@ public class DepotMainTF extends LinearOpMode {
                  * Hang and scan for the gold mineral location.
                  */
                 case HANG_AND_SAMPLE:
-                    if (goldLocation != TensorFlowManager.TFLocation.NONE) {
-                        telemetry.addData("Gold Location found during init. location:", goldLocation);
-                    } else {
-                        telemetry.addData("Gold Location not found during init. location:", "trying again");
-                        //try to find gold location again
-                        goldLocation = visionManager.getDoubleMineralLocation();
-                        ElapsedTime elapsedTime = new ElapsedTime();
-                        while(elapsedTime.seconds() < 2) ;
-                    }
+                    telemetry.addData("Gold Location not found during init. location:", "trying again");
+                    //try to find gold location again
+                    goldLocation = visionManager.getDoubleMineralLocation();
+                    ElapsedTime elapsedTime = new ElapsedTime();
+                    while(elapsedTime.seconds() < 3) ;
                     telemetry.addData("Gold Location", goldLocation);
-                    telemetry.update();
+                    telemetry.addData("Test", "Test");
                     step = step.LAND;
                     break;
                 /**
@@ -79,6 +76,7 @@ public class DepotMainTF extends LinearOpMode {
                 case LAND:
                     robot.land();
                     telemetry.addData("Status", "Robot Landed");
+                    telemetry.addData("Gold Cube location", goldLocation);
                     telemetry.update();
                     step = step.IMU_INIT;
                     break;
@@ -90,6 +88,7 @@ public class DepotMainTF extends LinearOpMode {
 //                    robot.drivetrain.resetDeltaAngle();
 //                    robot.drivetrain.imuStartingRot();
                     telemetry.addData("Imu", "Initialized");
+                    telemetry.addData("Gold Cube location", goldLocation);
                     telemetry.update();
                     step = step.TURN_OFF_CV;
                     break;
@@ -107,11 +106,12 @@ public class DepotMainTF extends LinearOpMode {
                         ROTATIONS += 2;
                         robot.drivetrain.turnPID(2);
                         goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
-                        ElapsedTime elapsedTime = new ElapsedTime();
-                        while(elapsedTime.seconds() < 1) ;
+                        ElapsedTime elapsedTimes = new ElapsedTime();
+                        while(elapsedTimes.seconds() < 1) ;
                     }
                     if (ROTATIONS > 0) { robot.drivetrain.turnPID(-ROTATIONS); }
                     telemetry.addData("Gold Cube location", goldLocation);
+                    telemetry.addData("Test", "Test");
                     telemetry.update();
                     step = step.TURN_OFF_CV;
                     break;

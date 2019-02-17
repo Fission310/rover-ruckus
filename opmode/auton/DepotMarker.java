@@ -4,13 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.opmode.Steps;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
-@Autonomous(name="Crater Rot: D;S;M;P", group="Slide Depot")
-public class CraterRot extends LinearOpMode {
+@Autonomous(name="Depot marker", group="Slide Depot")
+public class DepotMarker extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -45,27 +44,26 @@ public class CraterRot extends LinearOpMode {
         while (!opModeIsActive() && !isStopRequested()) {
             goldLocation = visionManager.getDoubleMineralLocation();
             telemetry.addData("Status", "Waiting in Init");
+            telemetry.addData("Gold location:", goldLocation);
             telemetry.update();
         }
 
         waitForStart();
         runtime.reset();  // Start counting run time from now.
 
-        while (opModeIsActive()) {
+        while (opModeIsActive() && !isStopRequested()) {
             switch (step) {
                 /**
                  * Hang and scan for the gold mineral location.
                  */
                 case HANG_AND_SAMPLE:
-                    if (goldLocation != TensorFlowManager.TFLocation.NONE) {
-                        telemetry.addData("Gold Location found during init. location:", goldLocation);
-                    } else {
-                        goldLocation = visionManager.getDoubleMineralLocation();
-                        ElapsedTime elapsedTime = new ElapsedTime();
-                        while(elapsedTime.seconds() < 2) ;
-                    }
+                    telemetry.addData("Gold Location not found during init. location:", "trying again");
+                    //try to find gold location again
+                    goldLocation = visionManager.getDoubleMineralLocation();
+                    ElapsedTime elapsedTime = new ElapsedTime();
+                    while(elapsedTime.seconds() < 3) ;
                     telemetry.addData("Gold Location", goldLocation);
-                    telemetry.update();
+                    telemetry.addData("Test", "Test");
                     step = step.LAND;
                     break;
                 /**
@@ -74,6 +72,7 @@ public class CraterRot extends LinearOpMode {
                 case LAND:
                     robot.land();
                     telemetry.addData("Status", "Robot Landed");
+                    telemetry.addData("Gold Cube location", goldLocation);
                     telemetry.update();
                     step = step.IMU_INIT;
                     break;
@@ -85,28 +84,11 @@ public class CraterRot extends LinearOpMode {
 //                    robot.drivetrain.resetDeltaAngle();
 //                    robot.drivetrain.imuStartingRot();
                     telemetry.addData("Imu", "Initialized");
-                    telemetry.update();
-                    step = step.FIND_GOLD_LOCATION;
-                    break;
-                /**
-                 * Figure out where the gold cube is.
-                 */
-                case FIND_GOLD_LOCATION:
-                    /**
-                     * Makes sure that the gold location is found.
-                     */
-                    while (goldLocation == TensorFlowManager.TFLocation.NONE && ROTATIONS < 18 && runtime.seconds() > 15) {
-                        ROTATIONS += 2;
-                        robot.drivetrain.turnPID(2);
-                        goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
-                        ElapsedTime elapsedTime = new ElapsedTime();
-                        while(elapsedTime.seconds() < 1);
-                    }
-                    if (ROTATIONS > 0) { robot.drivetrain.turnPID(-ROTATIONS); }
                     telemetry.addData("Gold Cube location", goldLocation);
                     telemetry.update();
                     step = step.TURN_OFF_CV;
                     break;
+
                 /**
                  * Turn off CV.
                  */
@@ -121,7 +103,7 @@ public class CraterRot extends LinearOpMode {
                  */
                 case STRAFE_OUT_LANDER:
                     robot.strafeOutOfLander();
-                    telemetry.addData("Status", "Robot strafed");
+                    telemetry.addData("Status", "Robot strafed out of lander");
                     telemetry.update();
                     step = step.TURN_90;
                     break;
@@ -130,24 +112,16 @@ public class CraterRot extends LinearOpMode {
                  */
                 case TURN_90:
                     robot.turn90();
-                    telemetry.addData("Robot rotates 90", "");
-                    telemetry.update();
-                    step = step.ALIGN_TO_GOLD;
-                    break;
-                /**
-                 * Align the robot to the gold cube to push it in to the depot
-                 */
-                case ALIGN_TO_GOLD:
-                    robot.tfRotateFindGoldLocation(goldLocation);
-                    telemetry.addData("Status", "Robot aligned to gold cube");
+                    telemetry.addData("Robot rotates 90 after strafing out of lander", "");
                     telemetry.update();
                     step = step.SAMPLE;
                     break;
+
                 /**
                  * Push the gold cube into the depot
                  */
                 case SAMPLE:
-                    robot.tfCraterSamplePID(goldLocation);
+                    robot.depotmarker();
                     telemetry.addData("Status", "Robot Pushed cube into depot");
                     telemetry.update();
                     step = step.MARKER;
@@ -165,7 +139,7 @@ public class CraterRot extends LinearOpMode {
                  * Align to wall
                  */
                 case ALIGN_TO_WALL:
-                    robot.alignToWall(true);
+                    robot.alignToWall(false);
                     telemetry.addData("Status", "Robot align to wall");
                     telemetry.update();
                     step = step.PARK;
@@ -174,7 +148,7 @@ public class CraterRot extends LinearOpMode {
                  * Extend arm and drive up to the crater
                  */
                 case PARK:
-                    robot.driveToCrater(true);
+                    robot.driveToCrater(false);
                     telemetry.addData("Status", "Robot drove to crater");
                     telemetry.update();
                     step = step.DEFAULT;

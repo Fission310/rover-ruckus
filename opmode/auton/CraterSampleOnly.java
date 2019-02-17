@@ -4,13 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.opmode.Steps;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
-@Autonomous(name="Crater Rot: D;S;M;P", group="Slide Depot")
-public class CraterRot extends LinearOpMode {
+@Autonomous(name="Crater sample: D;S;M;P", group="Slide Depot")
+public class CraterSampleOnly extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -100,7 +99,7 @@ public class CraterRot extends LinearOpMode {
                         robot.drivetrain.turnPID(2);
                         goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
                         ElapsedTime elapsedTime = new ElapsedTime();
-                        while(elapsedTime.seconds() < 1);
+                        while(elapsedTime.seconds() < 1) ;
                     }
                     if (ROTATIONS > 0) { robot.drivetrain.turnPID(-ROTATIONS); }
                     telemetry.addData("Gold Cube location", goldLocation);
@@ -138,7 +137,7 @@ public class CraterRot extends LinearOpMode {
                  * Align the robot to the gold cube to push it in to the depot
                  */
                 case ALIGN_TO_GOLD:
-                    robot.tfRotateFindGoldLocation(goldLocation);
+                    robot.tfFindGoldLocation(goldLocation);
                     telemetry.addData("Status", "Robot aligned to gold cube");
                     telemetry.update();
                     step = step.SAMPLE;

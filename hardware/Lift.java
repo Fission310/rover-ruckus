@@ -143,8 +143,6 @@ public class Lift extends Mechanism {
         leftLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        setDriveZeroPowers(DcMotor.ZeroPowerBehavior.FLOAT);
-
         // Reset the timeout time
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
@@ -154,11 +152,12 @@ public class Lift extends Mechanism {
                 leftLiftMotor.isBusy() && rightLiftMotor.isBusy()) {
 
             // Set power of lift and pinion motors accounting for adjustment
-            setLiftPower(-speed);
+            setLiftPower(speed);
 
             // Display info for the driver.
             opMode.telemetry.addData("Path1", "Running to %7d :%7d", leftTarget, rightTarget);
-            opMode.telemetry.addData("Path2", "Running at %7d :%7d", leftLiftMotor.getCurrentPosition(), rightLiftMotor.getCurrentPosition());
+            opMode.telemetry.addData("Path2 Encoder Values", "Running at %7d :%7d", leftLiftMotor.getCurrentPosition(), rightLiftMotor.getCurrentPosition());
+            opMode.telemetry.addData("Lift speed/power(power is negative of speed",speed);
             opMode.telemetry.update();
         }
 

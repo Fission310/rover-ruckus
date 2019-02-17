@@ -58,7 +58,7 @@ import static java.lang.Math.abs;
 public class TeleopSlideMain extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.0;
-    private static final double SLOW_MULTIPLIER = 0.4;
+    private static final double SLOW_MULTIPLIER = 0.5;
     private static final double LINEAR_SLIDES_SLOW_MULTIPLIER = 0.5;
 
     /* Private OpMode members. */
@@ -161,7 +161,7 @@ public class TeleopSlideMain extends OpMode {
          * Gamepad 2
          */
 //      Sets rotation mechanism power via the left and right triggers
-        leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.abs(gamepad2.right_stick_y): -.8 * gamepad2.left_trigger;
+        leftTrigger2 = Math.abs(gamepad2.left_trigger) > .9 ? -1 * Math.abs(gamepad2.right_stick_y): -.9 * gamepad2.left_trigger;
         rightTrigger2 = Math.abs(gamepad2.right_trigger) > .9 ? 1 * Math.abs(gamepad2.right_stick_y): .7 * gamepad2.right_trigger;
 //        if (Math.abs(gamepad2.right_trigger) < .3) {
 //            rightTrigger2 = gamepad2.right_trigger + .2;
@@ -189,7 +189,7 @@ public class TeleopSlideMain extends OpMode {
             linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .8 * Math.signum(gamepad2.right_stick_y);
         }
 //        linearSlidesInput = gamepad2.right_stick_y;
-        robot.drawerSlides.setDrawerSlidePower(-linearSlidesInput);
+        robot.drawerSlides.setDrawerSlidePower(linearSlidesInput);
 
 //      Sets acquirer  power via the right and left bumper
         if (gamepad2.left_bumper) { robot.acquirer.setIntakePower(0.6); }
@@ -201,31 +201,52 @@ public class TeleopSlideMain extends OpMode {
          */
 
         if (gamepad1.dpad_up || gamepad2.dpad_up || gamepad1.dpad_right || gamepad2.dpad_right) {
-            acquirerRotation += .05;
-        } else if (gamepad1.dpad_down || gamepad2.dpad_down || gamepad1.dpad_left || gamepad2.dpad_left) {
-            acquirerRotation -= .05;
+            acquirerRotation += .08;
+        }
+        if (gamepad1.dpad_down || gamepad2.dpad_down || gamepad1.dpad_left || gamepad2.dpad_left) {
+            acquirerRotation -= .08;
         }
         acquirerRotation = Range.clip(acquirerRotation, Servo.MIN_POSITION, Servo.MAX_POSITION);
         robot.acquirer.setAcquirerRotation(acquirerRotation);
+        telemetry.addData("acquirer rotation",acquirerRotation);
+        telemetry.update();
 
 
+
+//        if (gamepad1.x || gamepad2.x) {
+////            xButtonCounts = !xButtonCounts;
+////            if (!xButtonPressed) {
+////                if (xButtonCounts) { robot.acquirer.acquirerRotationSet(); }
+////                else { robot.acquirer.acquirerRotationInit(); }
+////                xButtonPressed = true;
+////            } else { }
+////        } else { if (xButtonPressed) { xButtonPressed = false; } }
+
+        double curAcquirerPosition = robot.acquirer.getAcquirerRotation();
         if (gamepad1.x || gamepad2.x) {
-            xButtonCounts = !xButtonCounts;
-            if (!xButtonPressed) {
-                if (xButtonCounts) { robot.acquirer.acquirerRotationSet(); }
-                else { robot.acquirer.acquirerRotationInit(); }
-                xButtonPressed = true;
-            } else { }
-        } else { if (xButtonPressed) { xButtonPressed = false; } }
+            robot.acquirer.acquirerRotationInit();
+        }
+        else {
+            robot.acquirer.setAcquirerRotation(curAcquirerPosition);
+        }
 
+        curAcquirerPosition = robot.acquirer.getAcquirerRotation();
+        if (gamepad1.y || gamepad2.y) {
+            robot.acquirer.acquirerRotationMid();
+        }
+        else {
+            robot.acquirer.setAcquirerRotation(curAcquirerPosition);
+
+        }
+
+        curAcquirerPosition = robot.acquirer.getAcquirerRotation();
         if (gamepad1.b || gamepad2.b) {
-            bButtonCounts = !bButtonCounts;
-            if (!bButtonPressed) {
-                if (bButtonCounts) { robot.marker.markerLeft(); }
-                else { robot.marker.markerRight(); }
-                bButtonPressed = true;
-            } else { }
-        } else { if (bButtonPressed) { bButtonPressed = false; } }
+            robot.acquirer.acquirerRotationSet();
+        }
+        else {
+            robot.acquirer.setAcquirerRotation(curAcquirerPosition);
+
+        }
 
         double[] positions = robot.drivetrain.getPositions();
         double[] rackPositions = robot.lift.getPositions();
@@ -244,6 +265,9 @@ public class TeleopSlideMain extends OpMode {
                 drawerSlides[0],
                 drawerSlides[1]);
         telemetry.addData("IMU", "Z-axis: " + imuZAxis);
+        telemetry.addData("acquirer rotation",acquirerRotation);
+
+
 //        telemetry.addData("Power of Left Lift Motor",  robot.lift.getLeftPower());
 //        telemetry.addData("Power of Right Lift Motor",  robot.lift.getRightPower());
     }

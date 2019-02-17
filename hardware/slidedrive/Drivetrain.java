@@ -280,16 +280,23 @@ public class Drivetrain extends Mechanism {
         driveToPos(speed, distance, distance, timeoutS);
     }
 
-    public void driveToPos(double speed, double inches) {
+    //positive is backwards
+    public void backDriveToPos(double speed, double inches, double timeoutS) {
         int newLeftTarget, newRightTarget;
 
         // Determine new target position, and pass to motor controller
         newLeftTarget = leftFront.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_30);
         newRightTarget = rightFront.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_30);
 
-        while(Math.abs(leftFront.getCurrentPosition() - newLeftTarget) > 10){
-            leftFront.setPower(speed*inches/Math.abs(inches));
-            rightFront.setPower(speed*inches/Math.abs(inches));
+        // Reset the timeout time
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+
+        while (opMode.opModeIsActive() && (runtime.seconds() < timeoutS)) {
+            while (Math.abs(leftFront.getCurrentPosition() - newLeftTarget) > 10) {
+                leftFront.setPower(speed * inches / Math.abs(inches));
+                rightFront.setPower(speed * inches / Math.abs(inches));
+            }
         }
         leftFront.setPower(0);
         rightFront.setPower(0);
@@ -458,6 +465,7 @@ public class Drivetrain extends Mechanism {
         rightFront.setPower(-speed);
     }
 
+    //drive straight backwards
     public void driveStraightPID2(double speed) {
         // Set up parameters for driving in a straight line.
         pidDrive.setSetpoint(0);
@@ -475,6 +483,8 @@ public class Drivetrain extends Mechanism {
      * Turn to a specified angle accurately using a PID loop.
      * @param angle         number of degrees to turn
      */
+    //positive is counterclockwise
+    //negative is clockwise
     public void turnPID(int angle) { pidDriveRotate(angle, power); }
     public void turn180PID(int angle) { pidRotate180(angle, power); }
 
