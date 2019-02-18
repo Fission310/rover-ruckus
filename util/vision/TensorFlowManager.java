@@ -294,7 +294,7 @@ public class TensorFlowManager {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
-        tfodParameters.minimumConfidence = .99;
+        tfodParameters.minimumConfidence = .90;
     }
 
     public void vuforiaLights(boolean turn) {

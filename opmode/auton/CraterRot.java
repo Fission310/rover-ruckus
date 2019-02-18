@@ -51,7 +51,7 @@ public class CraterRot extends LinearOpMode {
         waitForStart();
         runtime.reset();  // Start counting run time from now.
 
-        while (opModeIsActive()) {
+        while (opModeIsActive() && !isStopRequested()) {
             switch (step) {
                 /**
                  * Hang and scan for the gold mineral location.

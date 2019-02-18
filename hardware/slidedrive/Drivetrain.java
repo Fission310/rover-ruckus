@@ -40,7 +40,7 @@ public class Drivetrain extends Mechanism {
     public PIDController pidRotate, pidDrive;
     public SingleIMU singleImu = new SingleIMU();
 
-    private double power = .40;
+    private double power = .60;
 
     /**
      * Default constructor for Drivetrain.
@@ -252,7 +252,7 @@ public class Drivetrain extends Mechanism {
                 leftFront.isBusy() && rightFront.isBusy()) {
 
             // Set power of drivetrain motors accounting for adjustment
-            driveStraightPID(speed);
+            driveStraightPID(speed, leftInches);
 
             // Display info for the driver.
             opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
@@ -275,184 +275,17 @@ public class Drivetrain extends Mechanism {
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-
     public void driveToPos(double speed, double distance, double timeoutS) {
         driveToPos(speed, distance, distance, timeoutS);
-    }
-
-    //positive is backwards
-    public void backDriveToPos(double speed, double inches, double timeoutS) {
-        int newLeftTarget, newRightTarget;
-
-        // Determine new target position, and pass to motor controller
-        newLeftTarget = leftFront.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_30);
-        newRightTarget = rightFront.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_30);
-
-        // Reset the timeout time
-        ElapsedTime runtime = new ElapsedTime();
-        runtime.reset();
-
-        while (opMode.opModeIsActive() && (runtime.seconds() < timeoutS)) {
-            while (Math.abs(leftFront.getCurrentPosition() - newLeftTarget) > 10) {
-                leftFront.setPower(speed * inches / Math.abs(inches));
-                rightFront.setPower(speed * inches / Math.abs(inches));
-            }
-        }
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-
-    }
-
-    public void driveToPosBackwards(double speed, double leftInches, double rightInches, double timeoutS) {
-        // Target position variables
-        int newLeftTarget;
-        int newRightTarget;
-//      int avgTarget;
-        // Determine new target position, and pass to motor controller
-        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_30);
-        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_30);
-//        avgTarget = (int)(newLeftTarget + newRightTarget);
-        leftFront.setTargetPosition(newLeftTarget);
-        rightFront.setTargetPosition(newRightTarget);
-
-        // Turn On RUN_TO_POSITION
-        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // Reset the timeout time
-        ElapsedTime runtime = new ElapsedTime();
-        runtime.reset();
-
-        // Loop until a condition is met
-        while (opMode.opModeIsActive() &&
-                (runtime.seconds() < timeoutS) &&
-                leftFront.isBusy() && rightFront.isBusy()) {
-
-            // Set power of drivetrain motors accounting for adjustment
-            driveStraightPID2(speed);
-
-            // Display info for the driver.
-            opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
-            opMode.telemetry.addData("Path2", "Running at %7d :%7d",
-                    leftFront.getCurrentPosition(),
-                    rightFront.getCurrentPosition());
-
-            opMode.telemetry.update();
-        }
-
-        // Stop all motion
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Turn off RUN_TO_POSITION
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void driveToPosBackwards(double speed, double distance, double timeoutS) {
-        driveToPosBackwards(speed, distance, distance, timeoutS);
-    }
-
-    public void driveToPosRunToPosition(double speed, double leftInches, double rightInches, double timeoutS) {
-        // Target position variables
-        int newLeftTarget;
-        int newRightTarget;
-//      int avgTarget;
-        // Determine new target position, and pass to motor controller
-        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_30);
-        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_30);
-//        avgTarget = (int)(newLeftTarget + newRightTarget);
-        leftFront.setTargetPosition(newLeftTarget);
-        rightFront.setTargetPosition(newRightTarget);
-
-        // Turn On RUN_TO_POSITION
-        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // Reset the timeout time
-        ElapsedTime runtime = new ElapsedTime();
-        runtime.reset();
-
-        // Loop until a condition is met
-        while (opMode.opModeIsActive() &&
-                (runtime.seconds() < timeoutS) &&
-                leftFront.isBusy() && rightFront.isBusy()) {
-
-
-            // Display info for the driver.
-            opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
-            opMode.telemetry.addData("Path2", "Running at %7d :%7d",
-                    leftFront.getCurrentPosition(),
-                    rightFront.getCurrentPosition());
-
-            opMode.telemetry.update();
-        }
-
-        // Stop all motion
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-
-        // Turn off RUN_TO_POSITION
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void driveToPosNoBuiltInPID(double speed, double leftInches, double rightInches, double timeoutS) {
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // Target position variables
-        int newLeftTarget;
-        int newRightTarget;
-
-        // Determine new target position, and pass to motor controller
-        newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_30);
-        newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_30);
-        leftFront.setTargetPosition(newLeftTarget);
-        rightFront.setTargetPosition(newRightTarget);
-
-        // Reset the timeout time
-        ElapsedTime runtime = new ElapsedTime();
-        runtime.reset();
-
-        // Loop until a condition is met
-        while (opMode.opModeIsActive() &&
-                (runtime.seconds() < timeoutS) &&
-                leftFront.isBusy() && rightFront.isBusy() &&
-                leftFront.getCurrentPosition() < newLeftTarget && rightFront.getCurrentPosition() < newRightTarget) {
-
-            // Set power of drivetrain motors accounting for adjustment
-
-
-            // Display info for the driver.
-            opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
-            opMode.telemetry.addData("Path2", "Running at %7d :%7d",
-                    leftFront.getCurrentPosition(),
-                    rightFront.getCurrentPosition());
-
-            opMode.telemetry.update();
-        }
-
-        // Stop all motion
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-
-        // Turn off RUN_TO_POSITION
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /**
      * Drive accurately using a PID loop.
      * @param speed         speed at which the motor shall turn
      */
-    public void driveStraightPID(double speed) {
+    public void driveStraightPID(double speed, double distance) {
+        double leftSpeed = -speed, rightSpeed = -speed;
+
         // Set up parameters for driving in a straight line.
         pidDrive.setSetpoint(0);
         pidDrive.setOutputRange(0, power);
@@ -461,31 +294,23 @@ public class Drivetrain extends Mechanism {
 
         double corrections = pidDrive.performPID(singleImu.getAngle());
 
-        leftFront.setPower(-speed + corrections);
-        rightFront.setPower(-speed);
-    }
-
-    //drive straight backwards
-    public void driveStraightPID2(double speed) {
-        // Set up parameters for driving in a straight line.
-        pidDrive.setSetpoint(0);
-        pidDrive.setOutputRange(0, power);
-        pidDrive.setInputRange(-90, 90);
-        pidDrive.enable();
-
-        double corrections = pidDrive.performPID(singleImu.getAngle());
-
-        leftFront.setPower(-speed);
-        rightFront.setPower(-speed + Math.signum(speed) * corrections);
+        if (Math.signum(distance) >= 0) {
+            leftFront.setPower(leftSpeed + corrections);
+            rightFront.setPower(rightSpeed);
+        } else if (Math.signum(distance) < 0){
+            leftFront.setPower(leftSpeed);
+            rightFront.setPower(rightSpeed + Math.signum(speed) * corrections);
+        }
     }
 
     /**
      * Turn to a specified angle accurately using a PID loop.
+     * - positive is counterclockwise
+     * - negative is clockwise
      * @param angle         number of degrees to turn
      */
-    //positive is counterclockwise
-    //negative is clockwise
     public void turnPID(int angle) { pidDriveRotate(angle, power); }
+
     public void turn180PID(int angle) { pidRotate180(angle, power); }
 
     /**
@@ -591,7 +416,6 @@ public class Drivetrain extends Mechanism {
 
     /**
      * Set center motor power for strafing.
-     *
      * @param power      power for horizontal direction of drivetrain (-1 to 1)
      */
     public void strafe(double power){

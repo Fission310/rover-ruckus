@@ -27,7 +27,7 @@ public class HardwareSlide extends Mechanism {
     private static final int RIGHT_TURN = 88;
     private static final int DIAGONAL_TURN = 45;
     private static final int STRAFE = 6;
-    private static final double DRIVE_SPEED = .4;
+    private static final double DRIVE_SPEED = .5;
 
     /* Mechanisms */
     /**
@@ -117,13 +117,9 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
-    public void testland() {
-        lift.liftToPos(.3, -7.5);
-    }
-
     public void strafeOutOfLander() {
         if (opMode.opModeIsActive()) {
-//            drivetrain.backDriveToPos(.4, 4, 3.0);
+//            drivetrain.driveToPos(.4, 4, 3.0);
             drivetrain.strafeToPos(.5, FieldConstants.TILE_HYPOTENUSE / 2, 3);
 //            drivetrain.driveToPos(.4, -4, 3.0);
         }
@@ -142,7 +138,7 @@ public class HardwareSlide extends Mechanism {
      */
     public void tfFindGoldLocation(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPosBackwards(.4, FieldConstants.TILE_HYPOTENUSE / 3.0, 4);
+            drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE / 3.0, 4);
             if (location == location.LEFT){
                 drivetrain.strafeToPos(.4,FieldConstants.TILE_HYPOTENUSE / 2.0,4);
             } else if (location == location.RIGHT){
@@ -156,20 +152,21 @@ public class HardwareSlide extends Mechanism {
     //align robot to gold cube and push it into the depot
     public void tfRotateFindGoldLocation(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPosBackwards(.4, FieldConstants.TILE_HYPOTENUSE / 3.0, 4);
+            drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE / 3.0, 4);
             if (location == location.LEFT){
                 drivetrain.turnPID(-RIGHT_TURN);
-                drivetrain.driveToPos(.5, -FieldConstants.TILE_HYPOTENUSE / 2.0, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE / 2.0, 5);
                 drivetrain.turnPID(RIGHT_TURN);
             } else if (location == location.RIGHT){
                 drivetrain.turnPID(RIGHT_TURN);
-                drivetrain.driveToPos(.5, -FieldConstants.TILE_HYPOTENUSE / 2.0, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE / 2.0, 5);
                 drivetrain.turnPID(-RIGHT_TURN);
             } else if (location == location.NONE){
                 opMode.telemetry.addData("Detected None", "Robot will take center path");
             }
         }
     }
+
     public void rotFindGoldLocation(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
             if (location == location.LEFT){
@@ -179,7 +176,7 @@ public class HardwareSlide extends Mechanism {
             } else if (location == location.NONE){
                 opMode.telemetry.addData("Detected None", "Robot will take center path");
             }
-            drivetrain.driveToPosBackwards(.4, FieldConstants.TILE_HYPOTENUSE / 3.0, 4);
+            drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE / 3.0, 4);
             if (location == location.LEFT){
                 drivetrain.turnPID(-20);
                 drivetrain.strafeToPos(.4,-FieldConstants.TILE_HYPOTENUSE / 3.0,4);
@@ -199,12 +196,12 @@ public class HardwareSlide extends Mechanism {
      */
     public void tfDepotSamplePID(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPosBackwards(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE + 6, 4);
+            drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE + 6, 4);
             if (location == location.LEFT){
                 opMode.telemetry.addData("Sampling from", "left");
                 //back
                 drivetrain.turnPID(-DIAGONAL_TURN);
-                drivetrain.driveToPosBackwards(DRIVE_SPEED, FieldConstants.FLOOR_TILE, 4);
+                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE, 4);
                 drivetrain.turnPID(RIGHT_TURN);
 
             } else if (location == location.CENTER || location == location.NONE){
@@ -212,7 +209,7 @@ public class HardwareSlide extends Mechanism {
                 opMode.telemetry.addData("Sampling from", "center");
             } else if (location == location.RIGHT){
                 drivetrain.turnPID(DIAGONAL_TURN);
-                drivetrain.driveToPosBackwards(DRIVE_SPEED, FieldConstants.FLOOR_TILE, 4);
+                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE, 4);
                 opMode.telemetry.addData("Sampling from", "right");
             }
             opMode.telemetry.update();
@@ -221,40 +218,10 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
-    public void tfDepotSamplePIDOpposite(TensorFlowManager.TFLocation location) {
-        if (opMode.opModeIsActive()) {
-            drivetrain.driveToPosBackwards(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE + 6, 4);
-            if (location == location.LEFT){
-                opMode.telemetry.addData("Sampling from", "left");
-                //back
-                drivetrain.turnPID(-DIAGONAL_TURN);
-                drivetrain.driveToPosBackwards(DRIVE_SPEED, FieldConstants.FLOOR_TILE, 4);
-                drivetrain.turnPID(RIGHT_TURN);
-
-            } else if (location == location.CENTER || location == location.NONE){
-                drivetrain.turnPID(-DIAGONAL_TURN);
-                opMode.telemetry.addData("Sampling from", "center");
-            } else if (location == location.RIGHT){
-                drivetrain.turnPID(DIAGONAL_TURN);
-                drivetrain.driveToPosBackwards(DRIVE_SPEED, FieldConstants.FLOOR_TILE, 4);
-                opMode.telemetry.addData("Sampling from", "right");
-            }
-            opMode.telemetry.update();
-
-            drivetrain.strafeToPos(.4,FieldConstants.TILE_HYPOTENUSE / 1.6, 4);
-        }
-    }
-
-    public void depotmarker() {
-        if (opMode.opModeIsActive()) {
-            drivetrain.driveToPosBackwards(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE + 6, 4);
-        }
-    }
-
     public void tfCraterSamplePID(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
             //hit sample
-            drivetrain.driveToPosBackwards(DRIVE_SPEED, 8, 3);
+            drivetrain.driveToPos(DRIVE_SPEED, 8, 3);
 
             opMode.sleep(300);
             //drive forward again
@@ -278,11 +245,6 @@ public class HardwareSlide extends Mechanism {
             //turn around face crater
             drivetrain.turn180PID(179);
         }
-    }
-
-    //go straight into crater, disregard sampling
-    public void craterStraight() {
-        drivetrain.driveToPosBackwards(DRIVE_SPEED, 16, 3);
     }
 
     public TensorFlowManager.TFLocation tfSlideSample(TensorFlowManager visionManager, TensorFlowManager.TFDetector mineral) {
@@ -346,9 +308,9 @@ public class HardwareSlide extends Mechanism {
     public void driveToCrater(boolean crater) {
         if (opMode.opModeIsActive()) {
             if (crater) {
-                drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE * 3.5, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 3.5, 5);
             } else {
-                drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE * 3.5, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 3.5, 5);
             }
         }
     }

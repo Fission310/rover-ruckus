@@ -65,7 +65,7 @@ public class DepotMainTF extends LinearOpMode {
                     //try to find gold location again
                     goldLocation = visionManager.getDoubleMineralLocation();
                     ElapsedTime elapsedTime = new ElapsedTime();
-                    while(elapsedTime.seconds() < 3) ;
+                    while(elapsedTime.seconds() < 2) ;
                     telemetry.addData("Gold Location", goldLocation);
                     telemetry.addData("Test", "Test");
                     step = step.LAND;
