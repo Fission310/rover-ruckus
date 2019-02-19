@@ -82,8 +82,6 @@ public class CraterMainTF extends LinearOpMode {
                  */
                 case IMU_INIT:
                     robot.imuInit(hardwareMap);
-//                    robot.drivetrain.resetDeltaAngle();
-//                    robot.drivetrain.imuStartingRot();
                     telemetry.addData("Imu", "Initialized");
                     telemetry.update();
                     step = step.FIND_GOLD_LOCATION;
@@ -191,6 +189,9 @@ public class CraterMainTF extends LinearOpMode {
         }
 
         // Stop CV
-        if (isStopRequested() || !opModeIsActive()) { visionManager.stop(); }
+        if (isStopRequested() || !opModeIsActive()) {
+            visionManager.vuforiaLights(false);
+            visionManager.stop();
+        }
     }
 }

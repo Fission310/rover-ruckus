@@ -190,6 +190,9 @@ public class CraterRot extends LinearOpMode {
         }
 
         // Stop CV
-        if (isStopRequested() || !opModeIsActive()) { visionManager.stop(); }
+        if (isStopRequested() || !opModeIsActive()) {
+            visionManager.vuforiaLights(false);
+            visionManager.stop();
+        }
     }
 }

@@ -48,7 +48,7 @@ public class SingleIMU {
         while (!imu.isGyroCalibrated()) { }
 
         // Start the logging of measured acceleration
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+//        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
     public void setStartingAngle() {

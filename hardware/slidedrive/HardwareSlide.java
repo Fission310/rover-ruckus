@@ -95,7 +95,9 @@ public class HardwareSlide extends Mechanism {
      * @param hwMap     robot's hardware map
      */
     public void imuInit(HardwareMap hwMap) {
-        drivetrain.imuInit(hwMap);
+        if (opMode.opModeIsActive()) {
+            drivetrain.imuInit(hwMap);
+        }
     }
 
     /**

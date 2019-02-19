@@ -61,7 +61,6 @@ public class Acquirer extends Mechanism {
         rightIntakeMotor.setPower(0);
 //        leftIntakeMotor.setPower(0);
 //        acquirerFloorInit();
-        acquirerRotationInit();
     }
 
     /**
@@ -100,9 +99,8 @@ public class Acquirer extends Mechanism {
      */
     public void acquirerRotationInit() { acquirerRotation.setPosition(SERVO_INIT_POS); }
 
-    public void acquirerRotationMid() {
-        acquirerRotation.setPosition(0.5);
-    }
+    public void acquirerRotationMid() { acquirerRotation.setPosition(0.5); }
+
     /**
      * Moves the acquirer rotation servo to set angle to acquire.
      */

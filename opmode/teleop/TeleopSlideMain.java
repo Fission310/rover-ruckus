@@ -225,27 +225,12 @@ public class TeleopSlideMain extends OpMode {
         double curAcquirerPosition = robot.acquirer.getAcquirerRotation();
         if (gamepad1.x || gamepad2.x) {
             robot.acquirer.acquirerRotationInit();
-        }
-        else {
-            robot.acquirer.setAcquirerRotation(curAcquirerPosition);
-        }
-
-        curAcquirerPosition = robot.acquirer.getAcquirerRotation();
-        if (gamepad1.y || gamepad2.y) {
+        } else if (gamepad1.y || gamepad2.y) {
             robot.acquirer.acquirerRotationMid();
-        }
-        else {
-            robot.acquirer.setAcquirerRotation(curAcquirerPosition);
-
-        }
-
-        curAcquirerPosition = robot.acquirer.getAcquirerRotation();
-        if (gamepad1.b || gamepad2.b) {
+        } else if (gamepad1.b || gamepad2.b) {
             robot.acquirer.acquirerRotationSet();
-        }
-        else {
+        } else {
             robot.acquirer.setAcquirerRotation(curAcquirerPosition);
-
         }
 
         double[] positions = robot.drivetrain.getPositions();

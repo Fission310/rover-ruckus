@@ -41,14 +41,14 @@ public class DriveStraightTest extends LinearOpMode {
         while (opModeIsActive()) {
             switch (step) {
                 case 0:
-                    robot.drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE * 2, 5);
+                    robot.drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE * 1.5, 5);
                     telemetry.addData("Step 0", "Robot Drive one floor tile");
                     telemetry.update();
                     step++;
                     break;
                 case 1:
                     sleep(1000);
-                    robot.drivetrain.driveToPosBackwards(.5, FieldConstants.FLOOR_TILE * 2, 5);
+                    robot.drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE * 1.5, 5);
                     telemetry.addData("Step 0", "Robot Drive one floor tile negative speed");
                     telemetry.update();
                     step++;
