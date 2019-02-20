@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
+import org.firstinspires.ftc.teamcode.util.ColorConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 
 @Autonomous(name="Color Change", group="Test")
@@ -34,10 +35,32 @@ public class ColorChange extends LinearOpMode {
         // Initialize robot
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-        relativeLayout.setBackgroundColor(Color.BLACK);
 
-        // Wait until we're told to go
+//        try {
+//            relativeLayout.post(new Runnable() {
+//                public void run() {
+//                    relativeLayout.setBackgroundColor(Color.BLACK);
+//                }
+//            });
+//        } finally {
+//            // On the way out, *guarantee* that the background is reasonable. It doesn't actually start off
+//            // as pure white, but it's too much work to dig out what actually was used, and this is good
+//            // enough to at least make the screen reasonable again.
+//            // Set the panel back to the default color
+//            relativeLayout.post(new Runnable() {
+//                public void run() {
+//                    relativeLayout.setBackgroundColor(Color.RED);
+//                }
+//            });
+//        }
+
+//        // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
+            relativeLayout.post(new Runnable() {
+                public void run() {
+                    relativeLayout.setBackgroundColor(Color.BLUE);
+                }
+            });
             telemetry.addData("Status", "Waiting in Init");
             telemetry.update();
         }
@@ -45,7 +68,20 @@ public class ColorChange extends LinearOpMode {
         waitForStart();
         runtime.reset();  // Start counting run time from now.
 
-            relativeLayout.setBackgroundColor(Color.BLACK);
-        if (isStopRequested() || !opModeIsActive()) { }
+        while (opModeIsActive() && !isStopRequested()) {
+            relativeLayout.post(new Runnable() {
+                public void run() {
+                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, ColorConstants.greenHSVColor));
+                }
+            });
+        }
+
+        if (isStopRequested() || !opModeIsActive()) {
+            relativeLayout.post(new Runnable() {
+                public void run() {
+                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, ColorConstants.orangeHSVColor));
+                }
+            });
+        }
     }
 }
