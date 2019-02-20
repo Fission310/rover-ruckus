@@ -18,13 +18,11 @@ public class Sensors extends OpMode {
 
     MRRangeSensor sensorRange = new MRRangeSensor();
     REVDistanceSensor distance = new REVDistanceSensor();
-    ColorSensor sensorColor;
 
     @Override
     public void init() {
         sensorRange.init(hardwareMap, "range");
         distance.init(hardwareMap, "dist");
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
 
     }
 
@@ -65,8 +63,6 @@ public class Sensors extends OpMode {
         telemetry.addData("distance", distance.getDistanceInch());
 
 
-//        telemetry.addData("Power of Left Lift Motor",  robot.lift.getLeftPower());
-//        telemetry.addData("Power of Right Lift Motor",  robot.lift.getRightPower());
     }
 
     @Override

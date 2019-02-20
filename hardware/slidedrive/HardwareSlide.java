@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware.slidedrive;
 
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -11,7 +10,6 @@ import org.firstinspires.ftc.teamcode.hardware.Marker;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
-import org.firstinspires.ftc.teamcode.util.vision.VisionManager;
 
 
 /**
@@ -95,9 +93,7 @@ public class HardwareSlide extends Mechanism {
      * @param hwMap     robot's hardware map
      */
     public void imuInit(HardwareMap hwMap) {
-        if (opMode.opModeIsActive()) {
-            drivetrain.imuInit(hwMap);
-        }
+        drivetrain.imuInit(hwMap);
     }
 
     /**
