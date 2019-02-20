@@ -591,4 +591,17 @@ public class Drivetrain extends Mechanism {
 
         return positions;
     }
+
+    public void getDrivePower(){
+        opMode.telemetry.addData("GP 1 Status", "Left Input: " + leftFront.getPower());
+        opMode.telemetry.addData("GP 1 Status", "Right Input: " + rightFront.getPower());
+        opMode.telemetry.addData("GP 1 Status", "Slide: " + slideDrive.getPower());
+    }
+
+    public void getDriveEncoderTicks(){
+        double[] positions = getPositions();
+        opMode.telemetry.addData("Drivetrain Encoder", "Left: " + positions[0]);
+        opMode.telemetry.addData("Drivetrain Encoder", "Right: " + positions[1]);
+        opMode.telemetry.addData("Drivetrain Encoder", "Slide: " + positions[2]);
+    }
 }

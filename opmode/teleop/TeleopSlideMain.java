@@ -129,9 +129,9 @@ public class TeleopSlideMain extends OpMode {
         /**
          * Gamepad 1
          */
-        yInput = Math.abs(gamepad1.left_stick_y) > .9 ? 1 * Math.signum(gamepad1.left_stick_y) : .8 * Math.signum(gamepad1.left_stick_y);
-        xInput = Math.abs(gamepad1.right_stick_x) > .9 ? 1 * Math.signum(gamepad1.right_stick_x) : .8 * Math.signum(gamepad1.right_stick_x);
-        slideInput = Math.abs(gamepad1.left_stick_x) > .9 ? 1 * Math.signum(gamepad1.left_stick_x) : .8 * Math.signum(gamepad1.left_stick_x);
+        yInput = Math.abs(gamepad1.left_stick_y) > .9 ? 1 * Math.signum(gamepad1.left_stick_y) : .9 * gamepad1.left_stick_y;
+        xInput = Math.abs(gamepad1.right_stick_x) > .9 ? 1 * Math.signum(gamepad1.right_stick_x) : .8 * gamepad1.right_stick_x;
+        slideInput = Math.abs(gamepad1.left_stick_x) > .9 ? 1 * Math.signum(gamepad1.left_stick_x) : .8 * gamepad1.left_stick_x;
 
         slowYInput = Range.clip(yInput * SLOW_MULTIPLIER, -1.0, 1.0);
         slowXInput = Range.clip(xInput * SLOW_MULTIPLIER, -1.0, 1.0);
@@ -141,14 +141,8 @@ public class TeleopSlideMain extends OpMode {
 
         if (drivetrainSlowMode || gamepad1.left_bumper) {
             robot.drivetrain.driveSlide(slowYInput, slowXInput, slowSlide);
-            telemetry.addData("GP 1 Status", "slowYInput: " + slowYInput);
-            telemetry.addData("GP 1 Status", "slowXInput: " + slowXInput);
-            telemetry.addData("GP 1 Status", "slowSlide: " + slowSlide);
         } else {
             robot.drivetrain.driveSlide(yInput, xInput, slideInput);
-            telemetry.addData("GP 1 Status", "yInput: " + yInput);
-            telemetry.addData("GP 1 Status", "xInput: " + xInput);
-            telemetry.addData("GP 1 Status", "slideInput: " + slideInput);
         }
 
 //        leftTrigger1 = Math.abs(gamepad1.left_trigger) > .9 ? -1 * Math.abs(gamepad1.left_trigger) : -.8 * gamepad1.left_trigger;
@@ -184,9 +178,9 @@ public class TeleopSlideMain extends OpMode {
 //      Sets drawer slides power via the right joystick
         linearSlidesSlowMode = gamepad2.right_stick_button;
         if (linearSlidesSlowMode) {
-            linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? .7 * Math.signum(gamepad2.right_stick_y) : .6 * Math.signum(gamepad2.right_stick_y);
+            linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? .7 * Math.signum(gamepad2.right_stick_y) : .6 * gamepad2.right_stick_y;
         } else {
-            linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .8 * Math.signum(gamepad2.right_stick_y);
+            linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .8 * gamepad2.right_stick_y;
         }
 //        linearSlidesInput = gamepad2.right_stick_y;
         robot.drawerSlides.setDrawerSlidePower(linearSlidesInput);
@@ -233,14 +227,11 @@ public class TeleopSlideMain extends OpMode {
             robot.acquirer.setAcquirerRotation(curAcquirerPosition);
         }
 
-        double[] positions = robot.drivetrain.getPositions();
         double[] rackPositions = robot.lift.getPositions();
         double[] drawerSlides = robot.drawerSlides.getPositions();
         double imuZAxis = robot.drivetrain.singleImu.getZAxis();
-        telemetry.addData("Drivetrain Encoder counts", "Running at %.2f :%.2f :%.2f",
-                positions[0],
-                positions[1],
-                positions[2]);
+        robot.drivetrain.getDrivePower();
+        robot.drivetrain.getDriveEncoderTicks();
         telemetry.addData("Lift Encoder counts", "Running at %.2f :%.2f",
                 rackPositions[0],
                 rackPositions[1]);

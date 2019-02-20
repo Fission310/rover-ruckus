@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 public class HardwareSlide extends Mechanism {
 
     /* Constants */
-    private static final int RIGHT_TURN = 88;
+    private static final int RIGHT_TURN = 90;
     private static final int DIAGONAL_TURN = 45;
     private static final int STRAFE = 6;
     private static final double DRIVE_SPEED = .5;

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -55,6 +56,7 @@ import static java.lang.Math.abs;
  *
  */
 @TeleOp(name = "Teleop: Scaled Slide", group = "Teleop")
+@Disabled
 public class TeleopSlideScaled extends OpMode {
 
     private static final double ANALOG_THRESHOLD = 0.0;

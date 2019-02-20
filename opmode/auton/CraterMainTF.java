@@ -38,7 +38,7 @@ public class CraterMainTF extends LinearOpMode {
 
         // Initialize CV
         visionManager.init(hardwareMap, false);
-//        visionManager.vuforiaLights(true);
+        visionManager.vuforiaLights(true);
         visionManager.start();
 
         // Wait until we're told to go
@@ -110,7 +110,7 @@ public class CraterMainTF extends LinearOpMode {
                  * Turn off CV.
                  */
                 case TURN_OFF_CV:
-//                    visionManager.vuforiaLights(false);
+                    visionManager.vuforiaLights(false);
                     telemetry.addData("Status", "Turn off CV");
                     telemetry.update();
                     step = step.STRAFE_OUT_LANDER;
@@ -190,7 +190,7 @@ public class CraterMainTF extends LinearOpMode {
 
         // Stop CV
         if (isStopRequested() || !opModeIsActive()) {
-//            visionManager.vuforiaLights(false);
+            visionManager.vuforiaLights(false);
             visionManager.stop();
         }
     }

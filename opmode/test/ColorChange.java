@@ -22,11 +22,9 @@ import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 @Autonomous(name="Color Change", group="Test")
 //@Disabled
 public class ColorChange extends LinearOpMode {
-
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
     View relativeLayout;
-
 
     /**
      * Runs the autonomous routine.
