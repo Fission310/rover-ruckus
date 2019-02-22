@@ -113,9 +113,7 @@ public class Acquirer extends Mechanism {
         acquirerRotation.setPosition(rotations);
     }
 
-    public double getAcquirerRotation() {
-        return acquirerRotation.getPosition();
-    }
+    public double getAcquirerRotation() { return acquirerRotation.getPosition(); }
 
 
     /**

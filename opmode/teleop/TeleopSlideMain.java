@@ -78,7 +78,7 @@ public class TeleopSlideMain extends OpMode {
 
     /* Handle time complexities */
     boolean aButtonPressed, bButtonPressed, xButtonPressed, yButtonPressed;
-    boolean aButtonCounts, bButtonCounts, xButtonCounts, yButtonCounts;
+    boolean aButton, bButton, xButton, yButton;
 
     /* Handle button positions */
     boolean drivetrainSlowMode, linearSlidesSlowMode;
@@ -93,7 +93,7 @@ public class TeleopSlideMain extends OpMode {
     public void init() {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
-        robot.drivetrain.imuInit(hardwareMap);
+        robot.imuInit(hardwareMap);
     }
 
     /**
@@ -202,19 +202,13 @@ public class TeleopSlideMain extends OpMode {
         }
         acquirerRotation = Range.clip(acquirerRotation, Servo.MIN_POSITION, Servo.MAX_POSITION);
         robot.acquirer.setAcquirerRotation(acquirerRotation);
-        telemetry.addData("acquirer rotation",acquirerRotation);
-        telemetry.update();
 
-
-
-//        if (gamepad1.x || gamepad2.x) {
-////            xButtonCounts = !xButtonCounts;
-////            if (!xButtonPressed) {
-////                if (xButtonCounts) { robot.acquirer.acquirerRotationSet(); }
-////                else { robot.acquirer.acquirerRotationInit(); }
-////                xButtonPressed = true;
-////            } else { }
-////        } else { if (xButtonPressed) { xButtonPressed = false; } }
+        if (gamepad1.b)
+            if(!bButtonPressed) {
+                bButton = !bButton;
+                bButtonPressed = true;
+            } else {}
+        else bButtonPressed = false;
 
         double curAcquirerPosition = robot.acquirer.getAcquirerRotation();
         if (gamepad1.x || gamepad2.x) {

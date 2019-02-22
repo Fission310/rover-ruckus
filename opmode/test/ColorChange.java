@@ -68,7 +68,7 @@ public class ColorChange extends LinearOpMode {
         waitForStart();
         runtime.reset();  // Start counting run time from now.
 
-        while (opModeIsActive() && !isStopRequested()) {
+        while (opModeIsActive() && !isStopRequested() && isStarted()) {
             relativeLayout.post(new Runnable() {
                 public void run() {
                     relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, ColorConstants.greenHSVColor));

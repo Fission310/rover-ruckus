@@ -55,7 +55,7 @@ public class DepotMainTF extends LinearOpMode {
         waitForStart();
         runtime.reset();  // Start counting run time from now.
 
-        while (opModeIsActive() && !isStopRequested()) {
+        while (opModeIsActive() && !isStopRequested() && isStarted()) {
             switch (step) {
                 /**
                  * Hang and scan for the gold mineral location.
