@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
+import org.firstinspires.ftc.teamcode.util.BackgroundColorManager;
 import org.firstinspires.ftc.teamcode.util.ColorConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 
@@ -25,6 +26,7 @@ import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 public class ColorChange extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
+    BackgroundColorManager back = new BackgroundColorManager();
     View relativeLayout;
 
     /**
@@ -33,9 +35,7 @@ public class ColorChange extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize robot
-        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-        relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-
+        back.init(hardwareMap);
 //        try {
 //            relativeLayout.post(new Runnable() {
 //                public void run() {
@@ -56,11 +56,7 @@ public class ColorChange extends LinearOpMode {
 
 //        // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
-            relativeLayout.post(new Runnable() {
-                public void run() {
-                    relativeLayout.setBackgroundColor(Color.BLUE);
-                }
-            });
+            back.resetBackgroundColor();
             telemetry.addData("Status", "Waiting in Init");
             telemetry.update();
         }
@@ -69,19 +65,11 @@ public class ColorChange extends LinearOpMode {
         runtime.reset();  // Start counting run time from now.
 
         while (opModeIsActive() && !isStopRequested() && isStarted()) {
-            relativeLayout.post(new Runnable() {
-                public void run() {
-                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, ColorConstants.greenHSVColor));
-                }
-            });
+            back.setGreenBackground();
         }
 
         if (isStopRequested() || !opModeIsActive()) {
-            relativeLayout.post(new Runnable() {
-                public void run() {
-                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, ColorConstants.orangeHSVColor));
-                }
-            });
+            back.setOrangeBackground();
         }
     }
 }

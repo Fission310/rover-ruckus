@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 
-@TeleOp(name = "test", group = "Teleop")
+@TeleOp(name = "testCoreHex", group = "Teleop")
 //@Disabled
 public class TestCoreMotor extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
