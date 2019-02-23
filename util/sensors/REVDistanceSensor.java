@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+/**
+ * This class handles the REV Distance Sensor's functions and makes retrieving the values easier.
+ */
 public class REVDistanceSensor {
 
     public DistanceSensor distanceSensor;

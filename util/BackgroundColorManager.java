@@ -6,6 +6,9 @@ import android.view.View;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+/**
+ * This manager handles the robot controller's background color and makes changing color easier and cleaner
+ */
 public class BackgroundColorManager {
     View relativeLayout;
 

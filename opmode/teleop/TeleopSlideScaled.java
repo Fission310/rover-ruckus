@@ -178,13 +178,13 @@ public class TeleopSlideScaled extends OpMode {
             acquirerRotation -= .05;
         }
         acquirerRotation = Range.clip(acquirerRotation, Servo.MIN_POSITION, Servo.MAX_POSITION);
-        robot.acquirer.setAcquirerRotation(acquirerRotation);
+//        robot.acquirer.setAcquirerRotation(acquirerRotation);
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
         double[] positions = robot.drivetrain.getPositions();
 //        double[] rackPositions = robot.lift.getPositions();
-        double imuZAxis = robot.drivetrain.singleImu.getZAxis();
+        double imuZAxis = robot.drivetrain.singleImu.getHeading();
         telemetry.addData("Encoder counts", "Running at %.2f :%.2f :%.2f",
                 positions[0],
                 positions[1],

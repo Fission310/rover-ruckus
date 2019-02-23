@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+/**
+ * This class handles the Modern Robotic's Range Sensor functions and makes retrieving the values easier.
+ */
 public class MRRangeSensor {
 
     public ModernRoboticsI2cRangeSensor rangeSensor;

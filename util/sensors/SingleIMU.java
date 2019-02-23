@@ -16,6 +16,9 @@ import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 
 import java.util.Locale;
 
+/**
+ * SingleIMU handles all methods pertaining to the built in IMU in the REV Expansion Hub.
+ */
 public class SingleIMU {
     public double x_location, y_location, init_heading = 0D;
     public double globalAngle;
@@ -122,11 +125,6 @@ public class SingleIMU {
     }
 
     public double getHeading() {
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return angles.firstAngle;
-    }
-
-    public double getZAxis() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return angles.firstAngle;
     }

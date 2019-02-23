@@ -147,9 +147,9 @@ public class TeleopSlideMain extends OpMode {
 
 //        leftTrigger1 = Math.abs(gamepad1.left_trigger) > .9 ? -1 * Math.abs(gamepad1.left_trigger) : -.8 * gamepad1.left_trigger;
 //        rightTrigger1 = Math.abs(gamepad1.right_trigger) > .9 ? 1 * Math.abs(gamepad1.right_trigger) : .8 * gamepad1.right_trigger;
-        leftTrigger1 = -gamepad1.left_trigger;
-        rightTrigger1 = gamepad1.right_trigger;
-        robot.lift.setLiftPower(leftTrigger1 + rightTrigger1);
+//        leftTrigger1 = -gamepad1.left_trigger;
+//        rightTrigger1 = gamepad1.right_trigger;
+//        robot.lift.setLiftPower(leftTrigger1 + rightTrigger1);
 
         /**
          * Gamepad 2
@@ -180,28 +180,28 @@ public class TeleopSlideMain extends OpMode {
         if (linearSlidesSlowMode) {
             linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? .7 * Math.signum(gamepad2.right_stick_y) : .6 * gamepad2.right_stick_y;
         } else {
-            linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .8 * gamepad2.right_stick_y;
+            linearSlidesInput = Math.abs(gamepad2.right_stick_y) > .9 ? 1 * Math.signum(gamepad2.right_stick_y) : .9 * gamepad2.right_stick_y;
         }
 //        linearSlidesInput = gamepad2.right_stick_y;
         robot.drawerSlides.setDrawerSlidePower(linearSlidesInput);
 
 //      Sets acquirer  power via the right and left bumper
-        if (gamepad2.left_bumper) { robot.acquirer.setIntakePower(0.6); }
-        else if (gamepad2.right_bumper) { robot.acquirer.setIntakePower(-0.6); }
-        else { robot.acquirer.setIntakePower(0); }
+//        if (gamepad2.left_bumper) { robot.acquirer.setIntakePower(0.6); }
+//        else if (gamepad2.right_bumper) { robot.acquirer.setIntakePower(-0.6); }
+//        else { robot.acquirer.setIntakePower(0); }
 
         /**
          * Both Gamepads
          */
 
-        if (gamepad1.dpad_up || gamepad2.dpad_up || gamepad1.dpad_right || gamepad2.dpad_right) {
-            acquirerRotation += .08;
-        }
-        if (gamepad1.dpad_down || gamepad2.dpad_down || gamepad1.dpad_left || gamepad2.dpad_left) {
-            acquirerRotation -= .08;
-        }
-        acquirerRotation = Range.clip(acquirerRotation, Servo.MIN_POSITION, Servo.MAX_POSITION);
-        robot.acquirer.setAcquirerRotation(acquirerRotation);
+//        if (gamepad1.dpad_up || gamepad2.dpad_up || gamepad1.dpad_right || gamepad2.dpad_right) {
+//            acquirerRotation += .08;
+//        }
+//        if (gamepad1.dpad_down || gamepad2.dpad_down || gamepad1.dpad_left || gamepad2.dpad_left) {
+//            acquirerRotation -= .08;
+//        }
+//        acquirerRotation = Range.clip(acquirerRotation, Servo.MIN_POSITION, Servo.MAX_POSITION);
+//        robot.acquirer.setAcquirerRotation(acquirerRotation);
 
         if (gamepad1.b)
             if(!bButtonPressed) {
@@ -210,25 +210,25 @@ public class TeleopSlideMain extends OpMode {
             } else {}
         else bButtonPressed = false;
 
-        double curAcquirerPosition = robot.acquirer.getAcquirerRotation();
-        if (gamepad1.x || gamepad2.x) {
-            robot.acquirer.acquirerRotationInit();
-        } else if (gamepad1.y || gamepad2.y) {
-            robot.acquirer.acquirerRotationMid();
-        } else if (gamepad1.b || gamepad2.b) {
-            robot.acquirer.acquirerRotationSet();
-        } else {
-            robot.acquirer.setAcquirerRotation(curAcquirerPosition);
-        }
+//        double curAcquirerPosition = robot.acquirer.getAcquirerRotation();
+//        if (gamepad1.x || gamepad2.x) {
+//            robot.acquirer.acquirerRotationInit();
+//        } else if (gamepad1.y || gamepad2.y) {
+//            robot.acquirer.acquirerRotationMid();
+//        } else if (gamepad1.b || gamepad2.b) {
+//            robot.acquirer.acquirerRotationSet();
+//        } else {
+//            robot.acquirer.setAcquirerRotation(curAcquirerPosition);
+//        }
 
-        double[] rackPositions = robot.lift.getPositions();
+//        double[] rackPositions = robot.lift.getPositions();
         double[] drawerSlides = robot.drawerSlides.getPositions();
-        double imuZAxis = robot.drivetrain.singleImu.getZAxis();
+        double imuZAxis = robot.drivetrain.singleImu.getHeading();
         robot.drivetrain.getDrivePower();
         robot.drivetrain.getDriveEncoderTicks();
-        telemetry.addData("Lift Encoder counts", "Running at %.2f :%.2f",
-                rackPositions[0],
-                rackPositions[1]);
+//        telemetry.addData("Lift Encoder counts", "Running at %.2f :%.2f",
+//                rackPositions[0],
+//                rackPositions[1]);
         telemetry.addData("Rotational Arm Avg Encoder counts", "Running at %.2f",
                 robot.drawerSlides.encoderCounts());
         telemetry.addData("Rotational Arm Encoder counts", "Running at %.2f :%.2f",

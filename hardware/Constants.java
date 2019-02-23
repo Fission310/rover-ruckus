@@ -6,21 +6,21 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 public class Constants {
     /* CONSTANTS */
-    private static final double NEVEREST_60_GEAR_RATIO  = 60.0;
-    private static final double NEVEREST_40_GEAR_RATIO  = 40.0;
-    private static final double NEVEREST_30_GEAR_RATIO  = 30.0;
-    private static final double NEVEREST_20_GEAR_RATIO  = 20.0;
-    private static final double MODERN_ROBOTICS_53_GEAR_RATIO = 53.475;
+    private static final double GEAR_RATIO_60 = 60.0;
+    private static final double GEAR_RATIO_40 = 40.0;
+    private static final double GEAR_RATIO_30 = 30.0;
+    private static final double GEAR_RATIO_20 = 20.0;
+    private static final double GEAR_RATIO_MR_53 = 53.475;
     private static final double PPR = 7.0;
     private static final double CPR = PPR * 4.0;
     /**
-     * Ticks per revolution for a NeverRest 40 and GoBilda.
+     * Ticks per revolution for a NeverRest and GoBilda motors.
      */
-    private static final double TICKS_PER_MOTOR_60 = CPR * NEVEREST_60_GEAR_RATIO; // 1680
-    private static final double TICKS_PER_MOTOR_40 = CPR * NEVEREST_40_GEAR_RATIO; // 1120
-    private static final double TICKS_PER_MOTOR_30 = CPR * NEVEREST_30_GEAR_RATIO; // 840
-    private static final double TICKS_PER_MOTOR_20 = CPR * NEVEREST_20_GEAR_RATIO; // 560
-    private static final double TICKS_PER_MOTOR_53 = CPR * MODERN_ROBOTICS_53_GEAR_RATIO; // 723.24
+    private static final double TICKS_PER_MOTOR_60 = CPR * GEAR_RATIO_60; // 1680
+    private static final double TICKS_PER_MOTOR_40 = CPR * GEAR_RATIO_40; // 1120
+    private static final double TICKS_PER_MOTOR_30 = CPR * GEAR_RATIO_30; // 840
+    private static final double TICKS_PER_MOTOR_20 = CPR * GEAR_RATIO_20; // 560
+    private static final double TICKS_PER_MOTOR_53 = CPR * GEAR_RATIO_MR_53; // 723.24
     /**
      * Drivetrain gear ratio (< 1.0 if geared up).
      */
