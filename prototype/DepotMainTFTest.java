@@ -61,14 +61,14 @@ public class DepotMainTFTest extends LinearOpMode {
 //                    robot.land();
                     telemetry.addData("Status", "Robot Landed");
                     telemetry.update();
-                    step = step.IMU_INIT;
+                    step = Steps.State.IMU_INIT;
                     break;
 
                 case IMU_INIT:
                     robot.imuInit(hardwareMap);
                     telemetry.addData("Imu", "Initialized");
                     telemetry.update();
-                    step = step.STRAFE_OUT_LANDER;
+                    step = Steps.State.STRAFE_OUT_LANDER;
                     break;
 
                 case STRAFE_OUT_LANDER:
@@ -76,7 +76,7 @@ public class DepotMainTFTest extends LinearOpMode {
                     robot.turn90();
                     telemetry.addData("Status", "Robot turned 90 degrees");
                     telemetry.update();
-                    step = step.FIND_GOLD_LOCATION;
+                    step = Steps.State.FIND_GOLD_LOCATION;
                     break;
 
                 /**

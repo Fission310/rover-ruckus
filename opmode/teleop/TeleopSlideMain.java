@@ -2,12 +2,9 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
-
-import static java.lang.Math.abs;
 
 /**
  * TeleopMain is the primary TeleOp OpMode for slide drivetrains. All driver-controlled actions should
@@ -186,9 +183,9 @@ public class TeleopSlideMain extends OpMode {
         robot.drawerSlides.setDrawerSlidePower(linearSlidesInput);
 
 //      Sets acquirer  power via the right and left bumper
-//        if (gamepad2.left_bumper) { robot.acquirer.setIntakePower(0.6); }
-//        else if (gamepad2.right_bumper) { robot.acquirer.setIntakePower(-0.6); }
-//        else { robot.acquirer.setIntakePower(0); }
+        if (gamepad2.left_bumper) { robot.acquirer.setIntakePower(1); }
+         else if (gamepad2.right_bumper) { robot.acquirer.setIntakePower(-1); }
+        else { robot.acquirer.setIntakePower(0); }
 
         /**
          * Both Gamepads
@@ -231,9 +228,8 @@ public class TeleopSlideMain extends OpMode {
 //                rackPositions[1]);
         telemetry.addData("Rotational Arm Avg Encoder counts", "Running at %.2f",
                 robot.drawerSlides.encoderCounts());
-        telemetry.addData("Rotational Arm Encoder counts", "Running at %.2f :%.2f",
-                drawerSlides[0],
-                drawerSlides[1]);
+        telemetry.addData("Rotational Arm Encoder counts", "Running at %.2f",
+                drawerSlides[0]);
         telemetry.addData("IMU", "Z-axis: " + imuZAxis);
         telemetry.addData("acquirer rotation",acquirerRotation);
 

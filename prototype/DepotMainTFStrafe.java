@@ -61,14 +61,14 @@ public class DepotMainTFStrafe extends LinearOpMode {
 //                    robot.land();
                     telemetry.addData("Status", "Robot Landed");
                     telemetry.update();
-                    step = step.IMU_INIT;
+                    step = Steps.State.IMU_INIT;
                     break;
 
                 case IMU_INIT:
                     robot.imuInit(hardwareMap);
                     telemetry.addData("Imu", "Initialized");
                     telemetry.update();
-                    step = step.STRAFE_OUT_LANDER;
+                    step = Steps.State.STRAFE_OUT_LANDER;
                     break;
 
                 case STRAFE_OUT_LANDER:
@@ -76,7 +76,7 @@ public class DepotMainTFStrafe extends LinearOpMode {
                     robot.turn90();
                     telemetry.addData("Status", "Robot turned 90 degrees");
                     telemetry.update();
-                    step = step.FIND_GOLD_LOCATION;
+                    step = Steps.State.FIND_GOLD_LOCATION;
                     break;
 
                 /**
@@ -128,7 +128,7 @@ public class DepotMainTFStrafe extends LinearOpMode {
 
                     telemetry.addData("Gold Cube location found:", goldLocation);
                     telemetry.update();
-                    step = step.ALIGN_TO_GOLD;
+                    step = Steps.State.ALIGN_TO_GOLD;
                     telemetry.addData("Gold Cube location found:", goldLocation);
 
                     break;
@@ -137,7 +137,7 @@ public class DepotMainTFStrafe extends LinearOpMode {
                     robot.tfFindGoldLocation(goldLocation);
                     telemetry.addData("Status", "Robot driven to gold cube");
                     telemetry.update();
-                    step = step.SAMPLE;
+                    step = Steps.State.SAMPLE;
                     break;
 
                 /**
@@ -147,7 +147,7 @@ public class DepotMainTFStrafe extends LinearOpMode {
                     robot.tfDepotSamplePID(goldLocation);
                     telemetry.addData("Status", "Robot Pushed cube into depot");
                     telemetry.update();
-                    step = step.MARKER;
+                    step = Steps.State.MARKER;
                     break;
 
                 /**
@@ -157,7 +157,7 @@ public class DepotMainTFStrafe extends LinearOpMode {
                     robot.dropMarker();
                     telemetry.addData("Status", "Robot dropped marker");
                     telemetry.update();
-                    step = step.ALIGN_TO_WALL;
+                    step = Steps.State.ALIGN_TO_WALL;
                     break;
 
                 /**
@@ -167,7 +167,7 @@ public class DepotMainTFStrafe extends LinearOpMode {
                     robot.alignToWall(false);
                     telemetry.addData("Status", "Robot align to wall");
                     telemetry.update();
-                    step = step.PARK;
+                    step = Steps.State.PARK;
                     break;
 
                 /**
@@ -177,7 +177,7 @@ public class DepotMainTFStrafe extends LinearOpMode {
                     robot.driveToCrater(false);
                     telemetry.addData("Status", "Robot drove to crater");
                     telemetry.update();
-                    step = step.DEFAULT;
+                    step = Steps.State.DEFAULT;
                     break;
 
                 default: {

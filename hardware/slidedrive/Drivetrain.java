@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.hardware.slidedrive;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -61,8 +60,8 @@ public class Drivetrain extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve motors from hardware map and assign to instance vars
-        leftFront = hwMap.dcMotor.get(RCConfig.LEFT_FRONT);
-        rightFront = hwMap.dcMotor.get(RCConfig.RIGHT_FRONT);
+        leftFront = hwMap.dcMotor.get(RCConfig.LEFT_DRIVE);
+        rightFront = hwMap.dcMotor.get(RCConfig.RIGHT_DRIVE);
         slideDrive = hwMap.dcMotor.get(RCConfig.SLIDE_DRIVE);
 
         // Set motor direction (AndyMark configuration)
@@ -201,12 +200,12 @@ public class Drivetrain extends Mechanism {
         double left = Range.clip(y_value - x_value, -1.0, 1.0);
         double right = Range.clip(y_value + x_value, -1.0, 1.0);
 
-        left = (double)scaleInput(left);
-        right = (double)scaleInput(right);
+        left = scaleInput(left);
+        right = scaleInput(right);
 
         leftFront.setPower(left);
         rightFront.setPower(right);
-        strafe((double)scaleInput(slide));
+        strafe(scaleInput(slide));
     }
 
     /**

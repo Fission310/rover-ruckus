@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.opmode.Steps;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
@@ -66,7 +65,7 @@ public class CraterMainTF extends LinearOpMode {
                     }
                     telemetry.addData("Gold Location", goldLocation);
                     telemetry.update();
-                    step = step.LAND;
+                    step = Steps.State.LAND;
                     break;
                 /**
                  * Land and wait for the robot to fully drop and stabilize.
@@ -75,7 +74,7 @@ public class CraterMainTF extends LinearOpMode {
                     robot.land();
                     telemetry.addData("Status", "Robot Landed");
                     telemetry.update();
-                    step = step.IMU_INIT;
+                    step = Steps.State.IMU_INIT;
                     break;
                 /**
                  * IMU Init.
@@ -84,7 +83,7 @@ public class CraterMainTF extends LinearOpMode {
                     robot.imuInit(hardwareMap);
                     telemetry.addData("Imu", "Initialized");
                     telemetry.update();
-                    step = step.FIND_GOLD_LOCATION;
+                    step = Steps.State.FIND_GOLD_LOCATION;
                     break;
                 /**
                  * Figure out where the gold cube is.
@@ -104,7 +103,7 @@ public class CraterMainTF extends LinearOpMode {
                     if (ROTATIONS > 0) { robot.drivetrain.turnPID(-ROTATIONS); }
                     telemetry.addData("Gold Cube location", goldLocation);
                     telemetry.update();
-                    step = step.TURN_OFF_CV;
+                    step = Steps.State.TURN_OFF_CV;
                     break;
                 /**
                  * Turn off CV.
@@ -113,7 +112,7 @@ public class CraterMainTF extends LinearOpMode {
                     visionManager.vuforiaLights(false);
                     telemetry.addData("Status", "Turn off CV");
                     telemetry.update();
-                    step = step.STRAFE_OUT_LANDER;
+                    step = Steps.State.STRAFE_OUT_LANDER;
                     break;
                 /**
                  * Slide out of lander.
@@ -122,7 +121,7 @@ public class CraterMainTF extends LinearOpMode {
                     robot.strafeOutOfLander();
                     telemetry.addData("Status", "Robot strafed");
                     telemetry.update();
-                    step = step.TURN_90;
+                    step = Steps.State.TURN_90;
                     break;
                 /**
                  * Rotate 90 degrees; Robot faces backwards for the marker mechanism.
@@ -131,7 +130,7 @@ public class CraterMainTF extends LinearOpMode {
                     robot.turn90();
                     telemetry.addData("Robot rotates 90", "");
                     telemetry.update();
-                    step = step.ALIGN_TO_GOLD;
+                    step = Steps.State.ALIGN_TO_GOLD;
                     break;
                 /**
                  * Align the robot to the gold cube to push it in to the depot
@@ -140,7 +139,7 @@ public class CraterMainTF extends LinearOpMode {
                     robot.tfFindGoldLocation(goldLocation);
                     telemetry.addData("Status", "Robot aligned to gold cube");
                     telemetry.update();
-                    step = step.SAMPLE;
+                    step = Steps.State.SAMPLE;
                     break;
                 /**
                  * Push the gold cube into the depot
@@ -149,7 +148,7 @@ public class CraterMainTF extends LinearOpMode {
                     robot.tfCraterSamplePID(goldLocation);
                     telemetry.addData("Status", "Robot Pushed cube into depot");
                     telemetry.update();
-                    step = step.MARKER;
+                    step = Steps.State.MARKER;
                     break;
                 /**
                  * Drop the marker
@@ -158,7 +157,7 @@ public class CraterMainTF extends LinearOpMode {
                     robot.dropMarker();
                     telemetry.addData("Status", "Robot dropped marker");
                     telemetry.update();
-                    step = step.ALIGN_TO_WALL;
+                    step = Steps.State.ALIGN_TO_WALL;
                     break;
                 /**
                  * Align to wall
@@ -167,7 +166,7 @@ public class CraterMainTF extends LinearOpMode {
                     robot.alignToWall(true);
                     telemetry.addData("Status", "Robot align to wall");
                     telemetry.update();
-                    step = step.PARK;
+                    step = Steps.State.PARK;
                     break;
                 /**
                  * Extend arm and drive up to the crater
@@ -176,7 +175,7 @@ public class CraterMainTF extends LinearOpMode {
                     robot.driveToCrater(true);
                     telemetry.addData("Status", "Robot drove to crater");
                     telemetry.update();
-                    step = step.DEFAULT;
+                    step = Steps.State.DEFAULT;
                     break;
 
                 default: {

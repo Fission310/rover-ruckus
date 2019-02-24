@@ -6,14 +6,13 @@ package org.firstinspires.ftc.teamcode.hardware;
 public class RCConfig {
 
     // Motors
-    public static final String LEFT_FRONT = "left";
-    public static final String RIGHT_FRONT = "right";
+    public static final String LEFT_DRIVE = "left";
+    public static final String RIGHT_DRIVE = "right";
     public static final String SLIDE_DRIVE = "slide";
-    public static final String LEFT_HANGER = "left_hanger";
-    public static final String RIGHT_HANGER = "right_hanger";
+    public static final String LIFT = "lift";
     public static final String DRAWER_SLIDES = "drawer";
-    public static final String BACK_ROT = "back_rot";
-    public static final String FRONT_ROT = "front_rot";
+    public static final String INTAKE_MOTOR = "intake";
+    public static final String ROTATION = "rot";
 
     // Servos
     public static final String ARM = "arm";
@@ -21,11 +20,6 @@ public class RCConfig {
     public static final String ACQUIRER_ROTATION = "acquirer_rot";
     public static final String SWEEPER = "sweeper";
     public static final String MARKERARM = "marker_arm";
-    public static final String LEFT_ACQUIRER_INTAKE = "leftIntake";
-    public static final String RIGHT_ACQUIRER_INTAKE = "rightIntake";
-    public static final String ACQUIRER_FLOOR = "acquirer_floor";
-    public static final String LEFT_TAPE = "left_tape";
-    public static final String RIGHT_TAPE = "right_tape";
     public static final String PHONE_MOUNT = "phone_mount";
 
     // I2C

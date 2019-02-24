@@ -8,8 +8,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 
-import static java.lang.Math.abs;
-
 /**
  * TeleopMain is the primary TeleOp OpMode for slide drivetrains. All driver-controlled actions should
  * be defined in this class.

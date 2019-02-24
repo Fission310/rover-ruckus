@@ -21,10 +21,7 @@ public class Acquirer extends Mechanism {
     private static final double SERVO_CENTER_POS = 1;
 
     /* Hardware members */
-    private CRServo rightIntakeMotor;
-//    private CRServo leftIntakeMotor;
-
-//    private Servo acquirerFloor;
+    private DcMotor intakeMotor;
     private Servo acquirerRotation;
 
     /**
@@ -47,20 +44,14 @@ public class Acquirer extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
-        rightIntakeMotor = hwMap.crservo.get(RCConfig.RIGHT_ACQUIRER_INTAKE);
-//        leftIntakeMotor = hwMap.crservo.get(RCConfig.LEFT_ACQUIRER_INTAKE);
-
-        //        acquirerFloor = hwMap.servo.get(RCConfig.ACQUIRER_FLOOR);
-        acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
+        intakeMotor = hwMap.dcMotor.get(RCConfig.INTAKE_MOTOR);
+//        acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
 
         // Set polarity
-        rightIntakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-//        leftIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set initial power
-        rightIntakeMotor.setPower(0);
-//        leftIntakeMotor.setPower(0);
-//        acquirerFloorInit();
+        intakeMotor.setPower(0);
     }
 
     /**
@@ -68,31 +59,8 @@ public class Acquirer extends Mechanism {
      * @param power        Motor power with range of (-1 to 1)
      */
     public void setIntakePower(double power) {
-        rightIntakeMotor.setPower(power);
+        intakeMotor.setPower(power);
     }
-    public void setVexIntakePower(double power) {
-        double sign = Math.signum(power);
-        if (power != 0.0) {
-            rightIntakeMotor.setPower(.8 * sign);
-        } else {
-            rightIntakeMotor.setPower(0);
-        }
-    }
-
-    /**
-     * Inits the acquirer floor servo to not allow gold cubes to pass.
-     */
-//    public void acquirerFloorInit() {
-//        acquirerFloor.setPosition(SERVO_INIT_POS);
-//    }
-
-
-    /**
-     * Moves the acquirer floor servo to allow gold cubes to pass.
-     */
-//    public void acquirerFloorBlock() {
-//        acquirerFloor.setPosition(SERVO_CENTER_POS);
-//    }
 
     /**
      * Inits the acquirer rotation servo to fit inside the sizing cube.
@@ -114,7 +82,6 @@ public class Acquirer extends Mechanism {
     }
 
     public double getAcquirerRotation() { return acquirerRotation.getPosition(); }
-
 
     /**
      * Rotates the acquirer using the rotation servo while the drawer slides rotates to keep the

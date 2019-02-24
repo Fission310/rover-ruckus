@@ -14,8 +14,7 @@ public class TimingDemo extends LinearOpMode
 
     // called when init button is  pressed.
     @Override
-    public void runOpMode() throws InterruptedException
-    {
+    public void runOpMode() {
         telemetry.addData("Mode", "waiting");
         telemetry.update();
 

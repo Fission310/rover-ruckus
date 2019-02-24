@@ -3,15 +3,9 @@ package org.firstinspires.ftc.teamcode.opmode.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
+
 import org.firstinspires.ftc.teamcode.util.sensors.MRRangeSensor;
 import org.firstinspires.ftc.teamcode.util.sensors.REVDistanceSensor;
-
-import static java.lang.Math.abs;
 
 @TeleOp(name = "Sensor", group = "Teleop")
 public class Sensors extends OpMode {

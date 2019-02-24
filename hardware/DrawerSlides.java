@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -18,17 +16,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class DrawerSlides extends Mechanism {
 
     /* Hardware members */
-    private DcMotor rotationBack;
-    private DcMotor rotationForward;
-
+    private DcMotor rotation;
     private DcMotor drawerSlide;
 
     /**
      * Default constructor for DrawerSlides.
      */
-    public DrawerSlides(){
+    public DrawerSlides(){ }
 
-    }
     /**
      * Overloaded constructor for DrawerSlides. Sets the OpMode context.
      *
@@ -44,33 +39,27 @@ public class DrawerSlides extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
-        rotationForward = hwMap.dcMotor.get(RCConfig.FRONT_ROT);
-        rotationBack = hwMap.dcMotor.get(RCConfig.BACK_ROT);
+        rotation = hwMap.dcMotor.get(RCConfig.ROTATION);
         drawerSlide = hwMap.dcMotor.get(RCConfig.DRAWER_SLIDES);
 
         // Set braking behavior
-        rotationForward.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rotationBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rotation.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drawerSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set polarity
-        rotationForward.setDirection(DcMotorSimple.Direction.REVERSE);
-        rotationBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rotation.setDirection(DcMotorSimple.Direction.REVERSE);
         drawerSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set initial power
-        rotationForward.setPower(0);
-        rotationBack.setPower(0);
+        rotation.setPower(0);
         drawerSlide.setPower(0);
     }
 
     public void encoderInit() {
-        rotationForward.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rotationBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drawerSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        rotationForward.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rotationBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rotation.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         drawerSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
@@ -79,8 +68,7 @@ public class DrawerSlides extends Mechanism {
     }
 
     public void setRotationZeroPowers(DcMotor.ZeroPowerBehavior behavior) {
-        rotationForward.setZeroPowerBehavior(behavior);
-        rotationBack.setZeroPowerBehavior(behavior);
+        rotation.setZeroPowerBehavior(behavior);
     }
 
     /**
@@ -88,14 +76,12 @@ public class DrawerSlides extends Mechanism {
      * @param power        Motor power with range of (-1 to 1)
      */
     public void setRotationPower(double power) {
-        rotationForward.setPower(power);
-        rotationBack.setPower(power);
+        rotation.setPower(power);
     }
 
     public void setScaledRotationPower(double power) {
         double scaledPower = scaleInput(power);
-        rotationForward.setPower(scaledPower);
-        rotationBack.setPower(scaledPower);
+        rotation.setPower(scaledPower);
     }
 
     double scaleInput(double power) {
@@ -113,52 +99,38 @@ public class DrawerSlides extends Mechanism {
         return joystickScale;
     }
 
-    public void rotateToPos(double speed, double back, double forward, double timeoutS) {
+    public void rotateToPos(double speed, double back, double timeoutS) {
         // Target position variables
-        int newForwardTarget, newBackTarget;
+        int newBackTarget;
 
         // Determine new target position, and pass to motor controller
-        newForwardTarget = rotationForward.getCurrentPosition() + (int)(forward * Constants.TICKS_PER_INCH_53);
-        newBackTarget = rotationBack.getCurrentPosition() + (int)(back * Constants.TICKS_PER_INCH_53);
-        // Average out any differences (if any)
-        int target = (newForwardTarget + newBackTarget) / 2;
-
-        rotationForward.setTargetPosition(target);
-        rotationBack.setTargetPosition(target);
+        newBackTarget = rotation.getCurrentPosition() + (int)(back * Constants.TICKS_PER_INCH_53);
+        rotation.setTargetPosition(newBackTarget);
 
         // Turn On RUN_TO_POSITION
-        rotationForward.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rotationBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rotation.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Reset the timeout time
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
 
         // Loop until a condition is met
-        while (opMode.opModeIsActive() &&
-                (runtime.seconds() < timeoutS) &&
-                rotationForward.isBusy() && rotationBack.isBusy()) {
-
-            rotationForward.setPower(speed);
-            rotationBack.setPower(speed);
+        while (opMode.opModeIsActive() && (runtime.seconds() < timeoutS) && rotation.isBusy()) {
+            rotation.setPower(speed);
 
             // Display info for the driver.
             opMode.telemetry.addData("Path2", "Running at %7d :%7d",
-                    rotationForward.getCurrentPosition(),
-                    rotationBack.getCurrentPosition());
+                    rotation.getCurrentPosition());
 
             opMode.telemetry.update();
         }
 
         // Stop all motion
-        rotationForward.setPower(0);
-        rotationBack.setPower(0);
+        rotation.setPower(0);
 
         // Turn off RUN_TO_POSITION
-        rotationForward.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rotationBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rotationForward.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rotationBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rotation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotation.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /**
@@ -175,19 +147,14 @@ public class DrawerSlides extends Mechanism {
     }
 
     public double encoderCounts() {
-        double newForwardTarget = rotationForward.getCurrentPosition();
-        double newBackTarget = rotationBack.getCurrentPosition();
-        // Average out any differences (if any)
-        double target = (newForwardTarget + newBackTarget) / 2;
-        return target;
+        double newBackTarget = rotation.getCurrentPosition();
+        return newBackTarget;
     }
 
     public double[] getPositions() {
-        double[] positions = new double[2];
-        positions[0] = rotationForward.getCurrentPosition();
-        positions[1] = rotationBack.getCurrentPosition();
+        double[] positions = new double[1];
+        positions[0] = rotation.getCurrentPosition();
 
         return positions;
     }
-
 }
