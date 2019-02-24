@@ -4,10 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.util.TelemetryManager;
+import org.firstinspires.ftc.teamcode.util.signals.TelemetryManager;
 
 @Autonomous(name="Telemetry Test", group="Slide Depot")
-public class TelemetryTest extends LinearOpMode {
+public class
+TelemetryTest extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
     private TelemetryManager telemetryManager = new TelemetryManager(this);

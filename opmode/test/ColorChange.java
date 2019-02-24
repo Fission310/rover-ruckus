@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.util.BackgroundColorManager;
+import org.firstinspires.ftc.teamcode.util.signals.BackgroundColorManager;
 
 @Autonomous(name="Color Change", group="Test")
 //@Disabled

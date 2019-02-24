@@ -170,7 +170,8 @@ public class TeleopSlideMain extends OpMode {
 //        } else {
 //            robot.drawerSlides.setRotationPower(leftTrigger2 + rightTrigger2);
 //        }
-        robot.drawerSlides.setRotationPower(leftTrigger2 + rightTrigger2);
+        rotationInput = leftTrigger2 + rightTrigger2;
+        robot.drawerSlides.setRotationPower(rotationInput);
 
 //      Sets drawer slides power via the right joystick
         linearSlidesSlowMode = gamepad2.right_stick_button;
