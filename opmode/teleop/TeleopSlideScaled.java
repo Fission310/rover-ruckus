@@ -57,9 +57,9 @@ import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 @Disabled
 public class TeleopSlideScaled extends OpMode {
 
-    private static final double ANALOG_THRESHOLD = 0.0;
-    private static final double SLOW_MULTIPLIER = 0.4;
-    private static final double LINEAR_SLIDES_SLOW_MULTIPLIER = 0.5;
+    private final double ANALOG_THRESHOLD = 0.0;
+    private final double SLOW_MULTIPLIER = 0.4;
+    private final double LINEAR_SLIDES_SLOW_MULTIPLIER = 0.5;
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();

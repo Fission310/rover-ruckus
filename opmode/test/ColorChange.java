@@ -15,7 +15,6 @@ public class ColorChange extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
     BackgroundColorManager back = new BackgroundColorManager();
-    View relativeLayout;
 
     /**
      * Runs the autonomous routine.

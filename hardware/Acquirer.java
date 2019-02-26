@@ -48,7 +48,7 @@ public class Acquirer extends Mechanism {
 //        acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
 
         // Set polarity
-        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set initial power
         intakeMotor.setPower(0);

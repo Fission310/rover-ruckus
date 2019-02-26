@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.util.sensors.SingleIMU;
  */
 public class Drivetrain extends Mechanism {
 
-    private final double WHEEL_BASE = 15;
+    private static final double WHEEL_BASE = 15;
 
     /* Hardware members */
     private DcMotor leftFront;
@@ -78,6 +78,36 @@ public class Drivetrain extends Mechanism {
         leftFront.setPower(0);
         rightFront.setPower(0);
         slideDrive.setPower(0);
+    }
+
+    public void inits(HardwareMap hwMap) {
+        // Retrieve motors from hardware map and assign to instance vars
+        try {
+            leftFront = hwMap.dcMotor.get(RCConfig.LEFT_DRIVE);
+            leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            leftFront.setPower(0);
+        } catch (Exception e) {
+            opMode.telemetry.addData("Failed to init", "Left: ");
+        }
+
+        try {
+            rightFront = hwMap.dcMotor.get(RCConfig.RIGHT_DRIVE);
+            rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightFront.setPower(0);
+        } catch (Exception e) {
+            opMode.telemetry.addData("Failed to init", "Right: ");
+        }
+
+        try {
+            slideDrive = hwMap.dcMotor.get(RCConfig.SLIDE_DRIVE);
+            slideDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+            slideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            slideDrive.setPower(0);
+        } catch (Exception e) {
+            opMode.telemetry.addData("Failed to init", "Slide: ");
+        }
     }
 
     /**
@@ -335,7 +365,7 @@ public class Drivetrain extends Mechanism {
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(0, 90);
         pidRotate.setOutputRange(.2, power);
-        pidRotate.setTolerance(.8);
+        pidRotate.setTolerance(.7);
         pidRotate.enable();
 
         // getAngle() returns + when rotating counter clockwise (left) and - when rotating

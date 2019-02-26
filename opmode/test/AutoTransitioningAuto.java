@@ -13,7 +13,6 @@ public class AutoTransitioningAuto extends LinearOpMode {
         telemetry.addData("Initializing Here", true);
         telemetry.update();
 
-
         AutoTransitioner.transitionOnStop(this, "Timing Demo 2");
         // AutoTransitioner used before waitForStart()
         waitForStart();

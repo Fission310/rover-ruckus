@@ -225,40 +225,6 @@ public class TensorFlowManager {
         }
     }
 
-    private void updateLocationTest() {
-        if (tfod != null) {
-            // getUpdatedRecognitions() will return null if no new information is available since
-            // the last time that call was made.
-            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-            if (updatedRecognitions != null) {
-                if (updatedRecognitions.size() == 2 ) {
-                    int goldMineralX = -1;
-                    int silverMineral1X = -1;
-                    int silverMineral2X = -1;
-
-                    for (Recognition recognition : updatedRecognitions) {
-                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                            goldMineralX = (int) recognition.getLeft();
-                        } else if (silverMineral1X == -1) {
-                            silverMineral1X = (int) recognition.getLeft();
-                        } else {
-                            silverMineral2X = (int) recognition.getLeft();
-                        }
-                    }
-                    if (goldMineralX == -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                        this.location = TFLocation.RIGHT;
-                    } else if (goldMineralX != -1 && silverMineral1X != -1) {
-                        if (goldMineralX > silverMineral1X) {
-                            this.location = TFLocation.CENTER;
-                        } else {
-                            this.location = TFLocation.LEFT;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     /**
      * Initialize the Vuforia localization engine.
      */
