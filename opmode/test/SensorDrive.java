@@ -42,7 +42,7 @@ public class SensorDrive extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             if (sensorRange.getRangeRawUltrasonic() > 6) {
-                robot.drivetrain.drive(-.6,0);
+                robot.drivetrain.drive(-.4,0);
             } else {
                 robot.drivetrain.turnPID(90);
             }

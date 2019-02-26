@@ -80,7 +80,7 @@ public class HardwareSlide extends Mechanism {
      * @param hwMap     robot's hardware map
      */
     public void init(HardwareMap hwMap) {
-        drivetrain.init(hwMap);
+        drivetrain.inits(hwMap);
         acquirer.init(hwMap);
         drawerSlides.init(hwMap);
 //        lift.init(hwMap);

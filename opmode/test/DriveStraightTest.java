@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 
 @Autonomous(name="DriveStraightTest", group="Test")
+@Disabled
 public class DriveStraightTest extends LinearOpMode {
 
     /* Private OpMode members */
@@ -46,7 +48,7 @@ public class DriveStraightTest extends LinearOpMode {
                     step++;
                     break;
                 case 1:
-                    sleep(1000);
+                    sleep(500);
                     robot.drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE * 1.5, 5);
                     telemetry.addData("Step 0", "Robot Drive one floor tile negative speed");
                     telemetry.update();

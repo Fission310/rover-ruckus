@@ -11,11 +11,13 @@ import org.firstinspires.ftc.teamcode.util.sensors.REVDistanceSensor;
 public class Sensors extends OpMode {
 
     MRRangeSensor sensorRange = new MRRangeSensor();
+    MRRangeSensor sensorRange2 = new MRRangeSensor();
     REVDistanceSensor distance = new REVDistanceSensor();
 
     @Override
     public void init() {
         sensorRange.init(hardwareMap, "range");
+        sensorRange2.init(hardwareMap, "range2");
         distance.init(hardwareMap, "dist");
 
     }
@@ -50,6 +52,11 @@ public class Sensors extends OpMode {
         telemetry.addData("Sensor", sensorRange.getRangeRawOptical());
         telemetry.addData("Sensor", sensorRange.getRangeOpticalCM());
         telemetry.addData("Sensor", sensorRange.getRangeDistanceCM());
+
+        telemetry.addData("Raw Ultrasonic2", sensorRange2.getRangeRawUltrasonic());
+        telemetry.addData("Sensor2", sensorRange2.getRangeRawOptical());
+        telemetry.addData("Sensor2", sensorRange2.getRangeOpticalCM());
+        telemetry.addData("Sensor2", sensorRange2.getRangeDistanceCM());
 
         telemetry.addData("distance", distance.getDistanceMM());
         telemetry.addData("distance", distance.getDistanceCM());
