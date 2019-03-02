@@ -57,7 +57,7 @@ import static java.lang.Math.abs;
 @TeleOp(name = "Teleop: Main Slide", group = "Teleop")
 public class TeleopSlideMain extends OpMode {
 
-    private final double ANALOG_THRESHOLD = 0.1;
+    private final double ANALOG_THRESHOLD = 0.08;
     private final double SLOW_MULTIPLIER = 0.5;
     private final double LINEAR_SLIDES_SLOW_MULTIPLIER = 0.5;
 
@@ -68,7 +68,7 @@ public class TeleopSlideMain extends OpMode {
     private HardwareSlide robot = new HardwareSlide();
 
     /* Robot controller's background manager */
-//    private BackgroundColorManager background = new BackgroundColorManager();
+    private BackgroundColorManager background = new BackgroundColorManager();
 
     /* Holds Gamepad 1 joystick's values */
     double yInput, xInput, slideInput;
@@ -93,6 +93,7 @@ public class TeleopSlideMain extends OpMode {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
         robot.imuInit(hardwareMap);
+        background.init(hardwareMap);
     }
 
     /**
@@ -102,6 +103,8 @@ public class TeleopSlideMain extends OpMode {
     @Override
     public void init_loop() {
         telemetry.addData("Status:", "Waiting to start");
+        telemetry.addData("Gyro Is Calibrated", robot.imuCalibrated());
+        telemetry.addData("imu angle",robot.imuAngle());
         telemetry.update();
     }
 
@@ -131,10 +134,12 @@ public class TeleopSlideMain extends OpMode {
         /**
          * Controls the drivetrain via the left and right analog sticks || Slow mode = left stick button
          */
-        yInput = abs(gamepad1.left_stick_y) > .9 ? 1 * Math.signum(gamepad1.left_stick_y) : .9 * gamepad1.left_stick_y;
-        xInput = abs(gamepad1.right_stick_x) > .9 ? 1 * Math.signum(gamepad1.right_stick_x) : .8 * gamepad1.right_stick_x;
-        slideInput = abs(gamepad1.left_stick_x) > .9 ? 1 * Math.signum(gamepad1.left_stick_x) : .8 * gamepad1.left_stick_x;
-
+//        yInput = abs(gamepad1.left_stick_y) > .9 ? Math.signum(gamepad1.left_stick_y) : .9 * gamepad1.left_stick_y;
+//        xInput = abs(gamepad1.right_stick_x) > .9 ? Math.signum(gamepad1.right_stick_x) : .8 * gamepad1.right_stick_x;
+//        slideInput = abs(gamepad1.left_stick_x) > .9 ? Math.signum(gamepad1.left_stick_x) : .8 * gamepad1.left_stick_x;
+        yInput = gamepad1.left_stick_y;
+        xInput = gamepad1.right_stick_x;
+        slideInput = gamepad1.left_stick_x;
         if (abs(gamepad1.left_stick_x) < ANALOG_THRESHOLD) slideInput = 0.0;
 
         slowYInput = Range.clip(yInput * SLOW_MULTIPLIER, -1.0, 1.0);
@@ -149,10 +154,9 @@ public class TeleopSlideMain extends OpMode {
         else leftStickPressed = false;
 
         if (drivetrainSlowMode) {
-//            background.setOrangeBackground();
+            background.setOrangeBackground();
             robot.drivetrain.driveSlide(slowYInput, slowXInput, slowSlide);
         } else {
-//            background.setGreenBackground();
             robot.drivetrain.driveSlide(yInput, xInput, slideInput);
         }
 
@@ -231,18 +235,21 @@ public class TeleopSlideMain extends OpMode {
         /**
          * Telemetry
          */
-        double[] drawerSlides = robot.drawerSlides.getPositions();
+//        telemetry.addData("Slow Mode", ":" + drivetrainSlowMode);
+//        double[] drawerSlides = robot.drawerSlides.getPositions();
         double imuZAxis = robot.drivetrain.singleImu.getHeading();
 //        robot.drivetrain.getDrivePower();
 //        robot.drivetrain.getDriveEncoderTicks();
-        telemetry.addData("Rotational Arm Avg Encoder counts", "Running at %.2f",
-                robot.drawerSlides.encoderCounts());
-        telemetry.addData("Rotational Arm Encoder counts", "Running at %.2f",
-                drawerSlides[0]);
+//
+//        telemetry.addData("Rotational Arm Avg Encoder counts", "Running at %.2f",
+//                robot.drawerSlides.encoderCounts());
+//        telemetry.addData("Rotational Arm Encoder counts", "Running at %.2f",
+//                drawerSlides[0]);
         telemetry.addData("IMU", "Z-axis: " + imuZAxis);
     }
 
     @Override
     public void stop() {
+        background.resetBackgroundColor();
     }
 }

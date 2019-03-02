@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.util.signals.TelemetryManager;
 
 @Autonomous(name="Telemetry Test", group="Slide Depot")
-@Disabled
+//@Disabled
 public class
 TelemetryTest extends LinearOpMode {
     /* Private OpMode members */

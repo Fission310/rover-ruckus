@@ -80,7 +80,7 @@ public class HardwareSlide extends Mechanism {
      * @param hwMap     robot's hardware map
      */
     public void init(HardwareMap hwMap) {
-        drivetrain.inits(hwMap);
+        drivetrain.init(hwMap);
         acquirer.init(hwMap);
         drawerSlides.init(hwMap);
 //        lift.init(hwMap);
@@ -94,6 +94,15 @@ public class HardwareSlide extends Mechanism {
     public void imuInit(HardwareMap hwMap) {
         drivetrain.imuInit(hwMap);
     }
+
+    public boolean imuCalibrated() {
+        return drivetrain.imuCalibrated();
+    }
+
+    public double imuAngle() {
+        return drivetrain.imuAngle();
+    }
+
 
     /**
      * Waits for opMode's to start. Can perform actions while waiting.
