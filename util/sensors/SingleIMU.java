@@ -46,10 +46,14 @@ public class SingleIMU {
         imu.initialize(parameters);
 
         // make sure the imu gyro is calibrated before continuing.
-        while (!imu.isGyroCalibrated()) { }
+        //while (!imu.isGyroCalibrated()) { }
 
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+    }
+
+    public boolean imuCalibrated() {
+        return imu.isGyroCalibrated();
     }
 
     public void setStartingAngle() {

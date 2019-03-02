@@ -141,6 +141,14 @@ public class Drivetrain extends Mechanism {
         pidDrive = new PIDController(.1, .0, .0);
     }
 
+    public boolean imuCalibrated() {
+        return singleImu.imuCalibrated();
+    }
+
+    public double imuAngle() {
+        return singleImu.getAngle();
+    }
+
     public void imuStartingRot() {
         singleImu.setStartingAngle();
     }
