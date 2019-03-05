@@ -123,6 +123,7 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
+    //strafe RIGHT out of Lander
     public void strafeOutOfLander() {
         if (opMode.opModeIsActive()) {
 //            drivetrain.driveToPos(.4, 4, 3.0);
@@ -131,6 +132,7 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
+    //turn 90 degrees counter clockwise
     public void turn90() {
         if (opMode.opModeIsActive()) {
             drivetrain.turnPID(RIGHT_TURN);
@@ -139,17 +141,19 @@ public class HardwareSlide extends Mechanism {
     /**
      * Autonomous action for finding the location of the gold cube.
      * This assumes the vision sensor faces the slide of the robot.
-     *
+     * It strafes to the position of the gold cube
      *  @param location    location holds the TFLocation detected
      */
     public void tfFindGoldLocation(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
+            //move forward towards the depot/crater
             drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE / 3.0, 4);
-            if (location == TensorFlowManager.TFLocation.LEFT){
+            if (location == TensorFlowManager.TFLocation.LEFT) {
                 drivetrain.strafeToPos(.4,FieldConstants.TILE_HYPOTENUSE / 2.0,4);
             } else if (location == TensorFlowManager.TFLocation.RIGHT){
                 drivetrain.strafeToPos(.4,-FieldConstants.TILE_HYPOTENUSE / 2.0,4);
             } else if (location == TensorFlowManager.TFLocation.NONE){
+                //if gold cube wasn't found, just go straight
                 opMode.telemetry.addData("Detected None", "Robot will take center path");
             }
         }
@@ -224,26 +228,36 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
+    /**
+     * Sample by driving backwards to hit the sample, then drive forward,
+     * then turn clockwise to face the depot
+     * depending on where the gold location was, strafe right a certain number of units
+     * @param location location of gold cube
+     */
     public void tfCraterSamplePID(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            //hit sample
+            //hit sample by moving backwards 8 inches
             drivetrain.driveToPos(DRIVE_SPEED, 8, 3);
-
+            //random space to annoy joe
             opMode.sleep(300);
-            //drive forward again
+            //drive forward 8 inches
             drivetrain.driveToPos(DRIVE_SPEED,-8, 3);
             //turn clockwise face depot
             drivetrain.turnPID(-DIAGONAL_TURN);
+            //drive forward one floor tile, then correct position by strafing right a certain number of units
+            // then go forward again to depot
             if (location == TensorFlowManager.TFLocation.LEFT){
+                //if gold was left, strafe right a floor tile
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 5);
                 drivetrain.strafeToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE, 5);
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 3.0, 5);
             } else if (location == TensorFlowManager.TFLocation.CENTER || location == TensorFlowManager.TFLocation.NONE){
-                //drive forward one floor tile, then correct position by strafing right, then go forward again to depot
+                //if gold was center or not found, strafe right 1.5 floor tile
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 5);
                 drivetrain.strafeToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE * 1.5, 5);
                 drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 3.0, 5);
             } else if (location == TensorFlowManager.TFLocation.RIGHT){
+                //if gold was right, strafe right 2 floor tiles
                 drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 1.5, 5);
                 drivetrain.strafeToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE * 2.0, 5);
                 drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 3.0, 5);
