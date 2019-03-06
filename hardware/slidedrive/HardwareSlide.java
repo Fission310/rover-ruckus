@@ -314,6 +314,7 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
+    //align to wall after dropping marker
     public void alignToWall(boolean crater) {
         if (opMode.opModeIsActive()) {
             if (crater) {

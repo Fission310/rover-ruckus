@@ -12,13 +12,13 @@ public class Sensors extends OpMode {
 
     MRRangeSensor sensorRange = new MRRangeSensor();
     MRRangeSensor sensorRange2 = new MRRangeSensor();
-    REVDistanceSensor distance = new REVDistanceSensor();
+    //REVDistanceSensor distance = new REVDistanceSensor();
 
     @Override
     public void init() {
         sensorRange.init(hardwareMap, "range");
         sensorRange2.init(hardwareMap, "range2");
-        distance.init(hardwareMap, "dist");
+        //distance.init(hardwareMap, "dist");
 
     }
 
@@ -58,10 +58,10 @@ public class Sensors extends OpMode {
         telemetry.addData("Sensor2", sensorRange2.getRangeOpticalCM());
         telemetry.addData("Sensor2", sensorRange2.getRangeDistanceCM());
 
-        telemetry.addData("distance", distance.getDistanceMM());
-        telemetry.addData("distance", distance.getDistanceCM());
-        telemetry.addData("distance", distance.getDistanceMeter());
-        telemetry.addData("distance", distance.getDistanceInch());
+//        telemetry.addData("distance", distance.getDistanceMM());
+//        telemetry.addData("distance", distance.getDistanceCM());
+//        telemetry.addData("distance", distance.getDistanceMeter());
+//        telemetry.addData("distance", distance.getDistanceInch());
 
 
     }

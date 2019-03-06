@@ -13,6 +13,8 @@ public class SoundManager {
         return hwMap.appContext.getResources().getIdentifier(soundName,   "raw", hwMap.appContext.getPackageName());
     }
 
+
+
     public void playSound(Context context, int soundId) {
         SoundPlayer.getInstance().startPlaying(context, soundId);
     }
