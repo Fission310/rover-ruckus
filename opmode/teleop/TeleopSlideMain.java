@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.util.signals.BackgroundColorManager;
-import org.firstinspires.ftc.teamcode.util.signals.SoundManager;
 
 import static java.lang.Math.abs;
 
@@ -71,10 +70,6 @@ public class TeleopSlideMain extends OpMode {
     /* Robot controller's background manager */
     private BackgroundColorManager background = new BackgroundColorManager();
 
-    // Robot Sound Manager
-    private SoundManager sound = new SoundManager();
-
-
     /* Holds Gamepad 1 joystick's values */
     double yInput, xInput, slideInput;
     double slowYInput, slowXInput, slowSlide, leftTrigger1, rightTrigger1;
@@ -97,8 +92,9 @@ public class TeleopSlideMain extends OpMode {
     public void init() {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
-        robot.imuInit(hardwareMap);
         background.init(hardwareMap);
+        robot.imuInit(hardwareMap);
+
     }
 
     /**

@@ -145,9 +145,7 @@ public class Drivetrain extends Mechanism {
         return singleImu.imuCalibrated();
     }
 
-    public double imuAngle() {
-        return singleImu.getAngle();
-    }
+    public double imuAngle() { return singleImu.getAngle(); }
 
     public void imuStartingRot() {
         singleImu.setStartingAngle();
@@ -508,6 +506,24 @@ public class Drivetrain extends Mechanism {
         // Turn off RUN_TO_POSITION
         slideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    void curveTurn(int counts, double speed, double turnFraction, boolean turnRight) {
+        double reducedSpeed = speed * (1 - turnFraction);
+        double reducedCount = counts * (1- turnFraction);
+
+        if (turnRight) {
+            leftFront.setTargetPosition(counts);
+            leftFront.setPower(speed);
+            rightFront.setTargetPosition((int)reducedCount);
+            rightFront.setPower(reducedSpeed);
+        }
+        else {
+            leftFront.setTargetPosition((int)reducedCount);
+            leftFront.setPower(reducedSpeed);
+            rightFront.setTargetPosition(counts);
+            rightFront.setPower(speed);
+        }
     }
 
     public void odometryTurn(double speed, double radius, double angle, double timeoutS) {
