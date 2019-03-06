@@ -66,9 +66,9 @@ public class IMUTest extends LinearOpMode
     /* Robot hardware map */
     private HardwareSlide robot = new HardwareSlide();
 
-    BNO055IMU imu = robot.drivetrain. singleImu.imu;
+    BNO055IMU imu;
 
-        // State used for updating telemetry
+    // State used for updating telemetry
     Orientation angles;
     Acceleration gravity;
 
@@ -94,8 +94,8 @@ public class IMUTest extends LinearOpMode
 //        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
 //        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
 //        // and named "imu".
-//        imu = hardwareMap.get(BNO055IMU.class, "imu");
-//        imu.initialize(parameters);
+        imu = robot.drivetrain.singleImu.imu;
+        //imu.initialize(parameters);
 
         // Set up our telemetry dashboard
         composeTelemetry();

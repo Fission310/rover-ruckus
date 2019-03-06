@@ -123,6 +123,7 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
+    //strafe RIGHT out of Lander
     public void strafeOutOfLander() {
         if (opMode.opModeIsActive()) {
 //            drivetrain.driveToPos(.4, 4, 3.0);
@@ -131,6 +132,7 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
+    //turn 90 degrees counter clockwise
     public void turn90() {
         if (opMode.opModeIsActive()) {
             drivetrain.turnPID(RIGHT_TURN);
@@ -224,26 +226,36 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
+    /**
+     * Sample by driving backwards to hit the sample, then drive forward,
+     * then turn clockwise to face the depot
+     * depending on where the gold location was, strafe right a certain number of units
+     * @param location location of gold cube
+     */
     public void tfCraterSamplePID(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            //hit sample
+            //hit sample by moving backwards 8 inches
             drivetrain.driveToPos(DRIVE_SPEED, 8, 3);
 
             opMode.sleep(300);
-            //drive forward again
+            //drive forward 8 inches
             drivetrain.driveToPos(DRIVE_SPEED,-8, 3);
             //turn clockwise face depot
             drivetrain.turnPID(-DIAGONAL_TURN);
+            //drive forward one floor tile, then correct position by strafing right a certain number of units
+            // then go forward again to depot
             if (location == TensorFlowManager.TFLocation.LEFT){
+                //if gold was left, strafe right a floor tile
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 5);
                 drivetrain.strafeToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE, 5);
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 3.0, 5);
             } else if (location == TensorFlowManager.TFLocation.CENTER || location == TensorFlowManager.TFLocation.NONE){
-                //drive forward one floor tile, then correct position by strafing right, then go forward again to depot
+                //if gold was center or not found, strafe right 1.5 floor tile
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 5);
                 drivetrain.strafeToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE * 1.5, 5);
                 drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 3.0, 5);
             } else if (location == TensorFlowManager.TFLocation.RIGHT){
+                //if gold was right, strafe right 2 floor tiles
                 drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 1.5, 5);
                 drivetrain.strafeToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE * 2.0, 5);
                 drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 3.0, 5);
@@ -300,6 +312,7 @@ public class HardwareSlide extends Mechanism {
         }
     }
 
+    //align to wall after dropping marker
     public void alignToWall(boolean crater) {
         if (opMode.opModeIsActive()) {
             if (crater) {
