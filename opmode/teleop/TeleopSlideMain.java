@@ -157,9 +157,7 @@ public class TeleopSlideMain extends OpMode {
         if (drivetrainSlowMode) {
             background.setOrangeBackground();
             robot.drivetrain.driveSlide(slowYInput, slowXInput, slowSlide);
-        } else {
-            robot.drivetrain.driveSlide(yInput, xInput, slideInput);
-        }
+        } else { robot.drivetrain.driveSlide(yInput, xInput, slideInput); }
 
         robot.lift.setLiftPower(-gamepad1.left_trigger + gamepad1.right_trigger);
         /**

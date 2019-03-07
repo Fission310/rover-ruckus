@@ -20,13 +20,13 @@ public class RCConfig {
     public static final String ACQUIRER_ROTATION = "acquirer_rot";
     public static final String HORZ_PHONE_GIMBAL = "horz_gimbal";
     public static final String VERT_PHONE_GIMBAL = "vert_gimbal";
+    public static final String FRONT_RIGHT_RANGE = "front_range_servo";
+    public static final String BACK_LEFT_RANGE = "back_range_servo";
 
     // I2C
     public static final String IMU = "imu";
-    public static final String RANGE_SENSOR = "sensor_range";
-    public static final String LIMIT_SWITCH = "limit_switch";
-    public static final String COLOR_SENSOR = "color_sensor";
-    public static final String TOUCH_SENSOR = "touch_sensor";
+    public static final String FRONT_RANGE_SENSOR = "front_range";
+    public static final String BACK_RANGE_SENSOR = "back_range";
     public static final String DISTANCE_SENSOR_BOTTOM = "sensor_bottom";
     public static final String DISTANCE_SENSOR_BACK = "sensor_back";
     public static final String DISTANCE_SENSOR_SPONSOR = "sensor_sponsor";
