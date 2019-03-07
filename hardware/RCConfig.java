@@ -13,14 +13,13 @@ public class RCConfig {
     public static final String DRAWER_SLIDES = "drawer";
     public static final String INTAKE_MOTOR = "intake";
     public static final String ROTATION = "rot";
+    public static final String BACK_ROTATION = "backRot";
 
     // Servos
-    public static final String ARM = "arm";
     public static final String MARKER = "marker";
     public static final String ACQUIRER_ROTATION = "acquirer_rot";
-    public static final String SWEEPER = "sweeper";
-    public static final String MARKERARM = "marker_arm";
-    public static final String PHONE_MOUNT = "phone_mount";
+    public static final String HORZ_PHONE_GIMBAL = "horz_gimbal";
+    public static final String VERT_PHONE_GIMBAL = "vert_gimbal";
 
     // I2C
     public static final String IMU = "imu";
@@ -34,9 +33,4 @@ public class RCConfig {
 
     // Misc
     public static final String WEBCAM = "Webcam 1";
-    //Legacy
-    public static final String LEFT_BACK = "left_back";
-    public static final String RIGHT_BACK = "right_back";
-    public static final String ROTATE_LIFT = "rotate_lift";
-    public static final String WINCH = "winch";
 }

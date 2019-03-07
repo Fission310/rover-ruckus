@@ -17,6 +17,7 @@ public class DrawerSlides extends Mechanism {
 
     /* Hardware members */
     private DcMotor rotation;
+    private DcMotor backRotation;
     private DcMotor drawerSlide;
 
     /**
@@ -40,35 +41,40 @@ public class DrawerSlides extends Mechanism {
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
         rotation = hwMap.dcMotor.get(RCConfig.ROTATION);
+        backRotation = hwMap.dcMotor.get(RCConfig.BACK_ROTATION);
         drawerSlide = hwMap.dcMotor.get(RCConfig.DRAWER_SLIDES);
 
         // Set braking behavior
         rotation.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRotation.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drawerSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set polarity
         rotation.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRotation.setDirection(DcMotorSimple.Direction.REVERSE);
         drawerSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set initial power
         rotation.setPower(0);
+        backRotation.setPower(0);
         drawerSlide.setPower(0);
     }
 
     public void encoderInit() {
         rotation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRotation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drawerSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         rotation.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRotation.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         drawerSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void setDrawerSlideZeroPowers(DcMotor.ZeroPowerBehavior behavior) {
-        drawerSlide.setZeroPowerBehavior(behavior);
-    }
+    public void setDrawerSlideZeroPowers(DcMotor.ZeroPowerBehavior behavior) { drawerSlide.setZeroPowerBehavior(behavior); }
 
     public void setRotationZeroPowers(DcMotor.ZeroPowerBehavior behavior) {
         rotation.setZeroPowerBehavior(behavior);
+        backRotation.setZeroPowerBehavior(behavior);
     }
 
     /**
@@ -77,11 +83,13 @@ public class DrawerSlides extends Mechanism {
      */
     public void setRotationPower(double power) {
         rotation.setPower(power);
+        backRotation.setPower(power);
     }
 
     public void setScaledRotationPower(double power) {
         double scaledPower = scaleInput(power);
         rotation.setPower(scaledPower);
+        backRotation.setPower(scaledPower);
     }
 
     double scaleInput(double power) {

@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.DrawerSlides;
+import org.firstinspires.ftc.teamcode.hardware.Gimbal;
+import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Marker;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
@@ -42,11 +44,15 @@ public class HardwareSlide extends Mechanism {
     /**
      * Instance variable containing robot's lift and pinion lift.
      */
-//    public Lift lift;
+    public Lift lift;
     /**
      * Instance variable containing robot's marker.
      */
     public Marker marker;
+    /**
+     * Instance variable containing robot's Gimbal.
+     */
+    public Gimbal gimbal;
 
     /* Miscellaneous mechanisms */
 
@@ -57,8 +63,9 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain();
         drawerSlides = new DrawerSlides();
         acquirer = new Acquirer();
-//        lift = new Lift();
+        lift = new Lift();
         marker = new Marker();
+        gimbal = new Gimbal();
     }
     /**
      * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
@@ -71,8 +78,9 @@ public class HardwareSlide extends Mechanism {
         drivetrain = new Drivetrain(opMode);
         drawerSlides = new DrawerSlides(opMode);
         acquirer = new Acquirer(opMode);
-//        lift = new Lift(opMode);
+        lift = new Lift(opMode);
         marker = new Marker(opMode);
+        gimbal = new Gimbal(opMode);
     }
 
     /**
@@ -83,8 +91,9 @@ public class HardwareSlide extends Mechanism {
         drivetrain.init(hwMap);
         acquirer.init(hwMap);
         drawerSlides.init(hwMap);
-//        lift.init(hwMap);
+        lift.init(hwMap);
         marker.init(hwMap);
+        gimbal.init(hwMap);
     }
 
     /**
@@ -102,7 +111,6 @@ public class HardwareSlide extends Mechanism {
     public double imuAngle() {
         return drivetrain.imuAngle();
     }
-
 
     /**
      * Waits for opMode's to start. Can perform actions while waiting.

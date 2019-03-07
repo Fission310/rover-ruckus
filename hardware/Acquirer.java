@@ -45,7 +45,7 @@ public class Acquirer extends Mechanism {
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
         intakeMotor = hwMap.dcMotor.get(RCConfig.INTAKE_MOTOR);
-//        acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
+        acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
 
         // Set polarity
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);

@@ -93,7 +93,7 @@ public class TeleopSlideMain extends OpMode {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
         background.init(hardwareMap);
-        robot.imuInit(hardwareMap);
+//        robot.imuInit(hardwareMap);
 
     }
 
@@ -161,6 +161,7 @@ public class TeleopSlideMain extends OpMode {
             robot.drivetrain.driveSlide(yInput, xInput, slideInput);
         }
 
+        robot.lift.setLiftPower(-gamepad1.left_trigger + gamepad1.right_trigger);
         /**
          * Gamepad 2
          */
@@ -238,7 +239,7 @@ public class TeleopSlideMain extends OpMode {
          */
 //        telemetry.addData("Slow Mode", ":" + drivetrainSlowMode);
 //        double[] drawerSlides = robot.drawerSlides.getPositions();
-        double imuZAxis = robot.drivetrain.singleImu.getHeading();
+//        double imuZAxis = robot.drivetrain.singleImu.getHeading();
 //        robot.drivetrain.getDrivePower();
 //        robot.drivetrain.getDriveEncoderTicks();
 //
@@ -246,7 +247,7 @@ public class TeleopSlideMain extends OpMode {
 //                robot.drawerSlides.encoderCounts());
 //        telemetry.addData("Rotational Arm Encoder counts", "Running at %.2f",
 //                drawerSlides[0]);
-        telemetry.addData("IMU", "Z-axis: " + imuZAxis);
+//        telemetry.addData("IMU", "Z-axis: " + imuZAxis);
     }
 
     @Override

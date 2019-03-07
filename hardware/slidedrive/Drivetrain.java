@@ -265,11 +265,10 @@ public class Drivetrain extends Mechanism {
         // Target position variables
         int newLeftTarget;
         int newRightTarget;
-//      int avgTarget;
+
         // Determine new target position, and pass to motor controller
         newLeftTarget = leftFront.getCurrentPosition() + (int)(leftInches * Constants.TICKS_PER_INCH_30);
         newRightTarget = rightFront.getCurrentPosition() + (int)(rightInches * Constants.TICKS_PER_INCH_30);
-//        avgTarget = (int)(newLeftTarget + newRightTarget);
         leftFront.setTargetPosition(newLeftTarget);
         rightFront.setTargetPosition(newRightTarget);
 
@@ -294,14 +293,12 @@ public class Drivetrain extends Mechanism {
             opMode.telemetry.addData("Path2", "Running at %7d :%7d",
             leftFront.getCurrentPosition(),
             rightFront.getCurrentPosition());
-
             opMode.telemetry.update();
         }
 
         // Stop all motion
         leftFront.setPower(0);
         rightFront.setPower(0);
-        setSlideDriveZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Turn off RUN_TO_POSITION
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
