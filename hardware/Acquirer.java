@@ -65,14 +65,14 @@ public class Acquirer extends Mechanism {
     /**
      * Inits the acquirer rotation servo to fit inside the sizing cube.
      */
-    public void acquirerRotationInit() { acquirerRotation.setPosition(SERVO_INIT_POS); }
+    public void acquirerRotationDump() { acquirerRotation.setPosition(.5); }
 
     public void acquirerRotationMid() { acquirerRotation.setPosition(0.5); }
 
     /**
      * Moves the acquirer rotation servo to set angle to acquire.
      */
-    public void acquirerRotationSet() { acquirerRotation.setPosition(SERVO_CENTER_POS); }
+    public void acquirerRotationAcquirer() { acquirerRotation.setPosition(.15); }
 
     /**
      * Moves the acquirer rotation servo to set angle to acquire.

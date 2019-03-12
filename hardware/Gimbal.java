@@ -11,20 +11,20 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Gimbal extends Mechanism {
 
     /* CONSTANTS */
-    private final double LEFT_POS = 0;
+    private final double LEFT_POS = .35;
     private final double NEUTRAL_POS = 0.5;
-    private final double RIGHT_POS = 1;
+    private final double RIGHT_POS = .75;
 
     /* Hardware members */
     private Servo horizontal_gimbal;
     private Servo vertical_gimbal;
 
     /**
-     * Default constructor for Arm.
+     * Default constructor for Gimbal.
      */
     public Gimbal(){ }
     /**
-     * Overloaded constructor for Arm. Sets the OpMode context.
+     * Overloaded constructor for Gimbal. Sets the OpMode context.
      *
      * @param opMode    the LinearOpMode that is currently running
      */
@@ -40,15 +40,18 @@ public class Gimbal extends Mechanism {
         // Retrieve gimbal from hardware map and set to initial position
         horizontal_gimbal = hwMap.servo.get(RCConfig.HORZ_PHONE_GIMBAL);
         vertical_gimbal = hwMap.servo.get(RCConfig.VERT_PHONE_GIMBAL);
+
+        setHorizontalLeft();
+        setVerticalLeft();
     }
 
     /**
      * Set the gimbal to the left position.
      */
     public void setHorizontalLeft() {
-        horizontal_gimbal.setPosition(LEFT_POS);
+        horizontal_gimbal.setPosition(.47);
     }
-    public void setVerticalLeft() { vertical_gimbal.setPosition(LEFT_POS); }
+    public void setVerticalLeft() { vertical_gimbal.setPosition(.27); }
 
     /**
      * Set the gimbal to the right position.

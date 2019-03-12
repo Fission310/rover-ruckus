@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.opmode.Steps;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
 @Autonomous(name="Main TF Depot: D;S;M;P", group="Slide Depot")
-public class DepotMainTF extends LinearOpMode {
+public class DepotMain extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -34,6 +34,7 @@ public class DepotMainTF extends LinearOpMode {
         // Initialize robot
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
+        robot.imuInit(hardwareMap);
 
         // Initialize CV
         visionManager.init(hardwareMap, false);
@@ -45,7 +46,9 @@ public class DepotMainTF extends LinearOpMode {
             goldLocation = visionManager.getDoubleMineralLocation();
             telemetry.addData("Status", "Waiting in Init");
             telemetry.addData("Gold location:", goldLocation);
+            telemetry.addData("Gyro Is Calibrated", robot.imuCalibrated());
             telemetry.update();
+
         }
 
         waitForStart();
@@ -57,13 +60,15 @@ public class DepotMainTF extends LinearOpMode {
                  * Hang and scan for the gold mineral location.
                  */
                 case HANG_AND_SAMPLE:
-                    telemetry.addData("Gold Location not found during init. location:", "trying again");
-                    //try to find gold location again
-                    goldLocation = visionManager.getDoubleMineralLocation();
-                    ElapsedTime elapsedTime = new ElapsedTime();
-                    while(elapsedTime.seconds() < 2) ;
+                    if (goldLocation != TensorFlowManager.TFLocation.NONE) {
+                        telemetry.addData("Gold Location found during init. location:", goldLocation);
+                    } else {
+                        goldLocation = visionManager.getDoubleMineralLocation();
+                        ElapsedTime elapsedTime = new ElapsedTime();
+                        while(elapsedTime.seconds() < 2) ;
+                    }
                     telemetry.addData("Gold Location", goldLocation);
-                    telemetry.addData("Test", "Test");
+                    telemetry.update();
                     step = Steps.State.LAND;
                     break;
                 /**
@@ -80,11 +85,10 @@ public class DepotMainTF extends LinearOpMode {
                  * IMU Init.
                  */
                 case IMU_INIT:
-                    robot.imuInit(hardwareMap);
+                    robot.drivetrain.singleImu.resetAngle();
 //                    robot.drivetrain.resetDeltaAngle();
 //                    robot.drivetrain.imuStartingRot();
-                    telemetry.addData("Imu", "Initialized");
-                    telemetry.addData("Gold Cube location", goldLocation);
+                    telemetry.addData("Z axis", robot.imuAngle());
                     telemetry.update();
                     step = Steps.State.TURN_OFF_CV;
                     break;
@@ -96,6 +100,12 @@ public class DepotMainTF extends LinearOpMode {
                      * Makes sure that the gold location is found.
                      */
                     //if gold location was not found during init
+                    robot.sensors.setFrontRight();
+                    robot.sensors.setBackRight();
+                    sleep(500);
+                    robot.sensors.setFrontNeutral();
+                    robot.sensors.setBackNeutral();
+
                     while (goldLocation == TensorFlowManager.TFLocation.NONE && ROTATIONS < 18 && runtime.seconds() > 15) {
                         telemetry.addData("Gold Location not found during init. location:", "trying again");
                         telemetry.update();
@@ -130,7 +140,7 @@ public class DepotMainTF extends LinearOpMode {
                     step = Steps.State.TURN_90;
                     break;
                 /**
-                 * Rotate 90 degrees; Robot faces backwards for the marker mechanism.
+                 * Rotate 90 degrees; Robot faces forwards for the marker mechanism.
                  */
                 case TURN_90:
                     robot.turn90();

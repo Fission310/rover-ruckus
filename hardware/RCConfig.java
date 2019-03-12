@@ -27,9 +27,6 @@ public class RCConfig {
     public static final String IMU = "imu";
     public static final String FRONT_RANGE_SENSOR = "front_range";
     public static final String BACK_RANGE_SENSOR = "back_range";
-    public static final String DISTANCE_SENSOR_BOTTOM = "sensor_bottom";
-    public static final String DISTANCE_SENSOR_BACK = "sensor_back";
-    public static final String DISTANCE_SENSOR_SPONSOR = "sensor_sponsor";
 
     // Misc
     public static final String WEBCAM = "Webcam 1";

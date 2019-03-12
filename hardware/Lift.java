@@ -115,10 +115,10 @@ public class Lift extends Mechanism {
      */
     public void liftToPos(double speed, double inches) {
         // Target position variables
-        int leftTarget, rightTarget;
+        int leftTarget;
 
         // Determine new target position, and pass to motor controller
-        leftTarget = LiftMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_RACK_PINION);
+        leftTarget = LiftMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_53);
 
         LiftMotor.setTargetPosition(leftTarget);
 

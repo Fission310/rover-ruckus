@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import android.view.View;
@@ -10,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.util.signals.BackgroundColorManager;
 
 @Autonomous(name="Color Change", group="Test")
-//@Disabled
+@Disabled
 public class ColorChange extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();

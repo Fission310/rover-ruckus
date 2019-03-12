@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.opmode.Steps;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
 @Autonomous(name="Crater Rot: D;S;M;P", group="Slide Depot")
+@Disabled
 public class CraterRot extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();

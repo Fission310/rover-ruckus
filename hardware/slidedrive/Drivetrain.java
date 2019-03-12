@@ -39,7 +39,8 @@ public class Drivetrain extends Mechanism {
     public PIDController pidRotate, pidDrive;
     public SingleIMU singleImu = new SingleIMU();
 
-    private double power = .60;
+    private double power = .35;
+    private double turningPower = .30;
 
     /**
      * Default constructor for Drivetrain.
@@ -134,7 +135,7 @@ public class Drivetrain extends Mechanism {
         // Set the starting angle to make automating hanging easier
 
         // Set PID proportional value to start reducing power at about 50 degrees of rotation.
-        pidRotate = new PIDController(.0025, 0.002, .0025);
+        pidRotate = new PIDController(.0025, 0.000, .000);
 
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
@@ -341,9 +342,9 @@ public class Drivetrain extends Mechanism {
      * - negative is clockwise
      * @param angle         number of degrees to turn
      */
-    public void turnPID(int angle) { pidDriveRotate(angle, power); }
+    public void turnPID(int angle) { pidDriveRotate(angle, turningPower); }
 
-    public void turn180PID(int angle) { pidRotate180(angle, power); }
+    public void turn180PID(int angle) { pidRotate180(angle, turningPower); }
 
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
@@ -505,7 +506,7 @@ public class Drivetrain extends Mechanism {
         slideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    void curveTurn(int counts, double speed, double turnFraction, boolean turnRight) {
+    public void curveTurn(int counts, double speed, double turnFraction, boolean turnRight) {
         double reducedSpeed = speed * (1 - turnFraction);
         double reducedCount = counts * (1- turnFraction);
 
@@ -587,18 +588,5 @@ public class Drivetrain extends Mechanism {
         positions[2] = slideDrive.getCurrentPosition() / Constants.TICKS_PER_INCH_30;
 
         return positions;
-    }
-
-    public void getDrivePower(){
-        opMode.telemetry.addData("GP 1 Status", "Left Input: " + leftFront.getPower());
-        opMode.telemetry.addData("GP 1 Status", "Right Input: " + rightFront.getPower());
-        opMode.telemetry.addData("GP 1 Status", "Slide: " + slideDrive.getPower());
-    }
-
-    public void getDriveEncoderTicks(){
-        double[] positions = getPositions();
-        opMode.telemetry.addData("Drivetrain Encoder", "Left: " + positions[0]);
-        opMode.telemetry.addData("Drivetrain Encoder", "Right: " + positions[1]);
-        opMode.telemetry.addData("Drivetrain Encoder", "Slide: " + positions[2]);
     }
 }

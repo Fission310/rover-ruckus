@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.hardware.Gimbal;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Marker;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
+import org.firstinspires.ftc.teamcode.hardware.Sensors;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
 
@@ -26,7 +27,7 @@ public class HardwareSlide extends Mechanism {
     private static final int RIGHT_TURN = 90;
     private static final int DIAGONAL_TURN = 45;
     private static final int STRAFE = 6;
-    private static final double DRIVE_SPEED = .5;
+    private static final double DRIVE_SPEED = .4;
 
     /* Mechanisms */
     /**
@@ -53,6 +54,10 @@ public class HardwareSlide extends Mechanism {
      * Instance variable containing robot's Gimbal.
      */
     public Gimbal gimbal;
+    /**
+     * Instance variable containing robot's sensors.
+     */
+    public Sensors sensors;
 
     /* Miscellaneous mechanisms */
 
@@ -66,6 +71,7 @@ public class HardwareSlide extends Mechanism {
         lift = new Lift();
         marker = new Marker();
         gimbal = new Gimbal();
+        sensors = new Sensors();
     }
     /**
      * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
@@ -81,6 +87,7 @@ public class HardwareSlide extends Mechanism {
         lift = new Lift(opMode);
         marker = new Marker(opMode);
         gimbal = new Gimbal(opMode);
+        sensors = new Sensors(opMode);
     }
 
     /**
@@ -94,6 +101,7 @@ public class HardwareSlide extends Mechanism {
         lift.init(hwMap);
         marker.init(hwMap);
         gimbal.init(hwMap);
+        sensors.init(hwMap);
     }
 
     /**
@@ -126,8 +134,10 @@ public class HardwareSlide extends Mechanism {
      * Autonomous action for landing the robot using the lift and pinion mechanism.
      */
     public void land() {
+        //                        ElapsedTime elapsedTime = new ElapsedTime();
+
         if (opMode.opModeIsActive()) {
-           //lift.liftToPos(.3, 7.5);
+           lift.liftToPos(.6, 48.0); // 10 inch
         }
     }
 
@@ -135,15 +145,15 @@ public class HardwareSlide extends Mechanism {
     public void strafeOutOfLander() {
         if (opMode.opModeIsActive()) {
 //            drivetrain.driveToPos(.4, 4, 3.0);
-            drivetrain.strafeToPos(.5, FieldConstants.TILE_HYPOTENUSE / 2, 3);
-//            drivetrain.driveToPos(.4, -4, 3.0);
+//            drivetrain.strafeToPos(.5, FieldConstants.TILE_HYPOTENUSE / 2, 3);
+            drivetrain.driveToPos(.4, -5, 3.0);
         }
     }
 
     //turn 90 degrees counter clockwise
     public void turn90() {
         if (opMode.opModeIsActive()) {
-            drivetrain.turnPID(RIGHT_TURN);
+            drivetrain.turnPID(-RIGHT_TURN);
         }
     }
     /**
@@ -168,15 +178,17 @@ public class HardwareSlide extends Mechanism {
     //align robot to gold cube and push it into the depot
     public void tfRotateFindGoldLocation(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE / 3.0, 4);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE / 3.0, 4);
             if (location == TensorFlowManager.TFLocation.LEFT){
-                drivetrain.turnPID(-RIGHT_TURN);
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE / 2.0, 5);
                 drivetrain.turnPID(RIGHT_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE / 2.0, 5);
+                drivetrain.turnPID(-RIGHT_TURN);
             } else if (location == TensorFlowManager.TFLocation.RIGHT){
-                drivetrain.turnPID(RIGHT_TURN);
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE / 2.0, 5);
+                //turn right to cube
                 drivetrain.turnPID(-RIGHT_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE / 2.0, 5);
+                //turn left
+                drivetrain.turnPID(RIGHT_TURN);
             } else if (location == TensorFlowManager.TFLocation.NONE){
                 opMode.telemetry.addData("Detected None", "Robot will take center path");
             }
@@ -212,25 +224,23 @@ public class HardwareSlide extends Mechanism {
      */
     public void tfDepotSamplePID(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE + 6, 4);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE + 6, 4);
             if (location == TensorFlowManager.TFLocation.LEFT){
                 opMode.telemetry.addData("Sampling from", "left");
                 //back
                 drivetrain.turnPID(-DIAGONAL_TURN);
-                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE, 4);
-                drivetrain.turnPID(RIGHT_TURN);
-
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 4);
             } else if (location == TensorFlowManager.TFLocation.CENTER || location == TensorFlowManager.TFLocation.NONE){
-                drivetrain.turnPID(DIAGONAL_TURN);
+                drivetrain.turnPID(-DIAGONAL_TURN);
                 opMode.telemetry.addData("Sampling from", "center");
             } else if (location == TensorFlowManager.TFLocation.RIGHT){
                 drivetrain.turnPID(DIAGONAL_TURN);
-                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE, 4);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 4);
+                drivetrain.turnPID(-RIGHT_TURN);
                 opMode.telemetry.addData("Sampling from", "right");
             }
             opMode.telemetry.update();
-
-            drivetrain.strafeToPos(.4,-FieldConstants.TILE_HYPOTENUSE / 1.6, 4);
+            drivetrain.strafeToPos(.3,6, 3);
         }
     }
 
@@ -242,34 +252,32 @@ public class HardwareSlide extends Mechanism {
      */
     public void tfCraterSamplePID(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            //hit sample by moving backwards 8 inches
-            drivetrain.driveToPos(DRIVE_SPEED, 8, 3);
+            //hit sample by moving forward 8 inches
+            drivetrain.driveToPos(DRIVE_SPEED, -6, 3);
 
             opMode.sleep(300);
-            //drive forward 8 inches
-            drivetrain.driveToPos(DRIVE_SPEED,-8, 3);
-            //turn clockwise face depot
-            drivetrain.turnPID(-DIAGONAL_TURN);
+            //drive backward 8 inches
+            drivetrain.driveToPos(DRIVE_SPEED,-6, 3);
+            //turn counter-clockwise face depot
+            drivetrain.turnPID(RIGHT_TURN);
             //drive forward one floor tile, then correct position by strafing right a certain number of units
             // then go forward again to depot
             if (location == TensorFlowManager.TFLocation.LEFT){
                 //if gold was left, strafe right a floor tile
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 5);
-                drivetrain.strafeToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 4);
+                drivetrain.turnPID(DIAGONAL_TURN);
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 3.0, 5);
             } else if (location == TensorFlowManager.TFLocation.CENTER || location == TensorFlowManager.TFLocation.NONE){
                 //if gold was center or not found, strafe right 1.5 floor tile
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 5);
-                drivetrain.strafeToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE * 1.5, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 1.5, 5);
+                drivetrain.turnPID(DIAGONAL_TURN);
                 drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 3.0, 5);
             } else if (location == TensorFlowManager.TFLocation.RIGHT){
                 //if gold was right, strafe right 2 floor tiles
-                drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 1.5, 5);
-                drivetrain.strafeToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE * 2.0, 5);
-                drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 3.0, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 2, 4);
+                drivetrain.turnPID(DIAGONAL_TURN);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 3.0, 5);
             }
-            //turn around face crater
-            drivetrain.turn180PID(179);
         }
     }
 
@@ -305,14 +313,6 @@ public class HardwareSlide extends Mechanism {
         return goldLocation;
     }
 
-    /**
-     * Autonomous action for dropping the marker. Uses the robot's distance sensor to detect the robot's
-     * position using the vuforia pictograph. Moves parallel to wall until the edge is
-     * reached.
-     *
-//     *  @param targetCol      the cryptobox column that is being targeted (left is 0, center is 1, right is 2)
-//     *  @param isAllianceRed    whether or not the robot is on the Red Alliance
-     */
     public void dropMarker() {
         if (opMode.opModeIsActive()) {
             marker.markerLeft();
@@ -325,9 +325,9 @@ public class HardwareSlide extends Mechanism {
         if (opMode.opModeIsActive()) {
             if (crater) {
                 //facing crater, strafe left to align to wall
-                drivetrain.strafeToPos(.4,-FieldConstants.FLOOR_TILE / 1.5,4);
+//                drivetrain.strafeToPos(.4,-FieldConstants.FLOOR_TILE / 1.5,4);
             } else {
-                drivetrain.strafeToPos(.4,-16,4);
+//                drivetrain.strafeToPos(.4,-16,4);
             }
         }
     }
@@ -335,9 +335,10 @@ public class HardwareSlide extends Mechanism {
     public void driveToCrater(boolean crater) {
         if (opMode.opModeIsActive()) {
             if (crater) {
+                drivetrain.turn180PID(-180);
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 3.5, 5);
             } else {
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 3.5, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE * 3.5, 5);
             }
         }
     }

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.util.sensors.MRRangeSensor;
 import org.firstinspires.ftc.teamcode.util.sensors.REVDistanceSensor;
 
 @Autonomous(name="SesnorDrive", group="Slide Depot")
+@Disabled
 public class SensorDrive extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -54,8 +55,9 @@ import static java.lang.Math.abs;
  * BACK:
  *
  */
-@TeleOp(name = "Teleop: Main Slide", group = "Teleop")
-public class TeleopSlideMain extends OpMode {
+@TeleOp(name = "Teleop: Tank Slide", group = "Teleop")
+@Disabled
+public class TeleopSlideTank extends OpMode {
 
     private final double ANALOG_THRESHOLD = 0.08;
     private final double SLOW_MULTIPLIER = 0.5;
@@ -171,6 +173,7 @@ public class TeleopSlideMain extends OpMode {
          */
         leftTrigger2 = abs(gamepad2.left_trigger) > .9 ? -1 : -.5 * gamepad2.left_trigger;
         rightTrigger2 = abs(gamepad2.right_trigger) > .9 ? 1 : .7 * gamepad2.right_trigger;
+
         rotationInput = leftTrigger2 + rightTrigger2;
 
         robot.drawerSlides.setRotationPower(rotationInput);
@@ -182,7 +185,7 @@ public class TeleopSlideMain extends OpMode {
         if (linearSlidesSlowMode) {
             linearSlidesInput = abs(gamepad2.left_stick_y) > .9 ? .7 * Math.signum(gamepad2.left_stick_y) : .6 * gamepad2.left_stick_y;
         } else { linearSlidesInput = gamepad2.left_stick_y; }
-        robot.drawerSlides.setDrawerSlidePower(-linearSlidesInput);
+        robot.drawerSlides.setDrawerSlidePower(linearSlidesInput);
 
         /**
          * Sets acquirer power via the right bumper || Full power 0 to 1
@@ -195,9 +198,9 @@ public class TeleopSlideMain extends OpMode {
         else rightBumperPressed = false;
         telemetry.addData("Status", "right bumper" + rightBumper);
 
-        if (rightBumper) { acquirerIntake = .80; }
+        if (rightBumper) { acquirerIntake = .5; }
         else {acquirerIntake = 0;}
-        robot.acquirer.setIntakePower(-acquirerIntake);
+        robot.acquirer.setIntakePower(acquirerIntake);
 
         /**
          * Flips the acquirer to scoring and dumping position || Full power 0 to 1
@@ -214,8 +217,8 @@ public class TeleopSlideMain extends OpMode {
         else {robot.acquirer.acquirerRotationDump();}
 
         /**
-        * Both Gamepads
-        */
+         * Both Gamepads
+         */
 
 //        if (gamepad1.dpad_up || gamepad2.dpad_up || gamepad1.dpad_right || gamepad2.dpad_right) {
 //            acquirerRotation += .08;
@@ -232,13 +235,6 @@ public class TeleopSlideMain extends OpMode {
                 aButtonPressed = true;
             } else {}
         else aButtonPressed = false;
-        if (aButton) {
-            robot.sensors.setFrontRight();
-            robot.sensors.setBackLeft();
-        } else {
-            robot.sensors.setFrontNeutral();
-            robot.sensors.setBackNeutral();
-        }
 
         if (gamepad1.b || gamepad2.b)
             if(!bButtonPressed) {
@@ -247,15 +243,12 @@ public class TeleopSlideMain extends OpMode {
             } else {}
         else bButtonPressed = false;
 
-//        if (gamepad1.x || gamepad2.x)
-//            if(!xButtonPressed) {
-//                xButton = !xButton;
-//                xButtonPressed = true;
-//            } else {}
-//        else xButtonPressed = false;
-//        if (xButton) { robot.marker.markerLeft(); }
-//        else { robot.marker.markerRight(); }
-
+        if (gamepad1.x || gamepad2.x)
+            if(!xButtonPressed) {
+                xButton = !xButton;
+                xButtonPressed = true;
+            } else {}
+        else xButtonPressed = false;
 
         if (gamepad1.y || gamepad2.y)
             if(!yButtonPressed) {
@@ -264,6 +257,13 @@ public class TeleopSlideMain extends OpMode {
             } else {}
         else yButtonPressed = false;
 
+        if (yButton) {
+            robot.sensors.setFrontRight();
+            robot.sensors.setBackLeft();
+        } else {
+            robot.sensors.setFrontNeutral();
+            robot.sensors.setBackNeutral();
+        }
 
 
         /**

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.opmode.Steps;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
 @Autonomous(name="Main TF Crater: D;S;M;P", group="Slide Depot")
-public class CraterMainTF extends LinearOpMode {
+public class CraterMain extends LinearOpMode {
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -34,6 +34,7 @@ public class CraterMainTF extends LinearOpMode {
         // Initialize robot
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
+        robot.imuInit(hardwareMap);
 
         // Initialize CV
         visionManager.init(hardwareMap, false);
@@ -44,6 +45,8 @@ public class CraterMainTF extends LinearOpMode {
         while (!opModeIsActive() && !isStopRequested()) {
             goldLocation = visionManager.getDoubleMineralLocation();
             telemetry.addData("Status", "Waiting in Init");
+            telemetry.addData("Gyro Is Calibrated", robot.imuCalibrated());
+            telemetry.addData("Gold location", goldLocation);
             telemetry.update();
         }
 
@@ -71,7 +74,13 @@ public class CraterMainTF extends LinearOpMode {
                  * Land and wait for the robot to fully drop and stabilize.
                  */
                 case LAND:
+                    ElapsedTime elapsedTime = new ElapsedTime();
+
                     robot.land();
+                    if (elapsedTime.seconds() < 12) {
+                        step = Steps.State.IMU_INIT;
+                        break;
+                    }
                     telemetry.addData("Status", "Robot Landed");
                     telemetry.update();
                     step = Steps.State.IMU_INIT;
@@ -80,13 +89,13 @@ public class CraterMainTF extends LinearOpMode {
                  * IMU Init.
                  */
                 case IMU_INIT:
-                    robot.imuInit(hardwareMap);
+                    robot.drivetrain.singleImu.resetAngle();
                     telemetry.addData("Imu", "Initialized");
                     telemetry.update();
-                    step = Steps.State.FIND_GOLD_LOCATION;
+                    step = Steps.State.TURN_OFF_CV;
                     break;
                 /**
-                 * Figure out where the gold cube is.
+                 * NOT USED Figure out where the gold cube is.
                  */
                 case FIND_GOLD_LOCATION:
                     /**
@@ -94,13 +103,13 @@ public class CraterMainTF extends LinearOpMode {
                      */
                     //while (goldLocation == TensorFlowManager.TFLocation.NONE && ROTATIONS < 18 && runtime.seconds() > 15) {
                     //ROTATIONS += 2;
-                    if (goldLocation == TensorFlowManager.TFLocation.NONE) {
-                        robot.drivetrain.turnPID(2);
-                        goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
-                        ElapsedTime elapsedTime = new ElapsedTime();
-                        while(elapsedTime.seconds() < 1) ;
-                    }
-                    if (ROTATIONS > 0) { robot.drivetrain.turnPID(-ROTATIONS); }
+//                    if (goldLocation == TensorFlowManager.TFLocation.NONE) {
+//                        robot.drivetrain.turnPID(2);
+//                        goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
+//                        ElapsedTime elapsedTime = new ElapsedTime();
+//                        while(elapsedTime.seconds() < 1) ;
+//                    }
+//                    if (ROTATIONS > 0) { robot.drivetrain.turnPID(-ROTATIONS); }
                     telemetry.addData("Gold Cube location", goldLocation);
                     telemetry.update();
                     step = Steps.State.TURN_OFF_CV;
@@ -136,13 +145,13 @@ public class CraterMainTF extends LinearOpMode {
                  * Align the robot to the gold cube to push it in to the depot
                  */
                 case ALIGN_TO_GOLD:
-                    robot.tfFindGoldLocation(goldLocation);
+                    robot.tfRotateFindGoldLocation(goldLocation);
                     telemetry.addData("Status", "Robot aligned to gold cube");
                     telemetry.update();
                     step = Steps.State.SAMPLE;
                     break;
                 /**
-                 * Push the gold cube into the depot
+                 * Push the gold cube into the crater
                  */
                 case SAMPLE:
                     robot.tfCraterSamplePID(goldLocation);
