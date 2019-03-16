@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware.slidedrive;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -112,8 +113,8 @@ public class HardwareSlide extends Mechanism {
         drivetrain.imuInit(hwMap);
     }
 
-    public boolean imuCalibrated() {
-        return drivetrain.imuCalibrated();
+    public BNO055IMU.CalibrationStatus imuCalibrated() {
+        return drivetrain.singleImu.imuCalibrated();
     }
 
     public double imuAngle() {
@@ -134,8 +135,6 @@ public class HardwareSlide extends Mechanism {
      * Autonomous action for landing the robot using the lift and pinion mechanism.
      */
     public void land() {
-        //                        ElapsedTime elapsedTime = new ElapsedTime();
-
         if (opMode.opModeIsActive()) {
            lift.liftToPos(.6, 48.0); // 10 inch
         }
@@ -144,8 +143,6 @@ public class HardwareSlide extends Mechanism {
     //strafe RIGHT out of Lander
     public void strafeOutOfLander() {
         if (opMode.opModeIsActive()) {
-//            drivetrain.driveToPos(.4, 4, 3.0);
-//            drivetrain.strafeToPos(.5, FieldConstants.TILE_HYPOTENUSE / 2, 3);
             drivetrain.driveToPos(.4, -5, 3.0);
         }
     }
@@ -191,26 +188,6 @@ public class HardwareSlide extends Mechanism {
                 drivetrain.turnPID(RIGHT_TURN);
             } else if (location == TensorFlowManager.TFLocation.NONE){
                 opMode.telemetry.addData("Detected None", "Robot will take center path");
-            }
-        }
-    }
-
-    public void rotFindGoldLocation(TensorFlowManager.TFLocation location) {
-        if (opMode.opModeIsActive()) {
-            if (location == TensorFlowManager.TFLocation.LEFT){
-                drivetrain.turnPID(20);
-            } else if (location == TensorFlowManager.TFLocation.RIGHT){
-                drivetrain.turnPID(-20);
-            } else if (location == TensorFlowManager.TFLocation.NONE){
-                opMode.telemetry.addData("Detected None", "Robot will take center path");
-            }
-            drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE / 3.0, 4);
-            if (location == TensorFlowManager.TFLocation.LEFT){
-                drivetrain.turnPID(-20);
-                drivetrain.strafeToPos(.4,-FieldConstants.TILE_HYPOTENUSE / 3.0,4);
-            } else if (location == TensorFlowManager.TFLocation.RIGHT){
-                drivetrain.turnPID(20);
-                drivetrain.strafeToPos(.4,FieldConstants.TILE_HYPOTENUSE / 3.0,4);
             }
         }
     }
@@ -266,17 +243,17 @@ public class HardwareSlide extends Mechanism {
                 //if gold was left, strafe right a floor tile
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 4);
                 drivetrain.turnPID(DIAGONAL_TURN);
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 3.0, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 4.0, 5);
             } else if (location == TensorFlowManager.TFLocation.CENTER || location == TensorFlowManager.TFLocation.NONE){
                 //if gold was center or not found, strafe right 1.5 floor tile
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 1.5, 5);
                 drivetrain.turnPID(DIAGONAL_TURN);
-                drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 3.0, 5);
+                drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 4.0, 5);
             } else if (location == TensorFlowManager.TFLocation.RIGHT){
                 //if gold was right, strafe right 2 floor tiles
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 2, 4);
                 drivetrain.turnPID(DIAGONAL_TURN);
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 3.0, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 4.0, 5);
             }
         }
     }

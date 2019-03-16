@@ -74,13 +74,7 @@ public class CraterMain extends LinearOpMode {
                  * Land and wait for the robot to fully drop and stabilize.
                  */
                 case LAND:
-                    ElapsedTime elapsedTime = new ElapsedTime();
-
                     robot.land();
-                    if (elapsedTime.seconds() < 12) {
-                        step = Steps.State.IMU_INIT;
-                        break;
-                    }
                     telemetry.addData("Status", "Robot Landed");
                     telemetry.update();
                     step = Steps.State.IMU_INIT;
@@ -90,6 +84,8 @@ public class CraterMain extends LinearOpMode {
                  */
                 case IMU_INIT:
                     robot.drivetrain.singleImu.resetAngle();
+                    ElapsedTime elapsedTime = new ElapsedTime();
+                    while(elapsedTime.seconds() < .20) ;
                     telemetry.addData("Imu", "Initialized");
                     telemetry.update();
                     step = Steps.State.TURN_OFF_CV;

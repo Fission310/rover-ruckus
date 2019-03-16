@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util.sensors;
+package org.firstinspires.ftc.teamcode.util.sensors.imu;
 
 public class DoubleIMU {
     SingleIMU imu1;

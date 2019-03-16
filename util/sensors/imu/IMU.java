@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util.sensors;
+package org.firstinspires.ftc.teamcode.util.sensors.imu;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 

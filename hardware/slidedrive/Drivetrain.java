@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.RCConfig;
 import org.firstinspires.ftc.teamcode.hardware.Constants;
 import org.firstinspires.ftc.teamcode.util.motion.PIDController;
-import org.firstinspires.ftc.teamcode.util.sensors.SingleIMU;
+import org.firstinspires.ftc.teamcode.util.sensors.imu.SingleIMU;
 
 /**
  * Slide Drivetrain is the class that is used to define all of the hardware for a robot's slide drivetrain.
@@ -40,7 +40,7 @@ public class Drivetrain extends Mechanism {
     public SingleIMU singleImu = new SingleIMU();
 
     private double power = .35;
-    private double turningPower = .30;
+    private double turningPower = .50;
 
     /**
      * Default constructor for Drivetrain.
@@ -140,10 +140,6 @@ public class Drivetrain extends Mechanism {
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
         pidDrive = new PIDController(.1, .0, .0);
-    }
-
-    public boolean imuCalibrated() {
-        return singleImu.imuCalibrated();
     }
 
     public double imuAngle() { return singleImu.getAngle(); }
