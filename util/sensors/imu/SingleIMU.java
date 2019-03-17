@@ -26,6 +26,7 @@ public class SingleIMU {
     public AxesOrder axesOrder;
     public Orientation lastAngles = new Orientation();
     public Acceleration acceleration;
+    public Position position;
     public BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
     public SingleIMU() { }
@@ -102,6 +103,13 @@ public class SingleIMU {
         return angles.firstAngle;
     }
     /**
+     * Returns the linear acceleration of the robot.
+     */
+    public double getXAxis() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.thirdAngle;
+    }
+    /**
      * Returns the y axis for rotation.
      */
     public double getYAxis() {
@@ -124,11 +132,25 @@ public class SingleIMU {
     }
 
     /**
-     * Returns the linear acceleration of the robot.
+     * Returns the distance traveled in the x axis.
      */
-    public double getXAxis() {
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return angles.thirdAngle;
+    public double getXDistance() {
+        position = imu.getPosition();
+        return position.x;
+    }
+    /**
+     * Returns the distance traveled in the y axis.
+     */
+    public double getYDistance() {
+        position = imu.getPosition();
+        return position.y;
+    }
+    /**
+     * Returns the distance traveled in the z axis.
+     */
+    public double getZDistance() {
+        position = imu.getPosition();
+        return position.z;
     }
 
     /**

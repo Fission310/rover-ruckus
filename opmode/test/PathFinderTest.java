@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.util.path.test.PathTest;
 import org.firstinspires.ftc.teamcode.util.path.test.UnitMover;
 
 @Autonomous(name="Path Finder Test", group="Test")
+@Disabled
 public class PathFinderTest extends LinearOpMode {
 
     /* Private OpMode members */
