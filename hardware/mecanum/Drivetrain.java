@@ -399,6 +399,7 @@ public class Drivetrain extends Mechanism {
         runtime.reset();
 
         // Loop until a condition is met
+        //test stuff to add to git
         while (opMode.opModeIsActive() &&
                 (runtime.seconds() < timeoutS) &&
 //                slideDrive.isBusy()) {
