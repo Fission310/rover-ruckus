@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
@@ -25,8 +26,9 @@ public class SingleIMU {
     public BNO055IMU imu;
     public AxesOrder axesOrder;
     public Orientation lastAngles = new Orientation();
-    public Acceleration acceleration;
-    public Position position;
+    public Acceleration acceleration = new Acceleration();
+    public Velocity velocity = new Velocity();
+    public Position position = new Position();
     public BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
     public SingleIMU() { }
@@ -45,16 +47,29 @@ public class SingleIMU {
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled      = false;
+        parameters.loggingEnabled      = true;
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new NaiveAccelerationIntegrator();
 
         imu.initialize(parameters);
 
+        while (!imu.isGyroCalibrated() && !imu.isAccelerometerCalibrated()) { }
+
         // Start the logging of measured acceleration
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 200);
+        imu.startAccelerationIntegration(position, velocity, 1000);
+
+        position.toUnit(DistanceUnit.INCH);
+        velocity.toUnit(DistanceUnit.INCH);
     }
 
+    /**
+     *  Returns a text string giving the calibration status of the sensor. The string is in
+     * the format, “IMU Calibration Status : sx gx ax mx” where s stands for system, g for gyro, a
+     * for accelerometer and m for magnetometer. The x values or 0, 1, 2 or 3 where 0 means
+     * uncalibrated, 3 means fully calibrated and 1 and 2 mean partially calibrated. For example,
+     * “IMU Calibration Status : s0 g3 a0 m1” the system is not calibrated, the gyro is fully
+     * calibrated, the accelerometer is not calibrated and the magnetometer is partially calibrated
+     */
     public BNO055IMU.CalibrationStatus imuCalibrated() {
         return imu.getCalibrationStatus();
     }
@@ -103,7 +118,7 @@ public class SingleIMU {
         return angles.firstAngle;
     }
     /**
-     * Returns the linear acceleration of the robot.
+     * Returns the x axis for rotation.
      */
     public double getXAxis() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -117,18 +132,25 @@ public class SingleIMU {
         return angles.secondAngle;
     }
     /**
-     * Returns the x acceleration.
+     * Returns the linear acceleration of the robot of the x axis.
      */
     public double getXAccel() {
         acceleration = imu.getAcceleration();
         return acceleration.xAccel;
     }
     /**
-     * Returns the y axis acceleration.
+     * Returns the linear acceleration of the robot of the y axis.
      */
-    public double getaYAccel() {
+    public double getYAccel() {
         acceleration = imu.getAcceleration();
         return acceleration.yAccel;
+    }
+    /**
+     * Returns the linear acceleration of the robot of the z axis.
+     */
+    public double getZAccel() {
+        acceleration = imu.getAcceleration();
+        return acceleration.zAccel;
     }
 
     /**
