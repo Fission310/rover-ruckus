@@ -5,17 +5,28 @@ package org.firstinspires.ftc.teamcode.hardware;
  */
 public class RCConfig {
 
-    // Motors
+    /**
+     * Motors.
+     */
+    // Slide
     public static final String LEFT_DRIVE = "left";
     public static final String RIGHT_DRIVE = "right";
     public static final String SLIDE_DRIVE = "slide";
+    // Mecanum
+    public static final String LEFT_FRONT = "LeftFront";
+    public static final String LEFT_BACK = "LeftBack";
+    public static final String RIGHT_FRONT = "RightFront";
+    public static final String RIGHT_BACK = "RightBack";
+
     public static final String LIFT = "lift";
     public static final String DRAWER_SLIDES = "drawer";
     public static final String INTAKE_MOTOR = "intake";
     public static final String ROTATION = "rot";
     public static final String BACK_ROTATION = "backRot";
 
-    // Servos
+    /**
+     * Servos.
+     */
     public static final String MARKER = "marker";
     public static final String ACQUIRER_ROTATION = "acquirer_rot";
     public static final String HORZ_PHONE_GIMBAL = "horz_gimbal";
@@ -23,11 +34,15 @@ public class RCConfig {
     public static final String FRONT_RIGHT_RANGE = "front_range_servo";
     public static final String BACK_LEFT_RANGE = "back_range_servo";
 
-    // I2C
+    /**
+     * I2C.
+     */
     public static final String IMU = "imu";
     public static final String FRONT_RANGE_SENSOR = "front_range";
     public static final String BACK_RANGE_SENSOR = "back_range";
 
-    // Misc
+    /**
+     * Misc.
+     */
     public static final String WEBCAM = "Webcam 1";
 }

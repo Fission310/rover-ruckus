@@ -43,7 +43,7 @@ public class SingleIMU {
          * in space is calculated from the accelerometer and gyroscope data. The calculation is fast
          * (i.e. high output data rate).
          */
-        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.mode = BNO055IMU.SensorMode.NDOF;
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json";
@@ -53,13 +53,14 @@ public class SingleIMU {
 
         imu.initialize(parameters);
 
-        while (!imu.isGyroCalibrated() && !imu.isAccelerometerCalibrated()) { }
+//        while (!imu.isGyroCalibrated() && !imu.isAccelerometerCalibrated()) { }
 
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(position, velocity, 1000);
 
         position.toUnit(DistanceUnit.INCH);
         velocity.toUnit(DistanceUnit.INCH);
+        acceleration.toUnit(DistanceUnit.INCH);
     }
 
     /**
@@ -135,21 +136,21 @@ public class SingleIMU {
      * Returns the linear acceleration of the robot of the x axis.
      */
     public double getXAccel() {
-        acceleration = imu.getAcceleration();
+        acceleration = imu.getLinearAcceleration();
         return acceleration.xAccel;
     }
     /**
      * Returns the linear acceleration of the robot of the y axis.
      */
     public double getYAccel() {
-        acceleration = imu.getAcceleration();
+        acceleration = imu.getLinearAcceleration();
         return acceleration.yAccel;
     }
     /**
      * Returns the linear acceleration of the robot of the z axis.
      */
     public double getZAccel() {
-        acceleration = imu.getAcceleration();
+        acceleration = imu.getLinearAcceleration();
         return acceleration.zAccel;
     }
 

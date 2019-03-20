@@ -60,9 +60,14 @@ public class IMUTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            telemetry.addData("getAccelY", robot.drivetrain.singleImu.getYAccel());
+            telemetry.addData("getAccelX", robot.drivetrain.singleImu.getXAccel());
+            telemetry.addData("getAccelZ", robot.drivetrain.singleImu.getZAccel());
+
             telemetry.addData("getYDistance", robot.drivetrain.singleImu.getYDistance());
             telemetry.addData("getXDistance", robot.drivetrain.singleImu.getXDistance());
             telemetry.addData("getZDistance", robot.drivetrain.singleImu.getZDistance());
+            telemetry.addData("pos", robot.drivetrain.singleImu.imu.getPosition());
             telemetry.update();
         }
 
