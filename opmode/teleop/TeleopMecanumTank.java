@@ -6,17 +6,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.hardware.mecanum.HardwareMecanum;
-import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.util.signals.BackgroundColorManager;
 
 import static java.lang.Math.abs;
 
 /**
- * TeleopMecanumMain is the primary TeleOp OpMode for mecanum drivetrains. All driver-controlled actions should
+ * TeleopMecanumTank is the tank TeleOp OpMode for mecanum drivetrains. All driver-controlled actions should
  * be defined in this class.
  */
-@TeleOp(name = "Teleop: Main Mecanum", group = "Teleop")
-public class TeleopMecanumMain extends OpMode {
+@TeleOp(name = "Teleop: Tank Mecanum", group = "Teleop")
+public class TeleopMecanumTank extends OpMode {
 
     private final double ANALOG_THRESHOLD = 0.15;
     private final double SLOW_MULTIPLIER = 0.5;
@@ -32,8 +31,8 @@ public class TeleopMecanumMain extends OpMode {
     private BackgroundColorManager background = new BackgroundColorManager();
 
     /* Holds Gamepad 1 joystick's values */
-    double yInput, xInput, slideInput;
-    double slowYInput, slowXInput, slowSlide;
+    double leftYInput, rightYInput, slideInput;
+    double slowLeftYInput, slowRightYInput, slowSlide;
 
     /* Handle time complexities */
     boolean aButtonPressed, bButtonPressed, xButtonPressed, yButtonPressed, leftStickPressed, rightBumperPressed, leftBumperPressed;
@@ -89,13 +88,13 @@ public class TeleopMecanumMain extends OpMode {
         /**
          * Controls the drivetrain via the left and right analog sticks || Slow mode = left stick button
          */
-        yInput = gamepad1.left_stick_y;
-        xInput = gamepad1.right_stick_x;
+        leftYInput = gamepad1.left_stick_y;
+        rightYInput = gamepad1.right_stick_y;
         slideInput = gamepad1.left_stick_x;
         if (abs(gamepad1.left_stick_x) < ANALOG_THRESHOLD) slideInput = 0.0;
 
-        slowYInput = Range.clip(yInput * SLOW_MULTIPLIER, -1.0, 1.0);
-        slowXInput = Range.clip(xInput * SLOW_MULTIPLIER, -1.0, 1.0);
+        slowLeftYInput = Range.clip(leftYInput * SLOW_MULTIPLIER, -1.0, 1.0);
+        slowRightYInput = Range.clip(rightYInput * SLOW_MULTIPLIER, -1.0, 1.0);
         slowSlide = Range.clip(slideInput * SLOW_MULTIPLIER, -1.0, 1.0);
 
         if (gamepad1.left_stick_button)
@@ -107,10 +106,10 @@ public class TeleopMecanumMain extends OpMode {
 
         if (drivetrainSlowMode) {
             background.setOrangeBackground();
-            robot.drivetrain.driveVector(yInput, slideInput, xInput);
+            robot.drivetrain.tankVectorDrive(slowLeftYInput, slowRightYInput, slowSlide);
         } else {
             background.setGreenBackground();
-            robot.drivetrain.driveTrig(slideInput, yInput, xInput);
+            robot.drivetrain.tankVectorDrive(leftYInput, rightYInput, slideInput);
         }
 
         /**

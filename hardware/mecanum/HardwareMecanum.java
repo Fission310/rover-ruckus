@@ -6,10 +6,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
-import org.firstinspires.ftc.teamcode.hardware.DrawerSlides;
 import org.firstinspires.ftc.teamcode.hardware.Gimbal;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
-import org.firstinspires.ftc.teamcode.hardware.Marker;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.Sensors;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
@@ -27,7 +25,6 @@ public class HardwareMecanum extends Mechanism {
     /* Constants */
     private static final int RIGHT_TURN = 90;
     private static final int DIAGONAL_TURN = 45;
-    private static final int STRAFE = 6;
     private static final double DRIVE_SPEED = .4;
 
     /* Mechanisms */
@@ -36,29 +33,21 @@ public class HardwareMecanum extends Mechanism {
      */
     public Drivetrain drivetrain;
     /**
-     * Instance variable containing robot's drawer slides.
-     */
-    public DrawerSlides drawerSlides;
-    /**
      * Instance variable containing robot's acquirer.
      */
-    public Acquirer acquirer;
+//    public Acquirer acquirer;
     /**
      * Instance variable containing robot's lift and pinion lift.
      */
-    public Lift lift;
-    /**
-     * Instance variable containing robot's marker.
-     */
-    public Marker marker;
+//    public Lift lift;
     /**
      * Instance variable containing robot's Gimbal.
      */
-    public Gimbal gimbal;
+//    public Gimbal gimbal;
     /**
      * Instance variable containing robot's sensors.
      */
-    public Sensors sensors;
+//    public Sensors sensors;
 
     /* Miscellaneous mechanisms */
 
@@ -67,12 +56,10 @@ public class HardwareMecanum extends Mechanism {
      */
     public HardwareMecanum(){
         drivetrain = new Drivetrain();
-        drawerSlides = new DrawerSlides();
-        acquirer = new Acquirer();
-        lift = new Lift();
-        marker = new Marker();
-        gimbal = new Gimbal();
-        sensors = new Sensors();
+//        acquirer = new Acquirer();
+//        lift = new Lift();
+//        gimbal = new Gimbal();
+//        sensors = new Sensors();
     }
     /**
      * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
@@ -83,12 +70,10 @@ public class HardwareMecanum extends Mechanism {
     public HardwareMecanum(LinearOpMode opMode){
         this.opMode = opMode;
         drivetrain = new Drivetrain(opMode);
-        drawerSlides = new DrawerSlides(opMode);
-        acquirer = new Acquirer(opMode);
-        lift = new Lift(opMode);
-        marker = new Marker(opMode);
-        gimbal = new Gimbal(opMode);
-        sensors = new Sensors(opMode);
+//        acquirer = new Acquirer(opMode);
+//        lift = new Lift(opMode);
+//        gimbal = new Gimbal(opMode);
+//        sensors = new Sensors(opMode);
     }
 
     /**
@@ -97,12 +82,10 @@ public class HardwareMecanum extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         drivetrain.init(hwMap);
-        acquirer.init(hwMap);
-        drawerSlides.init(hwMap);
-        lift.init(hwMap);
-        marker.init(hwMap);
-        gimbal.init(hwMap);
-        sensors.init(hwMap);
+//        acquirer.init(hwMap);
+//        lift.init(hwMap);
+//        gimbal.init(hwMap);
+//        sensors.init(hwMap);
     }
 
     /**
@@ -136,7 +119,7 @@ public class HardwareMecanum extends Mechanism {
      */
     public void land() {
         if (opMode.opModeIsActive()) {
-            lift.liftToPos(.6, 48.0); // 10 inch
+//            lift.liftToPos(.6, 48.0); // 10 inch
         }
     }
 
@@ -258,43 +241,8 @@ public class HardwareMecanum extends Mechanism {
         }
     }
 
-    public TensorFlowManager.TFLocation tfSlideSample(TensorFlowManager visionManager, TensorFlowManager.TFDetector mineral) {
-        TensorFlowManager.TFLocation goldLocation = TensorFlowManager.TFLocation.NONE;
-        mineral = visionManager.getDetector();
-        if (mineral == TensorFlowManager.TFDetector.GOLD) {
-            goldLocation = TensorFlowManager.TFLocation.CENTER;
-        }
-
-        // drive forward
-        drivetrain.driveToPos(.4, -7.0,3.0);
-        // slide to the left
-//        drivetrain.strafeToPos(.5,24,4);
-
-        // scan for mineral
-        opMode.sleep(500);
-        mineral = visionManager.getDetector();
-        if (mineral == TensorFlowManager.TFDetector.GOLD) {
-            goldLocation = TensorFlowManager.TFLocation.RIGHT;
-        }
-        // slide to the right
-//        drivetrain.strafeToPos(.5,-48,4);
-
-        // scan for mineral
-        opMode.sleep(500);
-        mineral = visionManager.getDetector();
-        if (mineral == TensorFlowManager.TFDetector.GOLD) {
-            goldLocation = TensorFlowManager.TFLocation.LEFT;
-        }
-//        drivetrain.strafeToPos(.5,24,4);
-
-        return goldLocation;
-    }
-
     public void dropMarker() {
-        if (opMode.opModeIsActive()) {
-            marker.markerLeft();
-            opMode.sleep(500);
-        }
+        if (opMode.opModeIsActive()) { }
     }
 
     //align to wall after dropping marker

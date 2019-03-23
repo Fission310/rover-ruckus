@@ -38,7 +38,7 @@ public class Drivetrain extends Mechanism {
     public PIDController pidRotate, pidDrive;
     public SingleIMU singleImu = new SingleIMU();
 
-    private final double power = .35;
+    private final double power = .40;
     private final double turningPower = .40;
     private final double ticksPerInch = Constants.TICKS_PER_INCH_30;
     /**
