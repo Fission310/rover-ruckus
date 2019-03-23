@@ -38,8 +38,7 @@ public class NaiveAccelerationIntegrator implements BNO055IMU.AccelerationIntegr
     // Construction
     //------------------------------------------------------------------------------------------
 
-    public NaiveAccelerationIntegrator()
-    {
+    public NaiveAccelerationIntegrator() {
         this.parameters = null;
         this.position = new Position();
         this.velocity = new Velocity();
@@ -50,46 +49,38 @@ public class NaiveAccelerationIntegrator implements BNO055IMU.AccelerationIntegr
     // Operations
     //------------------------------------------------------------------------------------------
 
-    @Override public void initialize(@NonNull BNO055IMU.Parameters parameters, @Nullable Position initialPosition, @Nullable Velocity initialVelocity)
-    {
+    @Override public void initialize(@NonNull BNO055IMU.Parameters parameters, @Nullable Position initialPosition, @Nullable Velocity initialVelocity) {
         this.parameters = parameters;
         this.position = initialPosition != null ? initialPosition : this.position;
         this.velocity = initialVelocity != null ? initialVelocity : this.velocity;
         this.acceleration = null;
     }
 
-    @Override public void update(Acceleration linearAcceleration)
-    {
+    @Override public void update(Acceleration linearAcceleration) {
         // We should always be given a timestamp here
-        if (linearAcceleration.acquisitionTime != 0)
-        {
+        if (linearAcceleration.acquisitionTime != 0) {
             // We can only integrate if we have a previous acceleration to baseline from
-            if (acceleration != null)
-            {
+            if (acceleration != null) {
                 Acceleration accelPrev    = acceleration;
                 Velocity     velocityPrev = velocity;
 
                 acceleration = linearAcceleration;
 
-                if (accelPrev.acquisitionTime != 0)
-                {
+                if (accelPrev.acquisitionTime != 0) {
                     Velocity deltaVelocity = meanIntegrate(acceleration, accelPrev);
                     velocity = plus(velocity, deltaVelocity);
                 }
 
-                if (velocityPrev.acquisitionTime != 0)
-                {
+                if (velocityPrev.acquisitionTime != 0) {
                     Position deltaPosition = meanIntegrate(velocity, velocityPrev);
                     position = plus(position, deltaPosition);
                 }
 
-                if (parameters != null && parameters.loggingEnabled)
-                {
+                if (parameters != null && parameters.loggingEnabled) {
                     RobotLog.vv(parameters.loggingTag, "dt=%.3fs accel=%s vel=%s pos=%s", (acceleration.acquisitionTime - accelPrev.acquisitionTime)*1e-9, acceleration, velocity, position);
                 }
             }
-            else
-                acceleration = linearAcceleration;
+            else acceleration = linearAcceleration;
         }
     }
 }

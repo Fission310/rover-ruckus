@@ -59,8 +59,8 @@ public class SingleIMU {
         imu.startAccelerationIntegration(position, velocity, 1000);
 
         position.toUnit(DistanceUnit.INCH);
-        velocity.toUnit(DistanceUnit.INCH);
-        acceleration.toUnit(DistanceUnit.INCH);
+        velocity.toUnit(DistanceUnit.METER);
+        acceleration.toUnit(DistanceUnit.METER);
     }
 
     /**
@@ -152,6 +152,27 @@ public class SingleIMU {
     public double getZAccel() {
         acceleration = imu.getLinearAcceleration();
         return acceleration.zAccel;
+    }
+    /**
+     * Returns the linear velocity of the robot of the x axis.
+     */
+    public double getXVel() {
+        velocity = imu.getVelocity();
+        return velocity.xVeloc;
+    }
+    /**
+     * Returns the linear velocity of the robot of the y axis.
+     */
+    public double getYVel() {
+        velocity = imu.getVelocity();
+        return velocity.yVeloc;
+    }
+    /**
+     * Returns the linear velocity of the robot of the z axis.
+     */
+    public double getZVel() {
+        velocity = imu.getVelocity();
+        return velocity.zVeloc;
     }
 
     /**
