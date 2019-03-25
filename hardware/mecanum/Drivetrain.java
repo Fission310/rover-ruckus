@@ -276,6 +276,28 @@ public class Drivetrain extends Mechanism {
         driveToPos(speed, distance, distance, timeoutS);
     }
 
+    public void driveToPositionIMU(double inches, double power){
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+        double startError = singleImu.getXAccel();
+        double startPos = singleImu.getXDistance();
+        double currentPos = singleImu.getXDistance();
+        double endPos = startPos + inches;
+        double error;
+        leftBack.setPower(power);
+        leftFront.setPower(power);
+        rightBack.setPower(power);
+        rightFront.setPower(power);
+        while(opMode.opModeIsActive() && currentPos < endPos){
+            error = startError * runtime.seconds() * runtime.seconds();
+            currentPos = singleImu.getXDistance() - error;
+        }
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+    }
+
     /**
      * Drive accurately using a PID loop.
      * @param speed         speed at which the motor shall turn
