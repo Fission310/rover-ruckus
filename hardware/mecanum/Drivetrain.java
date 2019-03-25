@@ -336,7 +336,7 @@ public class Drivetrain extends Mechanism {
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(0, 90);
         pidRotate.setOutputRange(.2, power);
-        pidRotate.setTolerance(.7);
+        pidRotate.setTolerance(.2);
         pidRotate.enable();
 
         // getAngle() returns + when rotating counter clockwise (left) and - when rotating
@@ -386,7 +386,7 @@ public class Drivetrain extends Mechanism {
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(0, 180);
         pidRotate.setOutputRange(.2, power);
-        pidRotate.setTolerance(.8);
+        pidRotate.setTolerance(.2);
         pidRotate.enable();
 
         // getAngle() returns + when rotating counter clockwise (left) and - when rotating

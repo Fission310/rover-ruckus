@@ -11,9 +11,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Gimbal extends Mechanism {
 
     /* CONSTANTS */
-    private final double LEFT_POS = .35;
+    private final double LEFT_POS = .0;
     private final double NEUTRAL_POS = 0.5;
-    private final double RIGHT_POS = .75;
+    private final double RIGHT_POS = .1;
 
     /* Hardware members */
     private Servo horizontal_gimbal;
@@ -46,12 +46,20 @@ public class Gimbal extends Mechanism {
     }
 
     /**
+     * Set the gimbal to the sampling position during hang.
+     */
+    public void setSamplingPos() {
+        horizontal_gimbal.setPosition(.47);
+        vertical_gimbal.setPosition(.27);
+    }
+
+    /**
      * Set the gimbal to the left position.
      */
     public void setHorizontalLeft() {
-        horizontal_gimbal.setPosition(.47);
+        horizontal_gimbal.setPosition(LEFT_POS);
     }
-    public void setVerticalLeft() { vertical_gimbal.setPosition(.27); }
+    public void setVerticalLeft() { vertical_gimbal.setPosition(LEFT_POS); }
 
     /**
      * Set the gimbal to the right position.
