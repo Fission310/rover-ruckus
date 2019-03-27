@@ -13,10 +13,10 @@ public class RCConfig {
     public static final String RIGHT_DRIVE = "right";
     public static final String SLIDE_DRIVE = "slide";
     // Mecanum
-    public static final String LEFT_FRONT = "LeftFront";
-    public static final String LEFT_BACK = "LeftBack";
-    public static final String RIGHT_FRONT = "RightFront";
-    public static final String RIGHT_BACK = "RightBack";
+    public static final String LEFT_FRONT = "leftFront";
+    public static final String LEFT_BACK = "leftBack";
+    public static final String RIGHT_FRONT = "rightFront";
+    public static final String RIGHT_BACK = "rightBack";
 
     public static final String LIFT = "lift";
     public static final String DRAWER_SLIDES = "drawer";

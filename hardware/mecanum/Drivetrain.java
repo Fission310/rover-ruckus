@@ -170,10 +170,10 @@ public class Drivetrain extends Mechanism {
     }
 
     public void tankVectorDrive(double leftY, double rightY, double slide) {
-        double flPower = leftY + slide;
-        double frPower = rightY - slide;
-        double blPower = leftY - slide;
-        double brPower = rightY + slide;
+        double flPower = leftY - slide;
+        double blPower = leftY + slide;
+        double frPower = rightY + slide;
+        double brPower = rightY - slide;
 
         leftFront.setPower(Range.clip(flPower,-1,1));
         leftBack.setPower(Range.clip(blPower,-1,1));
@@ -187,6 +187,24 @@ public class Drivetrain extends Mechanism {
         rightFront.setPower(power);
         leftBack.setPower(power);
         rightBack.setPower(-power);
+    }
+
+    public double trueScaledInput(double joystickValue){
+        double signum = Math.signum(joystickValue);
+        double joystickScale = Math.pow(joystickValue,2) * signum;
+        return joystickScale;
+    }
+
+    public void tankDriveScaled(double leftY, double rightY, double slide){
+        double flPower = trueScaledInput(leftY) + slide;
+        double frPower = trueScaledInput(rightY) - slide;
+        double blPower = trueScaledInput(leftY) - slide;
+        double brPower = trueScaledInput(rightY) + slide;
+
+        leftFront.setPower(Range.clip(flPower,-1,1));
+        leftBack.setPower(Range.clip(blPower,-1,1));
+        rightBack.setPower(Range.clip(brPower,-1,1));
+        rightFront.setPower(Range.clip(frPower,-1,1));
     }
 
     /**
