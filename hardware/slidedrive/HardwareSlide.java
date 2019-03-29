@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
-import org.firstinspires.ftc.teamcode.hardware.Acquirer;
+import org.firstinspires.ftc.teamcode.hardware.Acquirer_Slides;
 import org.firstinspires.ftc.teamcode.hardware.DrawerSlides;
 import org.firstinspires.ftc.teamcode.hardware.Gimbal;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
@@ -42,7 +42,7 @@ public class HardwareSlide extends Mechanism {
     /**
      * Instance variable containing robot's acquirer.
      */
-    public Acquirer acquirer;
+    public Acquirer_Slides acquirer;
     /**
      * Instance variable containing robot's lift and pinion lift.
      */
@@ -68,7 +68,7 @@ public class HardwareSlide extends Mechanism {
     public HardwareSlide(){
         drivetrain = new Drivetrain();
         drawerSlides = new DrawerSlides();
-        acquirer = new Acquirer();
+        acquirer = new Acquirer_Slides();
         lift = new Lift();
         marker = new Marker();
         gimbal = new Gimbal();
@@ -84,7 +84,7 @@ public class HardwareSlide extends Mechanism {
         this.opMode = opMode;
         drivetrain = new Drivetrain(opMode);
         drawerSlides = new DrawerSlides(opMode);
-        acquirer = new Acquirer(opMode);
+        acquirer = new Acquirer_Slides(opMode);
         lift = new Lift(opMode);
         marker = new Marker(opMode);
         gimbal = new Gimbal(opMode);

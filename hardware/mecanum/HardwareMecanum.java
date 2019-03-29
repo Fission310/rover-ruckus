@@ -5,11 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
-import org.firstinspires.ftc.teamcode.hardware.Acquirer;
-import org.firstinspires.ftc.teamcode.hardware.Gimbal;
-import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
-import org.firstinspires.ftc.teamcode.hardware.Sensors;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
 
@@ -35,7 +31,11 @@ public class HardwareMecanum extends Mechanism {
     /**
      * Instance variable containing robot's acquirer.
      */
-//    public Acquirer acquirer;
+//    public Acquirer_Slides acquirer;
+    /**
+     * Instance variable containing robot's acquirer.
+     */
+//    public Hopper_Drawer hopper;
     /**
      * Instance variable containing robot's lift and pinion lift.
      */
@@ -56,7 +56,7 @@ public class HardwareMecanum extends Mechanism {
      */
     public HardwareMecanum(){
         drivetrain = new Drivetrain();
-//        acquirer = new Acquirer();
+//        acquirer = new Acquirer_Slides();
 //        lift = new Lift();
 //        gimbal = new Gimbal();
 //        sensors = new Sensors();
@@ -70,7 +70,7 @@ public class HardwareMecanum extends Mechanism {
     public HardwareMecanum(LinearOpMode opMode){
         this.opMode = opMode;
         drivetrain = new Drivetrain(opMode);
-//        acquirer = new Acquirer(opMode);
+//        acquirer = new Acquirer_Slides(opMode);
 //        lift = new Lift(opMode);
 //        gimbal = new Gimbal(opMode);
 //        sensors = new Sensors(opMode);

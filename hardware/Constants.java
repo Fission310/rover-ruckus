@@ -10,9 +10,9 @@ public class Constants {
     private static final double GEAR_RATIO_40 = 40.0;
     private static final double GEAR_RATIO_30 = 30.0;
     private static final double GEAR_RATIO_20 = 20.0;
-    private static final double GEAR_RATIO_MR_53 = 53.475;
+    private static final double GEAR_RATIO_3_7 = 3.7;
     private static final double PPR = 7.0;
-    private static final double CPR = PPR * 4.0;
+    private static final double CPR = PPR * 4.0; // 28
     /**
      * Ticks per revolution for a NeverRest and GoBilda motors.
      */
@@ -20,37 +20,24 @@ public class Constants {
     private static final double TICKS_PER_MOTOR_40 = CPR * GEAR_RATIO_40; // 1120
     private static final double TICKS_PER_MOTOR_30 = CPR * GEAR_RATIO_30; // 840
     private static final double TICKS_PER_MOTOR_20 = CPR * GEAR_RATIO_20; // 560
-    private static final double TICKS_PER_MOTOR_53 = CPR * GEAR_RATIO_MR_53; // 723.24
+    private static final double TICKS_PER_MOTOR_3_7 = CPR * GEAR_RATIO_3_7; // 103.6
+
     /**
      * Drivetrain gear ratio (< 1.0 if geared up).
      */
     private static final double DRIVE_GEAR_REDUCTION = 1.0;
-    private static final double DRIVETRAIN_GEAR_REDUCTION = 1.0 / 3.0;
-    private static final double ROTATION_GEAR_REDUCTION = 1.0;
     /**
      * Diameter of wheel in inches.
      */
     public static final double WHEEL_DIAMETER_INCHES_4 = 4.0;
-    private static final double WHEEL_DIAMETER_INCHES_2 = 2.0;
-    private static final double PINION_INCHES = 1.5;
     /**
      * Calculated ticks per inch.
      */
-    public static final double INCHES_PER_TICK_60 = ((WHEEL_DIAMETER_INCHES_2 * Math.PI) / (TICKS_PER_MOTOR_60 * DRIVE_GEAR_REDUCTION));
-    public static final double INCHES_PER_TICK_40 = ((WHEEL_DIAMETER_INCHES_4 * Math.PI) / (TICKS_PER_MOTOR_40 * DRIVETRAIN_GEAR_REDUCTION));
     public static final double INCHES_PER_TICK_30 = ((WHEEL_DIAMETER_INCHES_4 * Math.PI) / (TICKS_PER_MOTOR_30 * DRIVE_GEAR_REDUCTION));
-    public static final double INCHES_PER_TICK_53 = ((WHEEL_DIAMETER_INCHES_2 * Math.PI) / (TICKS_PER_MOTOR_53 * ROTATION_GEAR_REDUCTION));
-    public static final double INCHES_PER_TICK_20 = ((WHEEL_DIAMETER_INCHES_2 * Math.PI) / (TICKS_PER_MOTOR_20 * DRIVE_GEAR_REDUCTION));
-    public static final double INCHES_PER_TICK_LIFT = ((PINION_INCHES * Math.PI) / (TICKS_PER_MOTOR_20 * DRIVE_GEAR_REDUCTION));
     /**
      * Calculated inch per tick.
      */
-    public static final double TICKS_PER_INCH_60 = 1.0 / INCHES_PER_TICK_60;
-    public static final double TICKS_PER_INCH_40 = 1.0 / INCHES_PER_TICK_40;
     public static final double TICKS_PER_INCH_30 = 1.0 / INCHES_PER_TICK_30;
-    public static final double TICKS_PER_INCH_53 = 1.0 / INCHES_PER_TICK_53;
-    public static final double TICKS_PER_INCH_20 = 1.0 / INCHES_PER_TICK_20;
-    public static final double TICKS_PER_INCH_LIFT = 1.0 / INCHES_PER_TICK_LIFT;
     /**
      * Drive speed when using encoders.
      */

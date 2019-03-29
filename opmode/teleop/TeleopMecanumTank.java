@@ -109,7 +109,7 @@ public class TeleopMecanumTank extends OpMode {
             robot.drivetrain.tankVectorDrive(slowLeftYInput, slowRightYInput, slowSlide);
         } else {
             background.setGreenBackground();
-            robot.drivetrain.tankVectorDrive(leftYInput, rightYInput, slideInput);
+            robot.drivetrain.tankDriveScaled(leftYInput, rightYInput, slideInput);
         }
 
         /**

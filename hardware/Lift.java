@@ -21,7 +21,7 @@ public class Lift extends Mechanism {
     private DcMotor LiftMotor;
 
     /**
-     * Default constructor for Acquirer.
+     * Default constructor for Acquirer_Slides.
      */
     public Lift() { }
 
@@ -118,7 +118,7 @@ public class Lift extends Mechanism {
         int leftTarget;
 
         // Determine new target position, and pass to motor controller
-        leftTarget = LiftMotor.getCurrentPosition() + (int)(inches * Constants.TICKS_PER_INCH_53);
+        leftTarget = LiftMotor.getCurrentPosition() + (int)(inches * Constants.INCHES_PER_TICK_30);
 
         LiftMotor.setTargetPosition(leftTarget);
 

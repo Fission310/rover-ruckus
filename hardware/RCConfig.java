@@ -20,9 +20,8 @@ public class RCConfig {
 
     public static final String LIFT = "lift";
     public static final String DRAWER_SLIDES = "drawer";
+    public static final String CASCADING_SLIDES = "cascade";
     public static final String INTAKE_MOTOR = "intake";
-    public static final String ROTATION = "rot";
-    public static final String BACK_ROTATION = "backRot";
 
     /**
      * Servos.

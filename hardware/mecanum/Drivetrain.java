@@ -41,6 +41,9 @@ public class Drivetrain extends Mechanism {
     private final double power = .40;
     private final double turningPower = .40;
     private final double ticksPerInch = Constants.TICKS_PER_INCH_30;
+
+    double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
+
     /**
      * Default constructor for Drivetrain.
      */
@@ -146,22 +149,20 @@ public class Drivetrain extends Mechanism {
     public void driveTrig(double x, double y, double turn) {
         double r = Math.hypot(x, y);
         double robotAngle = Math.atan2(y, x) - Math.PI / 4;
-        double v1 = r * Math.cos(robotAngle) + turn;
-        double v2 = r * Math.sin(robotAngle) - turn;
-        double v3 = r * Math.sin(robotAngle) + turn;
-        double v4 = r * Math.cos(robotAngle) - turn;
+        double v1 = r * Math.cos(robotAngle) + turn, v2 = r * Math.sin(robotAngle) - turn,
+                v3 = r * Math.sin(robotAngle) + turn, v4 = r * Math.cos(robotAngle) - turn;
 
-        leftFront.setPower(v3); // v2
-        leftBack.setPower(v1); // v4
-        rightBack.setPower(v2); // v3
-        rightFront.setPower(v4); // v1
+        leftFront.setPower(Range.clip(v3,-1,1)); // v2
+        leftBack.setPower(Range.clip(v1,-1,1));  // v4
+        rightBack.setPower(Range.clip(v2,-1,1)); // v3
+        rightFront.setPower(Range.clip(v4,-1,1));// v1
     }
 
     public void driveVector(double y, double x, double turn) {
-        double flPower = y + x + turn;
-        double frPower = y - x - turn;
-        double blPower = y - x + turn;
-        double brPower = y + x - turn;
+        flPower = y + x + turn;
+        frPower = y - x - turn;
+        blPower = y - x + turn;
+        brPower = y + x - turn;
 
         leftFront.setPower(Range.clip(flPower,-1,1));
         leftBack.setPower(Range.clip(blPower,-1,1));
@@ -170,10 +171,10 @@ public class Drivetrain extends Mechanism {
     }
 
     public void tankVectorDrive(double leftY, double rightY, double slide) {
-        double flPower = leftY - slide;
-        double blPower = leftY + slide;
-        double frPower = rightY + slide;
-        double brPower = rightY - slide;
+        flPower = leftY - slide;
+        blPower = leftY + slide;
+        frPower = rightY + slide;
+        brPower = rightY - slide;
 
         leftFront.setPower(Range.clip(flPower,-1,1));
         leftBack.setPower(Range.clip(blPower,-1,1));
@@ -196,10 +197,10 @@ public class Drivetrain extends Mechanism {
     }
 
     public void tankDriveScaled(double leftY, double rightY, double slide){
-        double flPower = trueScaledInput(leftY) + slide;
-        double frPower = trueScaledInput(rightY) - slide;
-        double blPower = trueScaledInput(leftY) - slide;
-        double brPower = trueScaledInput(rightY) + slide;
+        flPower = trueScaledInput(leftY) + trueScaledInput(slide);
+        frPower = trueScaledInput(rightY) - trueScaledInput(slide);
+        blPower = trueScaledInput(leftY) - trueScaledInput(slide);
+        brPower = trueScaledInput(rightY) + trueScaledInput(slide);
 
         leftFront.setPower(Range.clip(flPower,-1,1));
         leftBack.setPower(Range.clip(blPower,-1,1));
