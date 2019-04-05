@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer_Slides;
-import org.firstinspires.ftc.teamcode.hardware.DrawerSlides;
+//import org.firstinspires.ftc.teamcode.hardware.DrawerSlides;
 import org.firstinspires.ftc.teamcode.hardware.Gimbal;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Marker;
@@ -38,7 +38,7 @@ public class HardwareSlide extends Mechanism {
     /**
      * Instance variable containing robot's drawer slides.
      */
-    public DrawerSlides drawerSlides;
+//    public DrawerSlides drawerSlides;
     /**
      * Instance variable containing robot's acquirer.
      */
@@ -67,7 +67,7 @@ public class HardwareSlide extends Mechanism {
      */
     public HardwareSlide(){
         drivetrain = new Drivetrain();
-        drawerSlides = new DrawerSlides();
+//        drawerSlides = new DrawerSlides();
         acquirer = new Acquirer_Slides();
         lift = new Lift();
         marker = new Marker();
@@ -83,7 +83,7 @@ public class HardwareSlide extends Mechanism {
     public HardwareSlide(LinearOpMode opMode){
         this.opMode = opMode;
         drivetrain = new Drivetrain(opMode);
-        drawerSlides = new DrawerSlides(opMode);
+//        drawerSlides = new DrawerSlides(opMode);
         acquirer = new Acquirer_Slides(opMode);
         lift = new Lift(opMode);
         marker = new Marker(opMode);
@@ -98,7 +98,7 @@ public class HardwareSlide extends Mechanism {
     public void init(HardwareMap hwMap) {
         drivetrain.init(hwMap);
         acquirer.init(hwMap);
-        drawerSlides.init(hwMap);
+//        drawerSlides.init(hwMap);
         lift.init(hwMap);
         marker.init(hwMap);
         gimbal.init(hwMap);

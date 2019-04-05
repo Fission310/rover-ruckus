@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util.sensors.imu;
+package org.firstinspires.ftc.teamcode.util.sensors.imu.util;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.NavUtil.meanIntegrate;
 import static org.firstinspires.ftc.robotcore.external.navigation.NavUtil.plus;

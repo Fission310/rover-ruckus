@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Constants;
-import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
+import org.firstinspires.ftc.teamcode.hardware.mecanum.HardwareMecanum;
 
-@Autonomous(name="DriveStraightTest", group="Test")
+@Autonomous(name="Driv Straight Test", group="Test")
 //@Disabled
 public class DriveStraightTest extends LinearOpMode {
 
@@ -17,7 +17,7 @@ public class DriveStraightTest extends LinearOpMode {
     private ElapsedTime     runtime = new ElapsedTime();
 
     /* Robot hardware */
-    private HardwareSlide robot = new HardwareSlide(this);
+    private HardwareMecanum robot = new HardwareMecanum(this);
 
     private int step = 0;
 
@@ -49,9 +49,15 @@ public class DriveStraightTest extends LinearOpMode {
                     step++;
                     break;
                 case 1:
-//                    sleep(500);\
-//                    int distance = (int)(6 * Constants.INCHES_PER_TICK_30);
-//                    robot.drivetrain.curveTurn(220,.3,1/4, true);
+                    sleep(1000);
+                    robot.drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE * 1.5, 5);
+                    telemetry.addData("Step 0", "Robot Drive one floor tile negative speed");
+                    telemetry.update();
+                    step++;
+                    break;
+                case 2:
+                    sleep(3000);
+                    robot.drivetrain.driveToPositionIMU(FieldConstants.FLOOR_TILE * 1.5, .5);
                     telemetry.addData("Step 0", "Robot Drive one floor tile negative speed");
                     telemetry.update();
                     step++;

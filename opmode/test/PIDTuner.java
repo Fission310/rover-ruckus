@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,6 +15,7 @@ import static java.lang.Math.abs;
 /**
  * PIDTuner is a dedicated teleop for tuning the drivetrain's PID Control constants for P, I, and D.
  */
+@Disabled
 @TeleOp(name = "PID Tuner", group = "Test")
 public class PIDTuner extends OpMode {
 

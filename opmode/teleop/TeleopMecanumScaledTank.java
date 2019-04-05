@@ -15,7 +15,7 @@ import static java.lang.Math.abs;
  * TeleopMecanumMain is the primary TeleOp OpMode for mecanum drivetrains. All driver-controlled actions should
  * be defined in this class.
  */
-@TeleOp(name = "Teleop: Scaled Mecanum", group = "Teleop")
+@TeleOp(name = "Teleop: Scaled Mecanum Tank", group = "Teleop")
 public class TeleopMecanumScaledTank extends OpMode {
 
     private final double ANALOG_THRESHOLD = 0.15;
@@ -32,7 +32,7 @@ public class TeleopMecanumScaledTank extends OpMode {
     private BackgroundColorManager background = new BackgroundColorManager();
 
     /* Holds Gamepad 1 joystick's values */
-    double yInput, xInput, slideInput;
+    double leftInput, rightInput, slideInput;
     double slowYInput, slowXInput, slowSlide;
 
     /* Handle time complexities */
@@ -89,31 +89,12 @@ public class TeleopMecanumScaledTank extends OpMode {
         /**
          * Controls the drivetrain via the left and right analog sticks || Slow mode = left stick button
          */
-        double leftInput = gamepad1.left_stick_y;
-        double rightInput = gamepad1.right_stick_y;
-        slideInput = gamepad1.left_stick_x;
-        if (abs(gamepad1.left_stick_x) < ANALOG_THRESHOLD) slideInput = 0.0;
+        leftInput = gamepad1.left_stick_y;
+        rightInput = gamepad1.right_stick_y;
+        slideInput = -gamepad1.left_trigger +  gamepad1.right_trigger;
+        if (abs(slideInput) < ANALOG_THRESHOLD) slideInput = 0.0;
             robot.drivetrain.tankDriveScaled(leftInput,rightInput,slideInput);
-        /*
-        slowYInput = Range.clip(yInput * SLOW_MULTIPLIER, -1.0, 1.0);
-        slowXInput = Range.clip(xInput * SLOW_MULTIPLIER, -1.0, 1.0);
-        slowSlide = Range.clip(slideInput * SLOW_MULTIPLIER, -1.0, 1.0);
 
-        if (gamepad1.left_stick_button)
-            if(!leftStickPressed) {
-                drivetrainSlowMode = !drivetrainSlowMode;
-                leftStickPressed = true;
-            } else {}
-        else leftStickPressed = false;
-
-        if (drivetrainSlowMode) {
-            background.setOrangeBackground();
-            robot.drivetrain.driveVector(yInput, slideInput, xInput);
-        } else {
-            background.setGreenBackground();
-            robot.drivetrain.driveTrig(slideInput, yInput, xInput);
-        }
-        */
         /**
          * Telemetry
          */

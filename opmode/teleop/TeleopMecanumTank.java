@@ -90,8 +90,8 @@ public class TeleopMecanumTank extends OpMode {
          */
         leftYInput = gamepad1.left_stick_y;
         rightYInput = gamepad1.right_stick_y;
-        slideInput = gamepad1.left_stick_x;
-        if (abs(gamepad1.left_stick_x) < ANALOG_THRESHOLD) slideInput = 0.0;
+        slideInput = -gamepad1.left_trigger + gamepad1.right_trigger;
+        if (abs(slideInput) < ANALOG_THRESHOLD) slideInput = 0.0;
 
         slowLeftYInput = Range.clip(leftYInput * SLOW_MULTIPLIER, -1.0, 1.0);
         slowRightYInput = Range.clip(rightYInput * SLOW_MULTIPLIER, -1.0, 1.0);

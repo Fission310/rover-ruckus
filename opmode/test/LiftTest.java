@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.hardware.Constants;
 import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 
 @Autonomous(name="Lift Test", group="Test")
-//@Disabled
+@Disabled
 public class LiftTest extends LinearOpMode {
 
     /* Private OpMode members */

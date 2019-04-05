@@ -58,9 +58,7 @@ public class Sensors extends Mechanism {
     /**
      * Set the gimbal to the left position.
      */
-    public void setFrontLeft() {
-        front_servo.setPosition(LEFT_POS);
-    }
+    public void setFrontLeft() { front_servo.setPosition(LEFT_POS); }
     public void setBackLeft() { back_servo.setPosition(LEFT_POS); }
 
     /**
