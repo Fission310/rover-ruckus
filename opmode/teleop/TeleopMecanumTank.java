@@ -14,7 +14,7 @@ import static java.lang.Math.abs;
  * TeleopMecanumTank is the tank TeleOp OpMode for mecanum drivetrains. All driver-controlled actions should
  * be defined in this class.
  */
-@TeleOp(name = "Teleop: Tank Mecanum", group = "Teleop")
+@TeleOp(name = "Teleop: Tank Mecanum [Test]", group = "Teleop")
 public class TeleopMecanumTank extends OpMode {
 
     private final double ANALOG_THRESHOLD = 0.15;

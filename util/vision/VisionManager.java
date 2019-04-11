@@ -35,6 +35,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * This class handles the robot CV functions and makes combining Vuforia and DogeCV easy in a single
  * OpMode.
  */
+@Deprecated
 public class VisionManager {
     private SamplingOrderDetector sampleDetector;
     private GoldAlignDetector goldDetector;

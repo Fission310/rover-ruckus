@@ -12,11 +12,11 @@ import org.firstinspires.ftc.teamcode.util.signals.BackgroundColorManager;
 import static java.lang.Math.abs;
 
 /**
- * TeleopMecanumMain is the primary TeleOp OpMode for mecanum drivetrains. All driver-controlled actions should
+ * TeleopMecanumArcade is the primary TeleOp OpMode for mecanum drivetrains. All driver-controlled actions should
  * be defined in this class.
  */
-@TeleOp(name = "Teleop: Main Mecanum", group = "Teleop")
-public class TeleopMecanumMain extends OpMode {
+@TeleOp(name = "Teleop: Arcade Mecanum [Test]", group = "Teleop")
+public class TeleopMecanumArcade extends OpMode {
 
     private final double ANALOG_THRESHOLD = 0.15;
     private final double SLOW_MULTIPLIER = 0.5;

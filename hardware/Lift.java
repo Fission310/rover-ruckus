@@ -79,28 +79,6 @@ public class Lift extends Mechanism {
     }
 
     /**
-     * Scales input from the joystick of the gamepad. This allows for easier control from a range of
-     * -1 to 1.
-     * @param joystickValue This should be the respected joystick from the gamepad
-     * @return scaled value=
-     */
-    double setLiftScaledPower(double joystickValue) {
-        double[] scaleArray = {0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
-                0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00};
-        int index = (int)(joystickValue * 16.0);
-
-        if (index < 0) index = -index;
-        else if (index > 16) index = 16;
-
-        double joystickScale = 0.0;
-
-        if (joystickValue < 0) joystickScale = -scaleArray[index];
-        else joystickScale = scaleArray[index];
-
-        return joystickScale;
-    }
-
-    /**
      * Lift to a relative position using encoders and an IMU.
      *
      * Rack and pinion will stop moving if any of three conditions occur:

@@ -1,12 +1,23 @@
 package org.firstinspires.ftc.teamcode.hardware.mecanum;
 
+import android.util.Log;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.lynx.LynxModuleIntf;
+import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataCommand;
+import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataResponse;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -22,6 +33,7 @@ public class HardwareMecanum extends Mechanism {
     private static final int RIGHT_TURN = 90;
     private static final int DIAGONAL_TURN = 45;
     private static final double DRIVE_SPEED = .4;
+    private boolean updated = false;
 
     /* Mechanisms */
     /**
@@ -51,15 +63,37 @@ public class HardwareMecanum extends Mechanism {
 
     /* Miscellaneous mechanisms */
 
+    private Map<DcMotorController, LynxModuleIntf> hubs;
+    private Map<LynxModuleIntf, LynxGetBulkInputDataResponse> responses;
+
     /**
      * Default constructor for HardwareMain. Instantiates public mechanism instance variables.
      */
     public HardwareMecanum(){
-        drivetrain = new Drivetrain();
-//        acquirer = new Acquirer_Slides();
-//        lift = new Lift();
-//        gimbal = new Gimbal();
-//        sensors = new Sensors();
+        try { drivetrain = new Drivetrain(); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "Problem with drivetrain");
+        }
+//        try { acquirer = new Acquirer_Slides(); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "Problem with acquirer");
+//        }
+//        try { hopper = new Hopper_Drawer(); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "Problem with hopper");
+//        }
+//        try { lift = new Lift(); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "Problem with lift");
+//        }
+//        try { gimbal = new Gimbal(); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "Problem with gimbal");
+//        }
+//        try { sensors = new Sensors(); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "Problem with sensors");
+//        }
     }
     /**
      * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
@@ -68,24 +102,78 @@ public class HardwareMecanum extends Mechanism {
      * @param opMode    the LinearOpMode that is currently running
      */
     public HardwareMecanum(LinearOpMode opMode){
-        this.opMode = opMode;
-        drivetrain = new Drivetrain(opMode);
-//        acquirer = new Acquirer_Slides(opMode);
-//        lift = new Lift(opMode);
-//        gimbal = new Gimbal(opMode);
-//        sensors = new Sensors(opMode);
-    }
+        try { drivetrain = new Drivetrain(opMode); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "Problem with drivetrain");
+        }
+//        try { acquirer = new Acquirer_Slides(opMode); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "Problem with acquirer");
+//        }
+//        try { hopper = new Hopper_Drawer(opMode); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "Problem with hopper");
+//        }
+//        try { lift = new Lift(opMode); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "Problem with lift");
+//        }
+//        try { gimbal = new Gimbal(opMode); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "Problem with gimbal");
+//        }
+//        try { sensors = new Sensors(opMode); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "Problem with sensors");
+//        }
+ }
 
     /**
      * Initializes all mechanisms on the robot.
      * @param hwMap     robot's hardware map
      */
     public void init(HardwareMap hwMap) {
-        drivetrain.init(hwMap);
-//        acquirer.init(hwMap);
-//        lift.init(hwMap);
-//        gimbal.init(hwMap);
-//        sensors.init(hwMap);
+        try { drivetrain.init(hwMap); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "problem initializing drivetrain");
+        }
+//        try { acquirer.init(hwMap); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "problem initializing acquirer");
+//        }
+//        try { hopper.init(hwMap); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "problem initializing hopper");
+//        }
+//        try { lift.init(hwMap); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "problem initializing lift");
+//        }
+//        try { gimbal.init(hwMap); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "problem initializing gimbal");
+//        }
+//        try { sensors.init(hwMap); }
+//        catch (Exception e) {
+//            opMode.telemetry.addData("Status", "problem initializing sensors");
+//        }
+
+        hubs = new HashMap<>(2);
+        responses = new HashMap<>(2);
+        try {
+            hubs.put(
+                    hwMap.get(DcMotorController.class, "Expansion Hub 1"),
+                    hwMap.get(LynxModuleIntf.class, "Expansion Hub 1"));
+        } catch (Exception e) {
+            opMode.telemetry.addData("Status", "problem with hub1");
+        }
+        try {
+            hubs.put(
+                    hwMap.get(DcMotorController.class, "Expansion Hub 2"),
+                    hwMap.get(LynxModuleIntf.class, "Expansion Hub 2"));
+        } catch (Exception e) {
+            opMode.telemetry.addData("Status", "problem with hub2");
+        }
     }
 
     /**
@@ -104,6 +192,28 @@ public class HardwareMecanum extends Mechanism {
         return drivetrain.imuAngle();
     }
 
+    public int getEncoderPosition(DcMotor motor) {
+        if (!updated) return 0;
+        synchronized (responses) {
+            return responses.get(hubs.get(motor.getController())).getEncoder(motor.getPortNumber()) * (motor.getDirection() == DcMotorSimple.Direction.FORWARD ? 1 : -1);
+        }
+    }
+
+    public void updateSubsystems() {
+        for (LynxModuleIntf hub : hubs.values()) {
+            LynxGetBulkInputDataCommand command = new LynxGetBulkInputDataCommand(hub);
+            try {
+                responses.put(hub, command.sendReceive());
+                updated = true;
+            } catch (Exception e) {
+                Log.e("get bulk data error", e.getMessage());
+                updated = false;
+            }
+        }
+        opMode.telemetry.addData("REV Hubs Updated:", updated);
+
+    }
+
     /**
      * Waits for opMode's to start. Can perform actions while waiting.
      */
@@ -113,6 +223,14 @@ public class HardwareMecanum extends Mechanism {
             opMode.telemetry.update();
         }
     }
+
+    public int getMotorVelocity(DcMotor motor) {
+        if (!updated) return 0;
+        synchronized (responses) {
+            return responses.get(hubs.get(motor.getController())).getVelocity(motor.getPortNumber());
+        }
+    }
+
 
     /**
      * Autonomous action for landing the robot using the lift and pinion mechanism.

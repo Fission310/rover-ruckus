@@ -6,20 +6,14 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 public class Constants {
     /* CONSTANTS */
-    private static final double GEAR_RATIO_60 = 60.0;
-    private static final double GEAR_RATIO_40 = 40.0;
     private static final double GEAR_RATIO_30 = 30.0;
-    private static final double GEAR_RATIO_20 = 20.0;
     private static final double GEAR_RATIO_3_7 = 3.7;
     private static final double PPR = 7.0;
     private static final double CPR = PPR * 4.0; // 28
     /**
      * Ticks per revolution for a NeverRest and GoBilda motors.
      */
-    private static final double TICKS_PER_MOTOR_60 = CPR * GEAR_RATIO_60; // 1680
-    private static final double TICKS_PER_MOTOR_40 = CPR * GEAR_RATIO_40; // 1120
     private static final double TICKS_PER_MOTOR_30 = CPR * GEAR_RATIO_30; // 840
-    private static final double TICKS_PER_MOTOR_20 = CPR * GEAR_RATIO_20; // 560
     private static final double TICKS_PER_MOTOR_3_7 = CPR * GEAR_RATIO_3_7; // 103.6
 
     /**
