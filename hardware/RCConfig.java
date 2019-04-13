@@ -28,6 +28,7 @@ public class RCConfig {
      */
     public static final String MARKER = "marker";
     public static final String ACQUIRER_ROTATION = "acquirer_rot";
+    public static final String HOPPER_ROTATION = "hopper_rot";
     public static final String HORZ_PHONE_GIMBAL = "horz_gimbal";
     public static final String VERT_PHONE_GIMBAL = "vert_gimbal";
     public static final String FRONT_RIGHT_RANGE = "front_range_servo";

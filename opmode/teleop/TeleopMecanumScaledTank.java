@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -37,8 +38,11 @@ public class TeleopMecanumScaledTank extends OpMode {
     private BackgroundColorManager background = new BackgroundColorManager();
 
     /* Holds Gamepad 1 joystick's values */
-    double leftInput, rightInput, slideInput;
+    double leftInput, rightInput, slideInput, hangerInput = 0;
     double slowYInput, slowXInput, slowSlide;
+
+    /* Holds Gamepad 1 joystick's values */
+    double cascadingSlidesInput, hopperInput, acquirerInput;
 
     /* Handle time complexities */
     boolean aButtonPressed, bButtonPressed, xButtonPressed, yButtonPressed, leftStickPressed, rightBumperPressed, leftBumperPressed;
@@ -96,9 +100,33 @@ public class TeleopMecanumScaledTank extends OpMode {
          */
         leftInput = gamepad1.left_stick_y;
         rightInput = gamepad1.right_stick_y;
-        slideInput = -gamepad1.left_trigger +  gamepad1.right_trigger;
+        slideInput = -gamepad1.left_trigger + gamepad1.right_trigger;
         if (abs(slideInput) < ANALOG_THRESHOLD) slideInput = 0.0;
-            robot.drivetrain.tankDriveScaled(leftInput,rightInput,slideInput);
+        robot.drivetrain.tankDriveScaled(leftInput, rightInput, slideInput);
+
+        /**
+         * Controls the Lift via the up and down dpad || Slow mode = left  button
+         */
+        if (gamepad1.dpad_up) hangerInput = 1;
+        else if (gamepad1.dpad_down) hangerInput = -1;
+        else hangerInput = 0;
+        robot.lift.setLiftPower(hangerInput);
+
+        if (stickyGamepad1.b) acquirerInput = 1;
+        else acquirerInput = 0;
+        robot.acquirer.setIntakePower(acquirerInput);
+
+        if (stickyGamepad2.right_bumper) { robot.acquirer.acquirerRotationAcquirer(); }
+        else { robot.acquirer.acquirerRotationDump(); }
+
+        if (stickyGamepad2.left_bumper) { robot.hopper.hopperRotation(); }
+        else { robot.hopper.hopperRotationDump(); }
+
+        cascadingSlidesInput = gamepad2.right_stick_y;
+        robot.acquirer.setCascadingSlidesPower(cascadingSlidesInput);
+
+        hopperInput = gamepad2.left_stick_y;
+        robot.hopper.setDrawerSlidePower(hopperInput);
 
         /**
          * Telemetry
@@ -109,6 +137,9 @@ public class TeleopMecanumScaledTank extends OpMode {
                 positions[1],
                 positions[2],
                 positions[3]);
+
+        stickyGamepad1.update();
+        stickyGamepad2.update();
     }
 
     @Override

@@ -18,7 +18,7 @@ public class Lift extends Mechanism {
     /* CONSTANTS */
 
     /* Hardware members */
-    private DcMotor LiftMotor;
+    private DcMotor liftMotor;
 
     /**
      * Default constructor for Acquirer_Slides.
@@ -40,16 +40,16 @@ public class Lift extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve motor from hardware map and assign to instance vars
-        LiftMotor = hwMap.dcMotor.get(RCConfig.LIFT);
+        liftMotor = hwMap.dcMotor.get(RCConfig.LIFT);
 
         // Set braking behavior
-        LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set polarity
-        LiftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set initial power
-        LiftMotor.setPower(0);
+        liftMotor.setPower(0);
     }
 
     /**
@@ -57,8 +57,8 @@ public class Lift extends Mechanism {
      * encoders.
      */
     public void encoderInit() {
-        LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /**
@@ -68,14 +68,14 @@ public class Lift extends Mechanism {
      * @param behavior FLOAT, BRAKE
      */
     public void setDriveZeroPowers(DcMotor.ZeroPowerBehavior behavior) {
-        LiftMotor.setZeroPowerBehavior(behavior);
+        liftMotor.setZeroPowerBehavior(behavior);
     }
 
     /**
      * Sets power for lift motor.
      */
     public void setLiftPower(double power) {
-            LiftMotor.setPower(power);
+            liftMotor.setPower(power);
     }
 
     /**
@@ -96,12 +96,12 @@ public class Lift extends Mechanism {
         int leftTarget;
 
         // Determine new target position, and pass to motor controller
-        leftTarget = LiftMotor.getCurrentPosition() + (int)(inches * Constants.INCHES_PER_TICK_30);
+        leftTarget = liftMotor.getCurrentPosition() + (int)(inches * Constants.INCHES_PER_TICK_30);
 
-        LiftMotor.setTargetPosition(leftTarget);
+        liftMotor.setTargetPosition(leftTarget);
 
         // Turn On RUN_TO_POSITION
-        LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Reset the timeout time
         ElapsedTime runtime = new ElapsedTime();
@@ -109,7 +109,7 @@ public class Lift extends Mechanism {
 
         // Loop until a condition is met
         while (opMode.opModeIsActive() &&
-                LiftMotor.isBusy()) {
+                liftMotor.isBusy()) {
 
             // Set power of lift and pinion motors accounting for adjustment
             setLiftPower(speed);
@@ -120,21 +120,21 @@ public class Lift extends Mechanism {
         }
 
         // Stop all motion
-        LiftMotor.setPower(0);
+        liftMotor.setPower(0);
 
         // Turn off RUN_TO_POSITION
-        LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public double[] getPositions() {
         double[] positions = new double[1];
-        positions[0] = LiftMotor.getCurrentPosition();
+        positions[0] = liftMotor.getCurrentPosition();
 
         return positions;
     }
 
     public double getLeftPower() {
-        return LiftMotor.getPower();
+        return liftMotor.getPower();
     }
 }

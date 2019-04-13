@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -15,8 +16,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class Hopper_Drawer extends Mechanism {
 
+    /* CONSTANTS */
+    private static final double SERVO_INIT_POS = 0;
+    private static final double SERVO_CENTER_POS = 1;
+
     /* Hardware members */
     private DcMotor drawerSlide;
+    private Servo hopperRotation;
 
     /**
      * Default constructor for Hopper_Drawer.
@@ -39,6 +45,7 @@ public class Hopper_Drawer extends Mechanism {
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
         drawerSlide = hwMap.dcMotor.get(RCConfig.DRAWER_SLIDES);
+        hopperRotation = hwMap.servo.get(RCConfig.HOPPER_ROTATION);
 
         // Set braking behavior
         drawerSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -71,4 +78,25 @@ public class Hopper_Drawer extends Mechanism {
 
         return positions;
     }
+
+    /**
+     * Inits the drawer rotation servo to fit inside the sizing cube.
+     */
+    public void hopperRotationDump() { hopperRotation.setPosition(.5); }
+
+    public void hopperRotationMid() { hopperRotation.setPosition(0.5); }
+
+    /**
+     * Moves the drawer rotation servo to set angle to acquire.
+     */
+    public void hopperRotation() { hopperRotation.setPosition(.15); }
+
+    /**
+     * Moves the drawer rotation servo to set angle.
+     */
+    public void setHopperRotation(double rotations) {
+        hopperRotation.setPosition(rotations);
+    }
+
+    public double getHopperRotation() { return hopperRotation.getPosition(); }
 }

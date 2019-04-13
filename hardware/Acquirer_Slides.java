@@ -66,6 +66,10 @@ public class Acquirer_Slides extends Mechanism {
         intakeMotor.setPower(power);
     }
 
+    public void setCascadingSlidesPower(double power) {
+        cascadingSlides.setPower(power);
+    }
+
     /**
      * Inits the acquirer rotation servo to fit inside the sizing cube.
      */

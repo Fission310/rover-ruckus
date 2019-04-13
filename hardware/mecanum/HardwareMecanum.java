@@ -13,6 +13,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
+import org.firstinspires.ftc.teamcode.hardware.Acquirer_Slides;
+import org.firstinspires.ftc.teamcode.hardware.Gimbal;
+import org.firstinspires.ftc.teamcode.hardware.Hopper_Drawer;
+import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
@@ -43,19 +47,19 @@ public class HardwareMecanum extends Mechanism {
     /**
      * Instance variable containing robot's acquirer.
      */
-//    public Acquirer_Slides acquirer;
+    public Acquirer_Slides acquirer;
     /**
      * Instance variable containing robot's acquirer.
      */
-//    public Hopper_Drawer hopper;
+    public Hopper_Drawer hopper;
     /**
      * Instance variable containing robot's lift and pinion lift.
      */
-//    public Lift lift;
+    public Lift lift;
     /**
      * Instance variable containing robot's Gimbal.
      */
-//    public Gimbal gimbal;
+    public Gimbal gimbal;
     /**
      * Instance variable containing robot's sensors.
      */
@@ -74,22 +78,22 @@ public class HardwareMecanum extends Mechanism {
         catch (Exception e) {
             opMode.telemetry.addData("Status", "Problem with drivetrain");
         }
-//        try { acquirer = new Acquirer_Slides(); }
-//        catch (Exception e) {
-//            opMode.telemetry.addData("Status", "Problem with acquirer");
-//        }
-//        try { hopper = new Hopper_Drawer(); }
-//        catch (Exception e) {
-//            opMode.telemetry.addData("Status", "Problem with hopper");
-//        }
-//        try { lift = new Lift(); }
-//        catch (Exception e) {
-//            opMode.telemetry.addData("Status", "Problem with lift");
-//        }
-//        try { gimbal = new Gimbal(); }
-//        catch (Exception e) {
-//            opMode.telemetry.addData("Status", "Problem with gimbal");
-//        }
+        try { acquirer = new Acquirer_Slides(); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "Problem with acquirer");
+        }
+        try { hopper = new Hopper_Drawer(); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "Problem with hopper");
+        }
+        try { lift = new Lift(); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "Problem with lift");
+        }
+        try { gimbal = new Gimbal(); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "Problem with gimbal");
+        }
 //        try { sensors = new Sensors(); }
 //        catch (Exception e) {
 //            opMode.telemetry.addData("Status", "Problem with sensors");
@@ -106,22 +110,22 @@ public class HardwareMecanum extends Mechanism {
         catch (Exception e) {
             opMode.telemetry.addData("Status", "Problem with drivetrain");
         }
-//        try { acquirer = new Acquirer_Slides(opMode); }
-//        catch (Exception e) {
-//            opMode.telemetry.addData("Status", "Problem with acquirer");
-//        }
-//        try { hopper = new Hopper_Drawer(opMode); }
-//        catch (Exception e) {
-//            opMode.telemetry.addData("Status", "Problem with hopper");
-//        }
-//        try { lift = new Lift(opMode); }
-//        catch (Exception e) {
-//            opMode.telemetry.addData("Status", "Problem with lift");
-//        }
-//        try { gimbal = new Gimbal(opMode); }
-//        catch (Exception e) {
-//            opMode.telemetry.addData("Status", "Problem with gimbal");
-//        }
+        try { acquirer = new Acquirer_Slides(opMode); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "Problem with acquirer");
+        }
+        try { hopper = new Hopper_Drawer(opMode); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "Problem with hopper");
+        }
+        try { lift = new Lift(opMode); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "Problem with lift");
+        }
+        try { gimbal = new Gimbal(opMode); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "Problem with gimbal");
+        }
 //        try { sensors = new Sensors(opMode); }
 //        catch (Exception e) {
 //            opMode.telemetry.addData("Status", "Problem with sensors");
@@ -137,22 +141,22 @@ public class HardwareMecanum extends Mechanism {
         catch (Exception e) {
             opMode.telemetry.addData("Status", "problem initializing drivetrain");
         }
-//        try { acquirer.init(hwMap); }
-//        catch (Exception e) {
-//            opMode.telemetry.addData("Status", "problem initializing acquirer");
-//        }
-//        try { hopper.init(hwMap); }
-//        catch (Exception e) {
-//            opMode.telemetry.addData("Status", "problem initializing hopper");
-//        }
-//        try { lift.init(hwMap); }
-//        catch (Exception e) {
-//            opMode.telemetry.addData("Status", "problem initializing lift");
-//        }
-//        try { gimbal.init(hwMap); }
-//        catch (Exception e) {
-//            opMode.telemetry.addData("Status", "problem initializing gimbal");
-//        }
+        try { acquirer.init(hwMap); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "problem initializing acquirer");
+        }
+        try { hopper.init(hwMap); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "problem initializing hopper");
+        }
+        try { lift.init(hwMap); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "problem initializing lift");
+        }
+        try { gimbal.init(hwMap); }
+        catch (Exception e) {
+            opMode.telemetry.addData("Status", "problem initializing gimbal");
+        }
 //        try { sensors.init(hwMap); }
 //        catch (Exception e) {
 //            opMode.telemetry.addData("Status", "problem initializing sensors");
@@ -211,7 +215,6 @@ public class HardwareMecanum extends Mechanism {
             }
         }
         opMode.telemetry.addData("REV Hubs Updated:", updated);
-
     }
 
     /**
@@ -220,7 +223,6 @@ public class HardwareMecanum extends Mechanism {
     public void waitForStart() {
         while (!opMode.opModeIsActive() && !opMode.isStopRequested()) {
             opMode.telemetry.addData("Heading:", drivetrain.singleImu.getHeading());
-            opMode.telemetry.update();
         }
     }
 
