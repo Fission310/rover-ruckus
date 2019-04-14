@@ -1,25 +1,23 @@
-package org.firstinspires.ftc.teamcode.opmode.teleop;
+package org.firstinspires.ftc.teamcode.prototype;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.hardware.mecanum.HardwareMecanum;
-import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
-import org.firstinspires.ftc.teamcode.util.gamepad.JoystickTransform;
-import org.firstinspires.ftc.teamcode.util.gamepad.StickyGamepad;
 import org.firstinspires.ftc.teamcode.util.signals.BackgroundColorManager;
 
 import static java.lang.Math.abs;
 
 /**
- * TeleopMecanumArcade is the primary TeleOp OpMode for mecanum drivetrains. All driver-controlled actions should
+ * TeleopMecanumTank is the tank TeleOp OpMode for mecanum drivetrains. All driver-controlled actions should
  * be defined in this class.
  */
-@TeleOp(name = "Teleop: Scaled Mecanum Tank [Test]", group = "Teleop")
-public class TeleopMecanumScaledTank extends OpMode {
+@Disabled
+@TeleOp(name = "Teleop: Tank Mecanum [Test]", group = "Teleop")
+public class TeleopMecanumTank extends OpMode {
 
     private final double ANALOG_THRESHOLD = 0.15;
     private final double SLOW_MULTIPLIER = 0.5;
@@ -31,18 +29,12 @@ public class TeleopMecanumScaledTank extends OpMode {
     /* Robot hardware map */
     private HardwareMecanum robot = new HardwareMecanum();
 
-    private JoystickTransform transform = new JoystickTransform();
-    private StickyGamepad stickyGamepad1 = new StickyGamepad(gamepad1), stickyGamepad2 = new StickyGamepad(gamepad2);
-
     /* Robot controller's background manager */
     private BackgroundColorManager background = new BackgroundColorManager();
 
     /* Holds Gamepad 1 joystick's values */
-    double leftInput, rightInput, slideInput, hangerInput = 0;
-    double slowYInput, slowXInput, slowSlide;
-
-    /* Holds Gamepad 1 joystick's values */
-    double cascadingSlidesInput, hopperInput, acquirerInput;
+    double leftYInput, rightYInput, slideInput;
+    double slowLeftYInput, slowRightYInput, slowSlide;
 
     /* Handle time complexities */
     boolean aButtonPressed, bButtonPressed, xButtonPressed, yButtonPressed, leftStickPressed, rightBumperPressed, leftBumperPressed;
@@ -54,7 +46,6 @@ public class TeleopMecanumScaledTank extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap);
-        robot.drivetrain.encoderInit();
         robot.imuInit(hardwareMap);
         background.init(hardwareMap);
         background.setGreenBackground();
@@ -98,35 +89,29 @@ public class TeleopMecanumScaledTank extends OpMode {
         /**
          * Controls the drivetrain via the left and right analog sticks || Slow mode = left stick button
          */
-        leftInput = gamepad1.left_stick_y;
-        rightInput = gamepad1.right_stick_y;
+        leftYInput = gamepad1.left_stick_y;
+        rightYInput = gamepad1.right_stick_y;
         slideInput = -gamepad1.left_trigger + gamepad1.right_trigger;
         if (abs(slideInput) < ANALOG_THRESHOLD) slideInput = 0.0;
-        robot.drivetrain.tankDriveScaled(leftInput, rightInput, slideInput);
 
-        /**
-         * Controls the Lift via the up and down dpad || Slow mode = left  button
-         */
-        if (gamepad1.dpad_up) hangerInput = 1;
-        else if (gamepad1.dpad_down) hangerInput = -1;
-        else hangerInput = 0;
-        robot.lift.setLiftPower(hangerInput);
+        slowLeftYInput = Range.clip(leftYInput * SLOW_MULTIPLIER, -1.0, 1.0);
+        slowRightYInput = Range.clip(rightYInput * SLOW_MULTIPLIER, -1.0, 1.0);
+        slowSlide = Range.clip(slideInput * SLOW_MULTIPLIER, -1.0, 1.0);
 
-        if (stickyGamepad1.b) acquirerInput = 1;
-        else acquirerInput = 0;
-        robot.acquirer.setIntakePower(acquirerInput);
+        if (gamepad1.left_stick_button)
+            if(!leftStickPressed) {
+                drivetrainSlowMode = !drivetrainSlowMode;
+                leftStickPressed = true;
+            } else {}
+        else leftStickPressed = false;
 
-        if (stickyGamepad2.right_bumper) { robot.acquirer.acquirerRotationAcquirer(); }
-        else { robot.acquirer.acquirerRotationDump(); }
-
-        if (stickyGamepad2.left_bumper) { robot.hopper.hopperRotation(); }
-        else { robot.hopper.hopperRotationDump(); }
-
-        cascadingSlidesInput = gamepad2.right_stick_y;
-        robot.acquirer.setCascadingSlidesPower(cascadingSlidesInput);
-
-        hopperInput = gamepad2.left_stick_y;
-        robot.hopper.setDrawerSlidePower(hopperInput);
+        if (drivetrainSlowMode) {
+            background.setOrangeBackground();
+            robot.drivetrain.tankVectorDrive(slowLeftYInput, slowRightYInput, slowSlide);
+        } else {
+            background.setGreenBackground();
+            robot.drivetrain.tankDriveScaled(leftYInput, rightYInput, slideInput);
+        }
 
         /**
          * Telemetry
@@ -137,9 +122,6 @@ public class TeleopMecanumScaledTank extends OpMode {
                 positions[1],
                 positions[2],
                 positions[3]);
-
-        stickyGamepad1.update();
-        stickyGamepad2.update();
     }
 
     @Override

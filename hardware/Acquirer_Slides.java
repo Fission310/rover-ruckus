@@ -17,8 +17,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Acquirer_Slides extends Mechanism {
 
     /* CONSTANTS */
-    private static final double SERVO_INIT_POS = 0;
-    private static final double SERVO_CENTER_POS = 1;
+    private static final double MIN_POS = 0.0;
+    private static final double MAX_POS = 1.0;
 
     /* Hardware members */
     private DcMotor cascadingSlides;
@@ -56,6 +56,13 @@ public class Acquirer_Slides extends Mechanism {
         // Set initial power
         cascadingSlides.setPower(0);
         intakeMotor.setPower(0);
+        encoderInit();
+    }
+
+    public void encoderInit() {
+        cascadingSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        cascadingSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     /**
@@ -73,14 +80,14 @@ public class Acquirer_Slides extends Mechanism {
     /**
      * Inits the acquirer rotation servo to fit inside the sizing cube.
      */
-    public void acquirerRotationDump() { acquirerRotation.setPosition(.5); }
+    public void acquirerRotationDump() { acquirerRotation.setPosition(MAX_POS); }
 
-    public void acquirerRotationMid() { acquirerRotation.setPosition(0.5); }
+    public void acquirerRotationMid() { acquirerRotation.setPosition(MAX_POS / 2); }
 
     /**
      * Moves the acquirer rotation servo to set angle to acquire.
      */
-    public void acquirerRotationAcquirer() { acquirerRotation.setPosition(.15); }
+    public void acquirerRotationAcquirer() { acquirerRotation.setPosition(MIN_POS); }
 
     /**
      * Moves the acquirer rotation servo to set angle.

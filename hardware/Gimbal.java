@@ -11,9 +11,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Gimbal extends Mechanism {
 
     /* CONSTANTS */
-    private final double LEFT_POS = .0;
+    private final double MIN_POS = .0;
     private final double NEUTRAL_POS = 0.5;
-    private final double RIGHT_POS = .1;
+    private final double MAX_POS = 1;
 
     /* Hardware members */
     private Servo horizontal_gimbal;
@@ -40,9 +40,6 @@ public class Gimbal extends Mechanism {
         // Retrieve gimbal from hardware map and set to initial position
         horizontal_gimbal = hwMap.servo.get(RCConfig.HORZ_PHONE_GIMBAL);
         vertical_gimbal = hwMap.servo.get(RCConfig.VERT_PHONE_GIMBAL);
-
-        setHorizontalLeft();
-        setVerticalLeft();
     }
 
     /**
@@ -57,17 +54,17 @@ public class Gimbal extends Mechanism {
      * Set the gimbal to the left position.
      */
     public void setHorizontalLeft() {
-        horizontal_gimbal.setPosition(LEFT_POS);
+        horizontal_gimbal.setPosition(MIN_POS);
     }
-    public void setVerticalLeft() { vertical_gimbal.setPosition(LEFT_POS); }
+    public void setVerticalLeft() { vertical_gimbal.setPosition(MIN_POS); }
 
     /**
      * Set the gimbal to the right position.
      */
     public void setHorizontalRight() {
-        horizontal_gimbal.setPosition(RIGHT_POS);
+        horizontal_gimbal.setPosition(MAX_POS);
     }
-    public void setVerticalRight() { vertical_gimbal.setPosition(RIGHT_POS);}
+    public void setVerticalRight() { vertical_gimbal.setPosition(MAX_POS);}
 
     /**
      * Set the gimbal to the neutral position.
@@ -83,4 +80,8 @@ public class Gimbal extends Mechanism {
     public void setVerticalPosition(double value) {
         vertical_gimbal.setPosition(value);
     }
+
+    public double getHorizontalPosition() { return horizontal_gimbal.getPosition(); }
+    public double getVerticalPosition() { return vertical_gimbal.getPosition(); }
+
 }

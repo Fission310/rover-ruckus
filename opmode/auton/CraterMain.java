@@ -33,7 +33,6 @@ public class CraterMain extends LinearOpMode {
     public void runOpMode() {
         // Initialize robot
         robot.init(hardwareMap);
-        robot.drivetrain.encoderInit();
         robot.imuInit(hardwareMap);
 
         // Initialize CV

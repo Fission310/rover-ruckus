@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.opmode.teleop;
+package org.firstinspires.ftc.teamcode.prototype;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -15,6 +16,7 @@ import static java.lang.Math.abs;
  * TeleopMecanumArcade is the primary TeleOp OpMode for mecanum drivetrains. All driver-controlled actions should
  * be defined in this class.
  */
+@Disabled
 @TeleOp(name = "Teleop: Arcade Mecanum [Test]", group = "Teleop")
 public class TeleopMecanumArcade extends OpMode {
 
@@ -45,7 +47,6 @@ public class TeleopMecanumArcade extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap);
-        robot.drivetrain.encoderInit();
         robot.imuInit(hardwareMap);
         background.init(hardwareMap);
         background.setGreenBackground();

@@ -50,6 +50,8 @@ public class Lift extends Mechanism {
 
         // Set initial power
         liftMotor.setPower(0);
+        encoderInit();
+
     }
 
     /**

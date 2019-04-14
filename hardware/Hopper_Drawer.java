@@ -55,6 +55,7 @@ public class Hopper_Drawer extends Mechanism {
 
         // Set initial power
         drawerSlide.setPower(0);
+        encoderInit();
     }
 
     public void encoderInit() {
@@ -82,14 +83,14 @@ public class Hopper_Drawer extends Mechanism {
     /**
      * Inits the drawer rotation servo to fit inside the sizing cube.
      */
-    public void hopperRotationDump() { hopperRotation.setPosition(.5); }
+    public void hopperRotationDump() { hopperRotation.setPosition(1); }
 
     public void hopperRotationMid() { hopperRotation.setPosition(0.5); }
 
     /**
      * Moves the drawer rotation servo to set angle to acquire.
      */
-    public void hopperRotation() { hopperRotation.setPosition(.15); }
+    public void hopperRotation() { hopperRotation.setPosition(.0); }
 
     /**
      * Moves the drawer rotation servo to set angle.

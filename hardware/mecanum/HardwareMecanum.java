@@ -106,6 +106,7 @@ public class HardwareMecanum extends Mechanism {
      * @param opMode    the LinearOpMode that is currently running
      */
     public HardwareMecanum(LinearOpMode opMode){
+        this.opMode = opMode;
         try { drivetrain = new Drivetrain(opMode); }
         catch (Exception e) {
             opMode.telemetry.addData("Status", "Problem with drivetrain");
@@ -137,8 +138,10 @@ public class HardwareMecanum extends Mechanism {
      * @param hwMap     robot's hardware map
      */
     public void init(HardwareMap hwMap) {
-        try { drivetrain.init(hwMap); }
-        catch (Exception e) {
+        try {
+            drivetrain.init(hwMap);
+            drivetrain.encoderInit();
+        } catch (Exception e) {
             opMode.telemetry.addData("Status", "problem initializing drivetrain");
         }
         try { acquirer.init(hwMap); }
@@ -203,6 +206,7 @@ public class HardwareMecanum extends Mechanism {
         }
     }
 
+
     public void updateSubsystems() {
         for (LynxModuleIntf hub : hubs.values()) {
             LynxGetBulkInputDataCommand command = new LynxGetBulkInputDataCommand(hub);
@@ -214,7 +218,7 @@ public class HardwareMecanum extends Mechanism {
                 updated = false;
             }
         }
-        opMode.telemetry.addData("REV Hubs Updated:", updated);
+//        opMode.telemetry.addData("REV Hubs Updated:", updated);
     }
 
     /**

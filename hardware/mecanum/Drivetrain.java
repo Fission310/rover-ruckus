@@ -197,10 +197,10 @@ public class Drivetrain extends Mechanism {
     }
 
     public void tankDriveScaled(double leftY, double rightY, double slide){
-        flPower = trueScaledInput(leftY) + trueScaledInput(slide);
-        frPower = trueScaledInput(rightY) - trueScaledInput(slide);
-        blPower = trueScaledInput(leftY) - trueScaledInput(slide);
-        brPower = trueScaledInput(rightY) + trueScaledInput(slide);
+        flPower = trueScaledInput(leftY) - trueScaledInput(slide);
+        frPower = trueScaledInput(rightY) + trueScaledInput(slide);
+        blPower = trueScaledInput(leftY) + trueScaledInput(slide);
+        brPower = trueScaledInput(rightY) - trueScaledInput(slide);
 
         leftFront.setPower(Range.clip(flPower,-1,1));
         leftBack.setPower(Range.clip(blPower,-1,1));
@@ -208,7 +208,9 @@ public class Drivetrain extends Mechanism {
         rightFront.setPower(Range.clip(frPower,-1,1));
     }
 
+    public void fieldCentric() {
 
+    }
     /**
      * Drive to a relative position using encoders and an IMU. Note (You must pass in the same
      * distance for both left and right inches for this method to work correctly)
