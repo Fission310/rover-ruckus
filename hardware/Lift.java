@@ -63,6 +63,11 @@ public class Lift extends Mechanism {
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    public void noEncoder() {
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     /**
      * Sets motors zero power behavior. Indicate whether the lift and pinion lift should be in float or brake mode.
      * Float mode allows for free rotations after the initial lift.
@@ -95,12 +100,12 @@ public class Lift extends Mechanism {
      */
     public void liftToPos(double speed, double inches) {
         // Target position variables
-        int leftTarget;
+        int target;
 
         // Determine new target position, and pass to motor controller
-        leftTarget = liftMotor.getCurrentPosition() + (int)(inches * Constants.INCHES_PER_TICK_30);
+        target = liftMotor.getCurrentPosition() + (int)(inches * LiftConstants.TICKS_PER_LINEAR_LIFT_INCH);
 
-        liftMotor.setTargetPosition(leftTarget);
+        liftMotor.setTargetPosition(target);
 
         // Turn On RUN_TO_POSITION
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -110,14 +115,13 @@ public class Lift extends Mechanism {
         runtime.reset();
 
         // Loop until a condition is met
-        while (opMode.opModeIsActive() &&
-                liftMotor.isBusy()) {
+        while (opMode.opModeIsActive() && liftMotor.isBusy()) {
 
-            // Set power of lift and pinion motors accounting for adjustment
+            // Set power of lift motor accounting for adjustment
             setLiftPower(speed);
 
             // Display info for the driver.
-            opMode.telemetry.addData("Path1", "Running to %7d", leftTarget);
+            opMode.telemetry.addData("Path1", "Running to %7d", target);
             opMode.telemetry.update();
         }
 
@@ -136,7 +140,7 @@ public class Lift extends Mechanism {
         return positions;
     }
 
-    public double getLeftPower() {
+    public double getLftPower() {
         return liftMotor.getPower();
     }
 }

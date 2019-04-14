@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer_Slides;
@@ -199,14 +200,6 @@ public class HardwareMecanum extends Mechanism {
         return drivetrain.imuAngle();
     }
 
-    public int getEncoderPosition(DcMotor motor) {
-        if (!updated) return 0;
-        synchronized (responses) {
-            return responses.get(hubs.get(motor.getController())).getEncoder(motor.getPortNumber()) * (motor.getDirection() == DcMotorSimple.Direction.FORWARD ? 1 : -1);
-        }
-    }
-
-
     public void updateSubsystems() {
         for (LynxModuleIntf hub : hubs.values()) {
             LynxGetBulkInputDataCommand command = new LynxGetBulkInputDataCommand(hub);
@@ -226,7 +219,25 @@ public class HardwareMecanum extends Mechanism {
      */
     public void waitForStart() {
         while (!opMode.opModeIsActive() && !opMode.isStopRequested()) {
-            opMode.telemetry.addData("Heading:", drivetrain.singleImu.getHeading());
+            opMode.telemetry.addData("status", "waiting for start command...");
+            opMode.telemetry.update();
+        }
+    }
+
+    public void safeSleep(long interval, String msg) {
+        ElapsedTime myTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        while(myTimer.milliseconds() < interval && opMode.opModeIsActive()) {
+            opMode.telemetry.addData("Elapsed Time (msec)", "%.00f", myTimer.milliseconds());
+            opMode.telemetry.addData("safeSleep", msg);
+            opMode.telemetry.update();
+            this.opMode.sleep(250);
+        }
+    }
+
+    public int getEncoderPosition(DcMotor motor) {
+        if (!updated) return 0;
+        synchronized (responses) {
+            return responses.get(hubs.get(motor.getController())).getEncoder(motor.getPortNumber()) * (motor.getDirection() == DcMotorSimple.Direction.FORWARD ? 1 : -1);
         }
     }
 
@@ -243,7 +254,7 @@ public class HardwareMecanum extends Mechanism {
      */
     public void land() {
         if (opMode.opModeIsActive()) {
-//            lift.liftToPos(.6, 48.0); // 10 inch
+            lift.liftToPos(.6, 5); // 10 inch
         }
     }
 
@@ -339,7 +350,7 @@ public class HardwareMecanum extends Mechanism {
             //hit sample by moving forward 8 inches
             drivetrain.driveToPos(DRIVE_SPEED, -6, 3);
 
-            opMode.sleep(300);
+            safeSleep(300, "");
             //drive backward 8 inches
             drivetrain.driveToPos(DRIVE_SPEED,-6, 3);
             //turn counter-clockwise face depot

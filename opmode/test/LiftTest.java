@@ -54,7 +54,7 @@ public class LiftTest extends LinearOpMode {
                     break;
                 case 1:
 //                    sleep(500);\
-//                    int distance = (int)(6 * Constants.INCHES_PER_TICK_30);
+//                    int distance = (int)(6 * Constants.INCHES_PER_TICK_26);
 //                    robot.drivetrain.curveTurn(220,.3,1/4, true);
                     telemetry.addData("Step 0", "Robot Drive one floor tile negative speed");
                     telemetry.update();

@@ -8,10 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.RCConfig;
 import org.firstinspires.ftc.teamcode.hardware.Constants;
@@ -40,7 +37,7 @@ public class Drivetrain extends Mechanism {
 
     private final double power = .40;
     private final double turningPower = .40;
-    private final double ticksPerInch = Constants.TICKS_PER_INCH_30;
+    private final double ticksPerInch = Constants.TICKS_PER_INCH_26;
 
     double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
 
@@ -85,6 +82,13 @@ public class Drivetrain extends Mechanism {
         leftBack.setPower(0);
         rightFront.setPower(0);
         rightBack.setPower(0);
+
+        // Set PID proportional value to start reducing power at about 50 degrees of rotation.
+        pidRotate = new PIDController(0.000, 0.000, 0.000);
+
+        // Set PID proportional value to produce non-zero correction value when robot veers off
+        // straight line. P value controls how sensitive the correction is.
+        pidDrive = new PIDController(.0, .0, .0);
     }
 
     /**
@@ -111,13 +115,6 @@ public class Drivetrain extends Mechanism {
         // Retrieve and initialize the IMU
         singleImu.init(hwMap, AxesOrder.ZYX,0D);
         // Set the starting angle to make automating hanging easier
-
-        // Set PID proportional value to start reducing power at about 50 degrees of rotation.
-        pidRotate = new PIDController(0.000, 0.000, 0.000);
-
-        // Set PID proportional value to produce non-zero correction value when robot veers off
-        // straight line. P value controls how sensitive the correction is.
-        pidDrive = new PIDController(.0, .0, .0);
     }
 
     public double imuAngle() { return singleImu.getAngle(); }
@@ -211,6 +208,7 @@ public class Drivetrain extends Mechanism {
     public void fieldCentric() {
 
     }
+
     /**
      * Drive to a relative position using encoders and an IMU. Note (You must pass in the same
      * distance for both left and right inches for this method to work correctly)
@@ -256,7 +254,7 @@ public class Drivetrain extends Mechanism {
         // Loop until a condition is met
         while (opMode.opModeIsActive() &&
                 (runtime.seconds() < timeoutS) &&
-                (leftFront.isBusy() && rightFront.isBusy() && leftBack.isBusy() && rightBack.isBusy())) {
+                leftFront.isBusy() && rightFront.isBusy() && leftBack.isBusy() && rightBack.isBusy()) {
 
             // Set power of drivetrain motors accounting for adjustment
             driveStraightPID(speed, leftInches);

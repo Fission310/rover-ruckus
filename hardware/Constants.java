@@ -6,14 +6,14 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 public class Constants {
     /* CONSTANTS */
-    private static final double GEAR_RATIO_30 = 30.0;
+    private static final double GEAR_RATIO_26 = 26.0;
     private static final double GEAR_RATIO_3_7 = 3.7;
     private static final double PPR = 7.0;
     private static final double CPR = PPR * 4.0; // 28
     /**
      * Ticks per revolution for a NeverRest and GoBilda motors.
      */
-    private static final double TICKS_PER_MOTOR_30 = CPR * GEAR_RATIO_30; // 840
+    private static final double TICKS_PER_MOTOR_26 = CPR * GEAR_RATIO_26; // 840
     private static final double TICKS_PER_MOTOR_3_7 = CPR * GEAR_RATIO_3_7; // 103.6
 
     /**
@@ -27,11 +27,11 @@ public class Constants {
     /**
      * Calculated ticks per inch.
      */
-    public static final double INCHES_PER_TICK_30 = ((WHEEL_DIAMETER_INCHES_4 * Math.PI) / (TICKS_PER_MOTOR_30 * DRIVE_GEAR_REDUCTION));
+    public static final double INCHES_PER_TICK_26 = ((WHEEL_DIAMETER_INCHES_4 * Math.PI) / (TICKS_PER_MOTOR_26 * DRIVE_GEAR_REDUCTION));
     /**
      * Calculated inch per tick.
      */
-    public static final double TICKS_PER_INCH_30 = 1.0 / INCHES_PER_TICK_30;
+    public static final double TICKS_PER_INCH_26 = 1.0 / INCHES_PER_TICK_26;
     /**
      * Drive speed when using encoders.
      */
