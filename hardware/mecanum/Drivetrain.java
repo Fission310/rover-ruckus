@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.hardware.mecanum;
 
 
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -15,6 +17,10 @@ import org.firstinspires.ftc.teamcode.hardware.Constants;
 import org.firstinspires.ftc.teamcode.util.motion.PIDController;
 import org.firstinspires.ftc.teamcode.util.sensors.imu.SingleIMU;
 
+import java.util.List;
+
+import static org.apache.commons.math3.stat.StatUtils.normalize;
+
 /**
  * Mecanum Drivetrain is the class that is used to define all of the hardware for a robot's mecanum drivetrain.
  * Drivetrain must be instantiated, then initialized using <code>init()</code> before being used.
@@ -22,9 +28,13 @@ import org.firstinspires.ftc.teamcode.util.sensors.imu.SingleIMU;
  * This class also contains autonomous actions involving the drivetrain. <code>encoderInit()</code>
  * must be called before an autonomous action can be called.
  *
- * This class describes a mecanum drivetrain (Two motor for both sides of robot + One motor for center wheels).
+ * This class describes a mecanum drivetrain.
  */
 public class Drivetrain extends Mechanism {
+
+//    private ExpansionHubEx hub;
+//    private ExpansionHubMotor leftFront, leftRear, rightRear, rightFront;
+//    private List<ExpansionHubMotor> motors;
 
     /* Hardware members */
     public DcMotor leftFront;
@@ -44,13 +54,16 @@ public class Drivetrain extends Mechanism {
     /**
      * Default constructor for Drivetrain.
      */
-    public Drivetrain() { }
+    public Drivetrain() {
+        super();
+    }
     /**
      * Overloaded constructor for Drivetrain. Sets the OpMode context.
      *
      * @param opMode    the LinearOpMode that is currently running
      */
     public Drivetrain(LinearOpMode opMode){
+        super();
         this.opMode = opMode;
     }
 
@@ -122,6 +135,21 @@ public class Drivetrain extends Mechanism {
     public void imuStartingRot() { singleImu.setStartingAngle(); }
 
     public void resetDeltaAngle() { singleImu.resetStartingAngle(); }
+//
+//    @Override
+//    public PIDCoefficients getPIDCoefficients(DcMotor.RunMode runMode) {
+//        PIDFCoefficients coefficients = leftFront.getPIDFCoefficients(runMode);
+//        return new PIDCoefficients(coefficients.p, coefficients.i, coefficients.d);
+//    }
+//
+//    @Override
+//    public void setPIDCoefficients(DcMotor.RunMode runMode, PIDCoefficients coefficients) {
+//        for (ExpansionHubMotor motor : motors) {
+//            motor.setPIDFCoefficients(runMode, new PIDFCoefficients(
+//                    coefficients.kP, coefficients.kI, coefficients.kD, 1
+//            ));
+//        }
+//    }
 
     /**
      * Sets motors zero power behavior. Indicate whether the drivetrain should be in float or brake mode.
@@ -205,10 +233,43 @@ public class Drivetrain extends Mechanism {
         rightFront.setPower(Range.clip(frPower,-1,1));
     }
 
-    public void fieldCentric() {
+    public void fieldCentric(double forward, double strafe, double rotate, double gyro) {
+        // reset the power of all motors
+        flPower = 0;
+        frPower = 0;
+        blPower = 0;
+        brPower = 0;
 
+        double forwardIn = forward, strafeIn = strafe;
+        double[] temp = new double[2];
+        temp = rotateVector(strafeIn, forwardIn, gyro);
+
+        forwardIn = temp[0];
+        strafeIn = temp[1];
+        double allWheels[] = new double[4];
+
+        allWheels[0] = forwardIn + strafeIn + rotate;
+        allWheels[1] = forwardIn - strafeIn - rotate;
+        allWheels[2] = forwardIn - strafeIn + rotate;
+        allWheels[3] = forwardIn + strafeIn - rotate;
+        normalize(allWheels);
+
+        flPower = allWheels[0];
+        frPower = allWheels[1];
+        blPower = allWheels[2];
+        brPower = allWheels[3];
     }
 
+    public static double[] rotateVector(double x, double y, double angle) {
+        double out[] = new double[2];
+        double cosA = Math.cos(angle * Math.PI / 180);
+        double sinA = Math.sin(angle * Math.PI / 180);
+
+        out[0] = x * cosA - y * sinA;
+        out[1] = y * cosA + x * sinA;
+
+        return out;
+    }
     /**
      * Drive to a relative position using encoders and an IMU. Note (You must pass in the same
      * distance for both left and right inches for this method to work correctly)
@@ -488,7 +549,6 @@ public class Drivetrain extends Mechanism {
             rightFront.setPower(speed);
         }
     }
-
 
     public double[] getPositions() {
         double[] positions = new double[4];
