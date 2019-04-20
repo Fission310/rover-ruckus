@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.hardware.mecanum;
 
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -16,10 +18,18 @@ import org.firstinspires.ftc.teamcode.hardware.RCConfig;
 import org.firstinspires.ftc.teamcode.hardware.Constants;
 import org.firstinspires.ftc.teamcode.util.motion.PIDController;
 import org.firstinspires.ftc.teamcode.util.sensors.imu.SingleIMU;
+import org.jetbrains.annotations.NotNull;
+import org.openftc.revextensions2.ExpansionHubEx;
+import org.openftc.revextensions2.ExpansionHubMotor;
+import org.openftc.revextensions2.RevBulkData;
+import org.openftc.revextensions2.RevExtensions2;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.apache.commons.math3.stat.StatUtils.normalize;
+import static org.firstinspires.ftc.teamcode.hardware.mecanum.DriveConstants.encoderTicksToInches;
 
 /**
  * Mecanum Drivetrain is the class that is used to define all of the hardware for a robot's mecanum drivetrain.
@@ -30,24 +40,17 @@ import static org.apache.commons.math3.stat.StatUtils.normalize;
  *
  * This class describes a mecanum drivetrain.
  */
-public class Drivetrain extends Mechanism {
-
-//    private ExpansionHubEx hub;
-//    private ExpansionHubMotor leftFront, leftRear, rightRear, rightFront;
-//    private List<ExpansionHubMotor> motors;
+public class Drivetrain extends MecanumDriveBase {
 
     /* Hardware members */
-    public DcMotor leftFront;
-    public DcMotor leftBack;
-    public DcMotor rightFront;
-    public DcMotor rightBack;
+    private ExpansionHubEx hub;
+    private ExpansionHubMotor leftFront, leftBack, rightBack, rightFront;
+    private List<ExpansionHubMotor> motors;
 
     public PIDController pidRotate, pidDrive;
     public SingleIMU singleImu = new SingleIMU();
 
-    private final double power = .40;
-    private final double turningPower = .40;
-    private final double ticksPerInch = Constants.TICKS_PER_INCH_26;
+    private final double power = .40, turningPower = .40, ticksPerInch = Constants.TICKS_PER_INCH_26;
 
     double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
 
@@ -72,11 +75,14 @@ public class Drivetrain extends Mechanism {
      * @param hwMap        robot's hardware map
      */
     public void init(HardwareMap hwMap) {
+        RevExtensions2.init();
+        hub = hwMap.get(ExpansionHubEx.class, "Expansion Hub 1");
+
         // Retrieve motors from hardware map and assign to instance vars
-        leftFront = hwMap.dcMotor.get(RCConfig.LEFT_FRONT);
-        leftBack = hwMap.dcMotor.get(RCConfig.LEFT_BACK);
-        rightFront = hwMap.dcMotor.get(RCConfig.RIGHT_FRONT);
-        rightBack = hwMap.dcMotor.get(RCConfig.RIGHT_BACK);
+        leftFront = hwMap.get(ExpansionHubMotor.class, RCConfig.LEFT_FRONT);
+        leftBack = hwMap.get(ExpansionHubMotor.class, RCConfig.LEFT_BACK);
+        rightFront = hwMap.get(ExpansionHubMotor.class, RCConfig.RIGHT_FRONT);
+        rightBack = hwMap.get(ExpansionHubMotor.class, RCConfig.RIGHT_BACK);
 
         // Set motor direction (AndyMark configuration)
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -84,17 +90,12 @@ public class Drivetrain extends Mechanism {
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        // Set motor brake behavior
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Set all motors to zero power
-        leftFront.setPower(0);
-        leftBack.setPower(0);
-        rightFront.setPower(0);
-        rightBack.setPower(0);
+        motors = Arrays.asList(leftFront, leftBack, rightFront, rightBack);
+        for (ExpansionHubMotor motor: motors) {
+            // Set motor brake behavior
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motor.setPower(0);
+        }
 
         // Set PID proportional value to start reducing power at about 50 degrees of rotation.
         pidRotate = new PIDController(0.000, 0.000, 0.000);
@@ -109,47 +110,12 @@ public class Drivetrain extends Mechanism {
      * encoders.
      */
     public void encoderInit() {
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motors = Arrays.asList(leftFront, leftBack, rightFront, rightBack);
+        for (ExpansionHubMotor motor: motors) {
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
     }
-
-    /**
-     * Initializes imu for accurate driving. Must be called after landing to get accurate
-     * readings.
-     */
-    public void imuInit(HardwareMap hwMap) {
-        // Retrieve and initialize the IMU
-        singleImu.init(hwMap, AxesOrder.ZYX,0D);
-        // Set the starting angle to make automating hanging easier
-    }
-
-    public double imuAngle() { return singleImu.getAngle(); }
-
-    public void imuStartingRot() { singleImu.setStartingAngle(); }
-
-    public void resetDeltaAngle() { singleImu.resetStartingAngle(); }
-//
-//    @Override
-//    public PIDCoefficients getPIDCoefficients(DcMotor.RunMode runMode) {
-//        PIDFCoefficients coefficients = leftFront.getPIDFCoefficients(runMode);
-//        return new PIDCoefficients(coefficients.p, coefficients.i, coefficients.d);
-//    }
-//
-//    @Override
-//    public void setPIDCoefficients(DcMotor.RunMode runMode, PIDCoefficients coefficients) {
-//        for (ExpansionHubMotor motor : motors) {
-//            motor.setPIDFCoefficients(runMode, new PIDFCoefficients(
-//                    coefficients.kP, coefficients.kI, coefficients.kD, 1
-//            ));
-//        }
-//    }
 
     /**
      * Sets motors zero power behavior. Indicate whether the drivetrain should be in float or brake mode.
@@ -158,10 +124,69 @@ public class Drivetrain extends Mechanism {
      * @param behavior FLOAT, BRAKE
      */
     public void setDriveZeroPowers(DcMotor.ZeroPowerBehavior behavior) {
-        leftFront.setZeroPowerBehavior(behavior);
-        leftBack.setZeroPowerBehavior(behavior);
-        rightFront.setZeroPowerBehavior(behavior);
-        rightBack.setZeroPowerBehavior(behavior);
+        for (ExpansionHubMotor motor: motors) {
+            motor.setZeroPowerBehavior(behavior);
+        }
+    }
+
+    /**
+     * Initializes imu for accurate driving. Must be called after landing to get accurate
+     * readings.
+     */
+    public void imuInit(HardwareMap hwMap) {
+        // Retrieve and initialize the IMU
+        singleImu.init(hub, hwMap, AxesOrder.ZYX,0D);
+        // Set the starting angle to make automating hanging easier
+    }
+
+    public double imuAngle() { return singleImu.getAngle(); }
+
+    public void imuStartingRot() { singleImu.setStartingAngle(); }
+
+    public void resetDeltaAngle() { singleImu.resetStartingAngle(); }
+
+    @Override
+    public double getExternalHeading() {
+        return singleImu.getHeading();
+    }
+
+    @Override
+    public PIDCoefficients getPIDCoefficients(DcMotor.RunMode runMode) {
+        PIDFCoefficients coefficients = leftFront.getPIDFCoefficients(runMode);
+        return new PIDCoefficients(coefficients.p, coefficients.i, coefficients.d);
+    }
+
+    @Override
+    public void setPIDCoefficients(DcMotor.RunMode runMode, PIDCoefficients coefficients) {
+        for (ExpansionHubMotor motor : motors) {
+            motor.setPIDFCoefficients(runMode, new PIDFCoefficients(
+                    coefficients.kP, coefficients.kI, coefficients.kD, 1
+            ));
+        }
+    }
+
+    @NotNull
+    @Override
+    public List<Double> getWheelPositions() {
+        RevBulkData bulkData = hub.getBulkInputData();
+
+        if (bulkData == null) {
+            return Arrays.asList(0.0, 0.0, 0.0, 0.0);
+        }
+
+        List<Double> wheelPositions = new ArrayList<>();
+        for (ExpansionHubMotor motor : motors) {
+            wheelPositions.add(DriveConstants.encoderTicksToInches(bulkData.getMotorCurrentPosition(motor)));
+        }
+        return wheelPositions;
+    }
+
+    @Override
+    public void setMotorPowers (double v0, double v1, double v2, double v3) {
+        leftFront.setPower(v0);
+        leftBack.setPower(v1);
+        rightFront.setPower(v2);
+        rightBack.setPower(v3);
     }
 
     /**
@@ -413,9 +438,8 @@ public class Drivetrain extends Mechanism {
      * - negative is clockwise
      * @param angle         number of degrees to turn
      */
-    public void turnPID(int angle) { pidDriveRotate(angle, turningPower); }
+    public void turnPID(int angle, double inputRange) { pidDriveRotate(angle, turningPower, inputRange); }
 
-    public void turn180PID(int angle) { pidRotate180(angle, turningPower); }
 
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
@@ -431,63 +455,15 @@ public class Drivetrain extends Mechanism {
      * gearing configuration, starting power, weight of the robot and the on target tolerance.
      *
      * @param degrees Degrees to turn, + is left - is right
+     * @param power  Maximum power set to the motors
+     * @param inputRange Maximum output of the controller
      */
-    private void pidDriveRotate(int degrees, double power) {
+    private void pidDriveRotate(int degrees, double power, double inputRange) {
         singleImu.resetAngle();
 
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
-        pidRotate.setInputRange(0, 90);
-        pidRotate.setOutputRange(.2, power);
-        pidRotate.setTolerance(.2);
-        pidRotate.enable();
-
-        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
-        // clockwise (right).
-
-        // rotate until turn is completed.
-
-        if (degrees < 0) { // On right turn we have to get off zero first.
-            while (opMode.opModeIsActive() && singleImu.getAngle() == 0) {
-                leftFront.setPower(-power);
-                leftBack.setPower(-power);
-                rightBack.setPower(power);
-                rightFront.setPower(power);
-                opMode.sleep(100);
-            } do {
-                power = pidRotate.performPID(singleImu.getAngle()); // power will be - on right turn.
-                leftFront.setPower(power);
-                leftBack.setPower(power);
-                rightBack.setPower(-power);
-                rightFront.setPower(-power);
-            } while (opMode.opModeIsActive() && !pidRotate.onTarget());
-        } else do { // left turn.
-            power = pidRotate.performPID(singleImu.getAngle()); // power will be + on left turn.
-
-            leftFront.setPower(power);
-            leftBack.setPower(power);
-            rightBack.setPower(-power);
-            rightFront.setPower(-power);
-        } while (opMode.opModeIsActive() && !pidRotate.onTarget());
-
-        leftFront.setPower(0);
-        leftBack.setPower(0);
-        rightBack.setPower(0);
-        rightFront.setPower(0);
-
-        // wait for rotation to stop.
-        opMode.sleep(500);
-
-        // reset angle tracking on new heading.
-        singleImu.resetAngle();
-    }
-
-    private void pidRotate180(int degrees, double power) {
-        singleImu.resetAngle();
-
-        pidRotate.reset();
-        pidRotate.setSetpoint(degrees);
-        pidRotate.setInputRange(0, 180);
+        pidRotate.setInputRange(0, inputRange);
         pidRotate.setOutputRange(.2, power);
         pidRotate.setTolerance(.2);
         pidRotate.enable();

@@ -268,7 +268,7 @@ public class HardwareMecanum extends Mechanism {
     //turn 90 degrees counter clockwise
     public void turn90() {
         if (opMode.opModeIsActive()) {
-            drivetrain.turnPID(-RIGHT_TURN);
+            drivetrain.turnPID(-RIGHT_TURN, 90);
         }
     }
     /**
@@ -295,15 +295,15 @@ public class HardwareMecanum extends Mechanism {
         if (opMode.opModeIsActive()) {
             drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE / 3.0, 4);
             if (location == TensorFlowManager.TFLocation.LEFT){
-                drivetrain.turnPID(RIGHT_TURN);
+                drivetrain.turnPID(RIGHT_TURN, 90);
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE / 2.0, 5);
-                drivetrain.turnPID(-RIGHT_TURN);
+                drivetrain.turnPID(-RIGHT_TURN,90);
             } else if (location == TensorFlowManager.TFLocation.RIGHT){
                 //turn right to cube
-                drivetrain.turnPID(-RIGHT_TURN);
+                drivetrain.turnPID(-RIGHT_TURN, 90);
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE / 2.0, 5);
                 //turn left
-                drivetrain.turnPID(RIGHT_TURN);
+                drivetrain.turnPID(RIGHT_TURN, 90);
             } else if (location == TensorFlowManager.TFLocation.NONE){
                 opMode.telemetry.addData("Detected None", "Robot will take center path");
             }
@@ -323,15 +323,15 @@ public class HardwareMecanum extends Mechanism {
             if (location == TensorFlowManager.TFLocation.LEFT){
                 opMode.telemetry.addData("Sampling from", "left");
                 //back
-                drivetrain.turnPID(-DIAGONAL_TURN);
+                drivetrain.turnPID(-DIAGONAL_TURN, 45);
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 4);
             } else if (location == TensorFlowManager.TFLocation.CENTER || location == TensorFlowManager.TFLocation.NONE){
-                drivetrain.turnPID(-DIAGONAL_TURN);
+                drivetrain.turnPID(-DIAGONAL_TURN, 45);
                 opMode.telemetry.addData("Sampling from", "center");
             } else if (location == TensorFlowManager.TFLocation.RIGHT){
-                drivetrain.turnPID(DIAGONAL_TURN);
+                drivetrain.turnPID(DIAGONAL_TURN, 45);
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 4);
-                drivetrain.turnPID(-RIGHT_TURN);
+                drivetrain.turnPID(-RIGHT_TURN, 90);
                 opMode.telemetry.addData("Sampling from", "right");
             }
             opMode.telemetry.update();
@@ -354,23 +354,23 @@ public class HardwareMecanum extends Mechanism {
             //drive backward 8 inches
             drivetrain.driveToPos(DRIVE_SPEED,-6, 3);
             //turn counter-clockwise face depot
-            drivetrain.turnPID(RIGHT_TURN);
+            drivetrain.turnPID(RIGHT_TURN, 90);
             //drive forward one floor tile, then correct position by strafing right a certain number of units
             // then go forward again to depot
             if (location == TensorFlowManager.TFLocation.LEFT){
                 //if gold was left, strafe right a floor tile
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 4);
-                drivetrain.turnPID(DIAGONAL_TURN);
+                drivetrain.turnPID(DIAGONAL_TURN, 45);
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 4.0, 5);
             } else if (location == TensorFlowManager.TFLocation.CENTER || location == TensorFlowManager.TFLocation.NONE){
                 //if gold was center or not found, strafe right 1.5 floor tile
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 1.5, 5);
-                drivetrain.turnPID(DIAGONAL_TURN);
+                drivetrain.turnPID(DIAGONAL_TURN, 45);
                 drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 4.0, 5);
             } else if (location == TensorFlowManager.TFLocation.RIGHT){
                 //if gold was right, strafe right 2 floor tiles
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 2, 4);
-                drivetrain.turnPID(DIAGONAL_TURN);
+                drivetrain.turnPID(DIAGONAL_TURN, 45);
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 4.0, 5);
             }
         }
@@ -395,7 +395,7 @@ public class HardwareMecanum extends Mechanism {
     public void driveToCrater(boolean crater) {
         if (opMode.opModeIsActive()) {
             if (crater) {
-                drivetrain.turn180PID(-180);
+                drivetrain.turnPID(-180, 180);
                 drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 3.5, 5);
             } else {
                 drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE * 3.5, 5);

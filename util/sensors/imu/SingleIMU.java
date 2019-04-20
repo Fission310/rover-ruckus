@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.util.sensors.imu.util.NaiveAccelerationIntegrator;
+import org.openftc.revextensions2.ExpansionHubEx;
 
 import java.util.Locale;
 
@@ -33,8 +34,9 @@ public class SingleIMU {
 
     public SingleIMU() { }
 
-    public void init(HardwareMap hwMap, AxesOrder axesOrder, double heading) {
+    public void init(ExpansionHubEx hub, HardwareMap hwMap, AxesOrder axesOrder, double heading) {
         this.axesOrder = axesOrder;
+        this.imu = LynxOptimizedI2cFactory.createLynxEmbeddedImu(hub.getStandardModule(), 0);
         this.imu = hwMap.get(BNO055IMU.class, "imu");
         this.init_heading = heading;
 
@@ -43,7 +45,7 @@ public class SingleIMU {
          * in space is calculated from the accelerometer and gyroscope data. The calculation is fast
          * (i.e. high output data rate).
          */
-        parameters.mode = BNO055IMU.SensorMode.NDOF;
+        parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json";

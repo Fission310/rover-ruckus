@@ -44,9 +44,6 @@ public class TeleopMain extends OpMode {
     double cascadingSlidesInput, hopperInput, acquirerInput;
     double acquirerPosition = 0.0, hopperPosition = 0.0, verticalPosition = 0.0, horizontalPosition = 0.0;
 
-    /* Handle button positions */
-    boolean drivetrainSlowMode;
-
     @Override
     public void init() {
         /* Robot Init */
@@ -103,7 +100,11 @@ public class TeleopMain extends OpMode {
         leftInput = gamepad1.left_stick_y;
         rightInput = gamepad1.right_stick_y;
         slideInput = -gamepad1.left_trigger + gamepad1.right_trigger;
-        robot.drivetrain.tankDriveScaled(leftInput, rightInput, slideInput);
+        if (stickyGamepad1.right_stick_button) {
+            robot.drivetrain.fieldCentric(leftInput, gamepad1.left_stick_x, gamepad1.right_stick_x, robot.imuAngle());
+        } else {
+            robot.drivetrain.tankDriveScaled(leftInput, rightInput, slideInput);
+        }
 
         /**
          * Controls the Lift via the up and down dpad || Slow mode = left  button
@@ -118,6 +119,12 @@ public class TeleopMain extends OpMode {
          */
 
         /**
+         * Controls the Acquirer speed via the right bumper
+         */
+        acquirerInput = stickyGamepad2.right_bumper ? 1 : 0;
+        robot.acquirer.setIntakePower(acquirerInput);
+
+        /**
          * Controls the Acquirer slides via the right analog stick
          */
         cascadingSlidesInput = gamepad2.right_stick_y;
@@ -127,12 +134,6 @@ public class TeleopMain extends OpMode {
          * Rotates the Acquirer via the right trigger
          */
         robot.acquirer.setAcquirerRotation(gamepad2.right_trigger);
-
-        /**
-         * Activates the Acquirer speed via the right bumper
-         */
-        acquirerInput = stickyGamepad2.right_bumper ? 1 : 0;
-        robot.acquirer.setIntakePower(acquirerInput);
 
         /**
          * Controls the Hopper slides via the left analog stick

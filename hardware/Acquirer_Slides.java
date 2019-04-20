@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -21,8 +22,8 @@ public class Acquirer_Slides extends Mechanism {
     private static final double MAX_POS = 1.0;
 
     /* Hardware members */
-    private DcMotor cascadingSlides;
-    private DcMotor intakeMotor;
+    private DcMotorEx cascadingSlides;
+    private DcMotorEx intakeMotor;
     private Servo acquirerRotation;
 
     /**
@@ -45,8 +46,8 @@ public class Acquirer_Slides extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
-        cascadingSlides = hwMap.dcMotor.get(RCConfig.CASCADING_SLIDES);
-        intakeMotor = hwMap.dcMotor.get(RCConfig.INTAKE_MOTOR);
+        cascadingSlides = hwMap.get(DcMotorEx.class, RCConfig.CASCADING_SLIDES);
+        intakeMotor = hwMap.get(DcMotorEx.class, RCConfig.INTAKE_MOTOR);
         acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
 
         // Set polarity
