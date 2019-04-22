@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -18,7 +19,7 @@ public class Lift extends Mechanism {
     /* CONSTANTS */
 
     /* Hardware members */
-    private DcMotor liftMotor;
+    private DcMotorEx liftMotor;
 
     /**
      * Default constructor for Acquirer_Slides.
@@ -40,7 +41,7 @@ public class Lift extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve motor from hardware map and assign to instance vars
-        liftMotor = hwMap.dcMotor.get(RCConfig.LIFT);
+        liftMotor = hwMap.get(DcMotorEx.class, RCConfig.LIFT);
 
         // Set braking behavior
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -133,11 +134,8 @@ public class Lift extends Mechanism {
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public double[] getPositions() {
-        double[] positions = new double[1];
-        positions[0] = liftMotor.getCurrentPosition();
-
-        return positions;
+    public double getPositions() {
+        return liftMotor.getCurrentPosition() / LiftConstants.TICKS_PER_LEADSCREW;
     }
 
     public double getLftPower() {

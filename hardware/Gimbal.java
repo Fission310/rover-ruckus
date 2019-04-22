@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 /**
  * Gimbal is the class that is used to define all of the hardware for a robot's phone gimbal.
@@ -16,8 +17,8 @@ public class Gimbal extends Mechanism {
     private final double MAX_POS = 1;
 
     /* Hardware members */
-    private Servo horizontal_gimbal;
-    private Servo vertical_gimbal;
+    private ServoImplEx horizontal_gimbal;
+    private ServoImplEx vertical_gimbal;
 
     /**
      * Default constructor for Gimbal.
@@ -38,16 +39,16 @@ public class Gimbal extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve gimbal from hardware map and set to initial position
-        horizontal_gimbal = hwMap.servo.get(RCConfig.HORZ_PHONE_GIMBAL);
-        vertical_gimbal = hwMap.servo.get(RCConfig.VERT_PHONE_GIMBAL);
+        horizontal_gimbal = hwMap.get(ServoImplEx.class, RCConfig.HORZ_PHONE_GIMBAL);
+        vertical_gimbal = hwMap.get(ServoImplEx.class, RCConfig.VERT_PHONE_GIMBAL);
     }
 
     /**
      * Set the gimbal to the sampling position during hang.
      */
     public void setSamplingPos() {
-        horizontal_gimbal.setPosition(.47);
-        vertical_gimbal.setPosition(.27);
+        horizontal_gimbal.setPosition(.77);
+        vertical_gimbal.setPosition(.67);
     }
 
     /**

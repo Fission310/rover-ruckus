@@ -71,11 +71,11 @@ public class PIDTuner extends OpMode {
          * Gamepad 1
          */
         if(gamepad1.x) {
-            robot.drivetrain.turnPID(90);
+            robot.drivetrain.turnPID(90, 90);
         }
 
         if(gamepad1.y) {
-            robot.drivetrain.turnPID(-90);
+            robot.drivetrain.turnPID(-90, 90);
         }
 
         if (gamepad1.dpad_up) {

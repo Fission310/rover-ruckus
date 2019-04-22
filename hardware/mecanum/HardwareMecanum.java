@@ -15,9 +15,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer_Slides;
+import org.firstinspires.ftc.teamcode.hardware.Constants;
 import org.firstinspires.ftc.teamcode.hardware.Gimbal;
 import org.firstinspires.ftc.teamcode.hardware.Hopper_Drawer;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
+import org.firstinspires.ftc.teamcode.hardware.LiftConstants;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
@@ -250,11 +252,11 @@ public class HardwareMecanum extends Mechanism {
 
 
     /**
-     * Autonomous action for landing the robot using the lift and pinion mechanism.
+     * Autonomous action for landing the robot using the lift mechanism.
      */
     public void land() {
         if (opMode.opModeIsActive()) {
-            lift.liftToPos(.6, 5); // 10 inch
+            lift.liftToPos(1, LiftConstants.EXTENDED_POSITION); // 10 inch
         }
     }
 

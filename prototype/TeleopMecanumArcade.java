@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.hardware.mecanum.HardwareMecanum;
-import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
 import org.firstinspires.ftc.teamcode.util.signals.BackgroundColorManager;
 
 import static java.lang.Math.abs;

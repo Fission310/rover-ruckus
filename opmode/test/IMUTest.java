@@ -43,13 +43,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
+import org.firstinspires.ftc.teamcode.hardware.mecanum.HardwareMecanum;
 
 import java.util.Locale;
 
 @TeleOp(name = "IMU Test", group = "Sensor")
 public class IMUTest extends LinearOpMode {
-    private HardwareSlide robot = new HardwareSlide();
+    private HardwareMecanum robot = new HardwareMecanum();
 
     @Override
     public void runOpMode() {

@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
+import org.firstinspires.ftc.teamcode.hardware.mecanum.HardwareMecanum;
 import org.firstinspires.ftc.teamcode.opmode.Steps;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
@@ -14,7 +14,7 @@ public class DepotMain extends LinearOpMode {
     private ElapsedTime     runtime = new ElapsedTime();
 
     /* Robot hardware */
-    private HardwareSlide robot = new HardwareSlide(this);
+    private HardwareMecanum robot = new HardwareMecanum(this);
 
     /* Vision Manager*/
     private TensorFlowManager visionManager = new TensorFlowManager();
@@ -33,7 +33,6 @@ public class DepotMain extends LinearOpMode {
     public void runOpMode() {
         // Initialize robot
         robot.init(hardwareMap);
-        robot.drivetrain.encoderInit();
         robot.imuInit(hardwareMap);
 
         // Initialize CV
@@ -100,22 +99,22 @@ public class DepotMain extends LinearOpMode {
                      * Makes sure that the gold location is found.
                      */
                     //if gold location was not found during init
-                    robot.sensors.setFrontRight();
-                    robot.sensors.setBackRight();
+//                    robot.sensors.setFrontRight();
+//                    robot.sensors.setBackRight();
                     sleep(500);
-                    robot.sensors.setFrontNeutral();
-                    robot.sensors.setBackNeutral();
+//                    robot.sensors.setFrontNeutral();
+//                    robot.sensors.setBackNeutral();
 
                     while (goldLocation == TensorFlowManager.TFLocation.NONE && ROTATIONS < 18 && runtime.seconds() > 15) {
                         telemetry.addData("Gold Location not found during init. location:", "trying again");
                         telemetry.update();
                         ROTATIONS += 2;
-                        robot.drivetrain.turnPID(2);
+//                        robot.drivetrain.turnPID(2);
                         goldLocation = (goldLocation != TensorFlowManager.TFLocation.NONE) ? goldLocation : visionManager.getDoubleMineralLocation();
                         ElapsedTime elapsedTimes = new ElapsedTime();
                         while(elapsedTimes.seconds() < 1) ;
                     }
-                    if (ROTATIONS > 0) { robot.drivetrain.turnPID(-ROTATIONS); }
+//                    if (ROTATIONS > 0) { robot.drivetrain.turnPID(-ROTATIONS); }
                     telemetry.addData("Gold Cube location", goldLocation);
                     telemetry.addData("Test", "Test");
                     telemetry.update();
@@ -195,7 +194,7 @@ public class DepotMain extends LinearOpMode {
                     break;
 
                 default: {
-                    robot.drivetrain.drive(0, 0);
+                    robot.drivetrain.setMotorPowers(0, 0, 0, 0);
                     telemetry.addData("Status", "Robot default");
                     telemetry.update();
                 }

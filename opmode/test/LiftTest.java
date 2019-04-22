@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.test;
 
+import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -7,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FieldConstants;
 import org.firstinspires.ftc.teamcode.hardware.Constants;
-import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
+import org.firstinspires.ftc.teamcode.hardware.mecanum.HardwareMecanum;
 
 @Autonomous(name="Lift Test", group="Test")
 @Disabled
@@ -17,7 +18,7 @@ public class LiftTest extends LinearOpMode {
     private ElapsedTime     runtime = new ElapsedTime();
 
     /* Robot hardware */
-    private HardwareSlide robot = new HardwareSlide(this);
+    private HardwareMecanum robot = new HardwareMecanum(this);
 
     private int step = 0;
 

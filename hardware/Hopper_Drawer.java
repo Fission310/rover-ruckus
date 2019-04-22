@@ -2,10 +2,14 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptTelemetry;
 
 
 /**
@@ -21,8 +25,8 @@ public class Hopper_Drawer extends Mechanism {
     private static final double SERVO_CENTER_POS = 1;
 
     /* Hardware members */
-    private DcMotor drawerSlide;
-    private Servo hopperRotation;
+    private DcMotorEx drawerSlide;
+    private ServoImplEx hopperRotation;
 
     /**
      * Default constructor for Hopper_Drawer.
@@ -44,8 +48,8 @@ public class Hopper_Drawer extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
-        drawerSlide = hwMap.dcMotor.get(RCConfig.DRAWER_SLIDES);
-        hopperRotation = hwMap.servo.get(RCConfig.HOPPER_ROTATION);
+        drawerSlide = hwMap.get(DcMotorEx.class, RCConfig.DRAWER_SLIDES);
+        hopperRotation = hwMap.get(ServoImplEx.class, RCConfig.HOPPER_ROTATION);
 
         // Set braking behavior
         drawerSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -73,11 +77,8 @@ public class Hopper_Drawer extends Mechanism {
         drawerSlide.setPower(power);
     }
 
-    public double[] getPositions() {
-        double[] positions = new double[1];
-        positions[0] = drawerSlide.getCurrentPosition();
-
-        return positions;
+    public double getPositions() {
+        return drawerSlide.getCurrentPosition() * Constants.INCHES_PER_TICK_HOPPER;
     }
 
     /**
@@ -86,6 +87,10 @@ public class Hopper_Drawer extends Mechanism {
     public void hopperRotationDump() { hopperRotation.setPosition(1); }
 
     public void hopperRotationMid() { hopperRotation.setPosition(0.5); }
+
+    public void disableHopper() {
+        hopperRotation.setPwmDisable();
+    }
 
     /**
      * Moves the drawer rotation servo to set angle to acquire.

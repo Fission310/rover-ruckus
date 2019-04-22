@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.hardware.slidedrive.HardwareSlide;
+import org.firstinspires.ftc.teamcode.hardware.mecanum.HardwareMecanum;
 import org.firstinspires.ftc.teamcode.opmode.Steps;
 import org.firstinspires.ftc.teamcode.util.vision.TensorFlowManager;
 
@@ -14,7 +14,7 @@ public class CraterMain extends LinearOpMode {
     private ElapsedTime     runtime = new ElapsedTime();
 
     /* Robot hardware */
-    private HardwareSlide robot = new HardwareSlide(this);
+    private HardwareMecanum robot = new HardwareMecanum(this);
 
     /* Vision Manager*/
     private TensorFlowManager visionManager = new TensorFlowManager();
@@ -183,7 +183,7 @@ public class CraterMain extends LinearOpMode {
                     break;
 
                 default: {
-                    robot.drivetrain.drive(0, 0);
+                    robot.drivetrain.setMotorPowers(0, 0, 0, 0);
                     telemetry.addData("Status", "Robot default");
                     telemetry.update();
                 }

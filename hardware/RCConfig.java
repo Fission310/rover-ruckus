@@ -8,10 +8,6 @@ public class RCConfig {
     /**
      * Motors.
      */
-    // Slide
-    public static final String LEFT_DRIVE = "left";
-    public static final String RIGHT_DRIVE = "right";
-    public static final String SLIDE_DRIVE = "slide";
     // Mecanum
     public static final String LEFT_FRONT = "leftFront";
     public static final String LEFT_BACK = "leftBack";

@@ -8,7 +8,7 @@ public class LiftConstants {
     /* CONSTANTS */
     private static final double PPR = 7.0;
     private static final double CPR = PPR * 4.0; // 28
-    private static final double GEAR_RATIO_3_7 = 3.7;
+    private static final double GEAR_RATIO_3_7 = 20;
 
     /**
      * Ticks per revolution for a NeverRest motors.

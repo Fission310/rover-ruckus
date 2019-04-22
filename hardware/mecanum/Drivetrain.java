@@ -44,6 +44,7 @@ public class Drivetrain extends MecanumDriveBase {
 
     /* Hardware members */
     private ExpansionHubEx hub;
+    private ExpansionHubEx hub2;
     private ExpansionHubMotor leftFront, leftBack, rightBack, rightFront;
     private List<ExpansionHubMotor> motors;
 
@@ -77,6 +78,7 @@ public class Drivetrain extends MecanumDriveBase {
     public void init(HardwareMap hwMap) {
         RevExtensions2.init();
         hub = hwMap.get(ExpansionHubEx.class, "Expansion Hub 1");
+        hub = hwMap.get(ExpansionHubEx.class, "Expansion Hub 2");
 
         // Retrieve motors from hardware map and assign to instance vars
         leftFront = hwMap.get(ExpansionHubMotor.class, RCConfig.LEFT_FRONT);
@@ -182,7 +184,7 @@ public class Drivetrain extends MecanumDriveBase {
     }
 
     @Override
-    public void setMotorPowers (double v0, double v1, double v2, double v3) {
+    public void setMotorPowers(double v0, double v1, double v2, double v3) {
         leftFront.setPower(v0);
         leftBack.setPower(v1);
         rightFront.setPower(v2);
