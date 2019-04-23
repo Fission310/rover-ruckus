@@ -142,7 +142,7 @@ public class DepotMain extends LinearOpMode {
                  * Rotate 90 degrees; Robot faces forwards for the marker mechanism.
                  */
                 case TURN_90:
-                    robot.turn90();
+                    robot.turnToSample();
                     telemetry.addData("Robot rotates 90 after strafing out of lander", "");
                     telemetry.update();
                     step = Steps.State.ALIGN_TO_GOLD;

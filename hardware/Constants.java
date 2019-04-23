@@ -15,9 +15,10 @@ public class Constants {
     /**
      * Ticks per revolution for a NeverRest and GoBilda motors.
      */
-    public static final double TICKS_PER_MOTOR_26 = CPR * GEAR_RATIO_26; // 840
-    public static final double TICKS_PER_MOTOR_3_7 = CPR * GEAR_RATIO_3_7; // 103.6
-    public static final double TICKS_PER_MOTOR_ACQUIRER = CPR * GEAR_RATIO_ACQUIRER; // 103.6
+    private static final double TICKS_PER_MOTOR_26 = CPR * GEAR_RATIO_26; // 840
+    private static final double TICKS_PER_MOTOR_20 = CPR * GEAR_RATIO_20; // 840
+    private static final double TICKS_PER_MOTOR_3_7 = CPR * GEAR_RATIO_3_7; // 103.6
+    private static final double TICKS_PER_MOTOR_ACQUIRER = CPR * GEAR_RATIO_ACQUIRER; // 103.6
 
     /**
      * Drivetrain gear ratio (< 1.0 if geared up).
@@ -30,13 +31,17 @@ public class Constants {
     /**
      * Calculated ticks per inch.
      */
+    public static final double INCHES_PER_TICK_20 = ((2.0 * Math.PI) / (TICKS_PER_MOTOR_20 * DRIVE_GEAR_REDUCTION));
     public static final double INCHES_PER_TICK_26 = ((WHEEL_DIAMETER_INCHES_4 * Math.PI) / (TICKS_PER_MOTOR_26 * DRIVE_GEAR_REDUCTION));
     public static final double INCHES_PER_TICK_HOPPER= ((2.0 * Math.PI) / (TICKS_PER_MOTOR_3_7 * DRIVE_GEAR_REDUCTION));
     public static final double INCHES_PER_TICK_ACQUIRER = ((2.0 * Math.PI) / (TICKS_PER_MOTOR_ACQUIRER * DRIVE_GEAR_REDUCTION));
     /**
      * Calculated inch per tick.
      */
+    public static final double TICKS_PER_INCH_20 = 1.0 / INCHES_PER_TICK_20;
     public static final double TICKS_PER_INCH_26 = 1.0 / INCHES_PER_TICK_26;
+    public static final double TICKS_PER_INCH_HOPPER = 1.0 / INCHES_PER_TICK_HOPPER;
+    public static final double TICKS_PER_INCH_ACQUIRER = 1.0 / INCHES_PER_TICK_ACQUIRER;
     /**
      * Drive speed when using encoders.
      */

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -26,7 +27,7 @@ public class Hopper_Drawer extends Mechanism {
 
     /* Hardware members */
     private DcMotorEx drawerSlide;
-    private ServoImplEx hopperRotation;
+    public ServoImplEx hopperRotation;
 
     /**
      * Default constructor for Hopper_Drawer.
@@ -50,6 +51,7 @@ public class Hopper_Drawer extends Mechanism {
         // Retrieve servos from hardware map and assign to instance vars
         drawerSlide = hwMap.get(DcMotorEx.class, RCConfig.DRAWER_SLIDES);
         hopperRotation = hwMap.get(ServoImplEx.class, RCConfig.HOPPER_ROTATION);
+        hopperRotation.setPwmRange(new PwmControl.PwmRange(800,2200));
 
         // Set braking behavior
         drawerSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -74,7 +76,22 @@ public class Hopper_Drawer extends Mechanism {
      * @param power        Motor power with range of (-1 to 1)
      */
     public void setDrawerSlidePower(double power) {
+        drawerSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         drawerSlide.setPower(power);
+    }
+
+    public void setDrawerSlideUp(double time){
+        drawerSlide.setTargetPosition((int)(33 / Constants.INCHES_PER_TICK_HOPPER));
+        drawerSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ElapsedTime elapsedTime = new ElapsedTime();
+        while(opMode.opModeIsActive() && drawerSlide.isBusy() && elapsedTime.milliseconds() < time){ drawerSlide.setPower(.9); }
+    }
+
+    public  void setDrawerSlideDown(double time){
+        drawerSlide.setTargetPosition(0);
+        drawerSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ElapsedTime elapsedTime = new ElapsedTime();
+        while(opMode.opModeIsActive() && drawerSlide.isBusy() && elapsedTime.milliseconds() < time){ drawerSlide.setPower(-.8); }
     }
 
     public double getPositions() {

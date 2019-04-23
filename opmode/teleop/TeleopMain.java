@@ -49,6 +49,7 @@ public class TeleopMain extends OpMode {
     private boolean acquirerState, acquirerDebounce;
     private boolean acquirerflipState, acquirerFlipDebounce;
     private boolean hopperflipState, hopperFlipDebounce;
+    private boolean hopperUpDebounce, hopperState;
 
     @Override
     public void init() {
@@ -63,6 +64,14 @@ public class TeleopMain extends OpMode {
         /* Gamepad init */
         stickyGamepad1 = new StickyGamepad(gamepad1);
         stickyGamepad2 = new StickyGamepad(gamepad2);
+
+        driverState = false;
+        driverDebounce = false;
+        acquirerState = false;
+        acquirerDebounce = false;
+        acquirerflipState = false;
+        acquirerFlipDebounce = false;
+        hopperUpDebounce = false;
     }
 
     /**
@@ -83,13 +92,6 @@ public class TeleopMain extends OpMode {
      */
     @Override
     public void start() {
-        driverState = false;
-        driverDebounce = false;
-        acquirerState = false;
-        acquirerDebounce = false;
-        acquirerflipState = false;
-        acquirerFlipDebounce = false;
-
         runtime.reset();
     }
 
@@ -123,9 +125,7 @@ public class TeleopMain extends OpMode {
             }
         } else { driverDebounce = false; }
 
-        if (driveMode) {
-            robot.drivetrain.fieldCentric(leftInput, gamepad1.left_stick_x, gamepad1.right_stick_x, robot.drivetrain.singleImu.getHeading());
-        } else { robot.drivetrain.tankDriveScaled(leftInput, rightInput, slideInput); }
+       robot.drivetrain.tankDriveScaled(leftInput, rightInput, slideInput);
 
         /**
          * Controls the Lift via the up and down dpad || Slow mode = left  button
@@ -142,7 +142,7 @@ public class TeleopMain extends OpMode {
         /**
          * Controls the Acquirer speed via the right bumper
          */
-        if (gamepad2.right_stick_button) {
+        if (gamepad2.y) {
             if (!acquirerDebounce) {
                 acquirerState = !acquirerState;
                 if (acquirerState) { robot.acquirer.setIntakePower(1); }
@@ -164,8 +164,12 @@ public class TeleopMain extends OpMode {
         if (gamepad2.right_bumper) {
             if (!acquirerFlipDebounce) {
                 acquirerflipState = !acquirerflipState;
-                if (acquirerflipState) { robot.acquirer.setAcquirerRotation(1); }
-                else { robot.acquirer.setAcquirerRotation(0); }
+                if (acquirerflipState) {
+                    robot.acquirer.setAcquirerRotation(1);
+                    robot.acquirer.acquirerRotation.setPwmDisable();
+                } else {
+                    robot.acquirer.acquirerRotation.setPwmEnable();
+                    robot.acquirer.setAcquirerRotation(0); }
                 acquirerFlipDebounce = true;
             }
         } else { acquirerFlipDebounce = false; }
@@ -182,11 +186,22 @@ public class TeleopMain extends OpMode {
         if (gamepad2.left_bumper) {
             if (!hopperFlipDebounce) {
                 hopperflipState = !hopperflipState;
-                if (hopperflipState) { robot.hopper.setHopperRotation(.80); }
-                else { robot.hopper.setHopperRotation(0); }
+                if (hopperflipState) { robot.hopper.hopperRotation.setPwmDisable(); }
+                else {
+                    robot.hopper.hopperRotation.setPwmEnable();
+                    robot.hopper.setHopperRotation(0.5); }
                 hopperFlipDebounce = true;
             }
         } else { hopperFlipDebounce = false; }
+
+        if (gamepad2.left_stick_button) {
+            if (!hopperUpDebounce) {
+                hopperState = !hopperState;
+                if (hopperState) { robot.hopper.setDrawerSlideUp(2500); }
+                else { robot.hopper.setDrawerSlideDown(2500); }
+                hopperUpDebounce = true;
+            }
+        } else { hopperUpDebounce = false; }
 
         /**
          * Telemetry

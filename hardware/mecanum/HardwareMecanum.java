@@ -38,6 +38,8 @@ public class HardwareMecanum extends Mechanism {
 
     /* Constants */
     private static final int RIGHT_TURN = 90;
+    private static final int LEFT_TURN = 50;
+    private static final int RIGHT_SAMPLE_TURN = 130;
     private static final int DIAGONAL_TURN = 45;
     private static final double DRIVE_SPEED = .4;
     private boolean updated = false;
@@ -213,7 +215,7 @@ public class HardwareMecanum extends Mechanism {
                 updated = false;
             }
         }
-//        opMode.telemetry.addData("REV Hubs Updated:", updated);
+        opMode.telemetry.addData("REV Hubs Updated:", updated);
     }
 
     /**
@@ -263,14 +265,18 @@ public class HardwareMecanum extends Mechanism {
     //strafe RIGHT out of Lander
     public void strafeOutOfLander() {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.4, -5, 3.0);
+            drivetrain.driveToPos(.4, -2, 1.5);
         }
     }
 
     //turn 90 degrees counter clockwise
-    public void turn90() {
+    public void turnToSample(TensorFlowManager.TFLocation location) {
+        int degreesToRotate = 90;
         if (opMode.opModeIsActive()) {
-            drivetrain.turnPID(-RIGHT_TURN, 90);
+            if (location == TensorFlowManager.TFLocation.CENTER) { degreesToRotate = 90; }
+            else if (location == TensorFlowManager.TFLocation.LEFT) { degreesToRotate = LEFT_TURN; }
+            else if (location == TensorFlowManager.TFLocation.RIGHT) { degreesToRotate = RIGHT_SAMPLE_TURN; }
+            drivetrain.turnPID(-degreesToRotate, degreesToRotate);
         }
     }
     /**
@@ -349,32 +355,48 @@ public class HardwareMecanum extends Mechanism {
      */
     public void tfCraterSamplePID(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            //hit sample by moving forward 8 inches
-            drivetrain.driveToPos(DRIVE_SPEED, -6, 3);
+//            //hit sample by moving forward 8 inches
+//            drivetrain.driveToPos(DRIVE_SPEED, -6, 3);
+//
+//            safeSleep(300, "");
+//            //drive backward 8 inches
+//            drivetrain.driveToPos(DRIVE_SPEED,-6, 3);
+//            //turn counter-clockwise face depot
+//            drivetrain.turnPID(RIGHT_TURN, 90);
+//            //drive forward one floor tile, then correct position by strafing right a certain number of units
+//            // then go forward again to depot
+//            if (location == TensorFlowManager.TFLocation.LEFT){
+//                //if gold was left, strafe right a floor tile
+//                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 4);
+//                drivetrain.turnPID(DIAGONAL_TURN, 45);
+//                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 4.0, 5);
+//            } else if (location == TensorFlowManager.TFLocation.CENTER || location == TensorFlowManager.TFLocation.NONE){
+//                //if gold was center or not found, strafe right 1.5 floor tile
+//                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 1.5, 5);
+//                drivetrain.turnPID(DIAGONAL_TURN, 45);
+//                drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 4.0, 5);
+//            } else if (location == TensorFlowManager.TFLocation.RIGHT){
+//                //if gold was right, strafe right 2 floor tiles
+//                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 2, 4);
+//                drivetrain.turnPID(DIAGONAL_TURN, 45);
+//                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 4.0, 5);
+//            }
+            acquirer.acquirerSlideToPos(.4, FieldConstants.TILE_HYPOTENUSE, 6);
+            acquirer.acquirerSlideToPos(.4, -FieldConstants.TILE_HYPOTENUSE, 6);
+            hopper.setDrawerSlideUp(2500);
+            hopper.setHopperRotation(0.5);
+            opMode.sleep(1000);
+            hopper.hopperRotation.setPwmDisable();
+            hopper.setDrawerSlideDown(2500);
 
-            safeSleep(300, "");
-            //drive backward 8 inches
-            drivetrain.driveToPos(DRIVE_SPEED,-6, 3);
-            //turn counter-clockwise face depot
-            drivetrain.turnPID(RIGHT_TURN, 90);
-            //drive forward one floor tile, then correct position by strafing right a certain number of units
-            // then go forward again to depot
-            if (location == TensorFlowManager.TFLocation.LEFT){
-                //if gold was left, strafe right a floor tile
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 4);
-                drivetrain.turnPID(DIAGONAL_TURN, 45);
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 4.0, 5);
-            } else if (location == TensorFlowManager.TFLocation.CENTER || location == TensorFlowManager.TFLocation.NONE){
-                //if gold was center or not found, strafe right 1.5 floor tile
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 1.5, 5);
-                drivetrain.turnPID(DIAGONAL_TURN, 45);
-                drivetrain.driveToPos(DRIVE_SPEED,-FieldConstants.FLOOR_TILE * 4.0, 5);
-            } else if (location == TensorFlowManager.TFLocation.RIGHT){
-                //if gold was right, strafe right 2 floor tiles
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 2, 4);
-                drivetrain.turnPID(DIAGONAL_TURN, 45);
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 4.0, 5);
-            }
+            int rotateToWall = 45;
+            if (location == TensorFlowManager.TFLocation.LEFT) { rotateToWall = LEFT_TURN;}
+            else if (location == TensorFlowManager.TFLocation.CENTER) { rotateToWall = 90;}
+            else if (location == TensorFlowManager.TFLocation.RIGHT) { rotateToWall = RIGHT_SAMPLE_TURN;}
+            drivetrain.turnPID(rotateToWall, rotateToWall);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 2.0, 6);
+            drivetrain.turnPID(90, 90);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 2.0, 6);
         }
     }
 

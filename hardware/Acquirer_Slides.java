@@ -4,9 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
@@ -24,7 +27,7 @@ public class Acquirer_Slides extends Mechanism {
     /* Hardware members */
     private DcMotorEx cascadingSlides;
     private DcMotorEx intakeMotor;
-    private Servo acquirerRotation;
+    public ServoImplEx acquirerRotation;
 
     /**
      * Default constructor for Acquirer_Slides.
@@ -48,8 +51,8 @@ public class Acquirer_Slides extends Mechanism {
         // Retrieve servos from hardware map and assign to instance vars
         cascadingSlides = hwMap.get(DcMotorEx.class, RCConfig.CASCADING_SLIDES);
         intakeMotor = hwMap.get(DcMotorEx.class, RCConfig.INTAKE_MOTOR);
-        acquirerRotation = hwMap.servo.get(RCConfig.ACQUIRER_ROTATION);
-
+        acquirerRotation = hwMap.get(ServoImplEx.class,RCConfig.ACQUIRER_ROTATION);
+        acquirerRotation.setPwmRange(new PwmControl.PwmRange(880,2200));
         // Set polarity
         cascadingSlides.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -81,6 +84,39 @@ public class Acquirer_Slides extends Mechanism {
     }
 
     public double getAcquirerSlidesTicks() { return cascadingSlides.getCurrentPosition() * Constants.INCHES_PER_TICK_ACQUIRER; }
+
+    public void acquirerSlideToPos(double speed, double inches, double timeoutS) {
+        // Target position variables
+        int newDistanceTarget;
+
+        // Determine new target position, and pass to motor controller
+        newDistanceTarget = cascadingSlides.getCurrentPosition() + (int)(inches / Constants.INCHES_PER_TICK_ACQUIRER);
+        cascadingSlides.setTargetPosition(newDistanceTarget);
+
+        // Turn On RUN_TO_POSITION
+        cascadingSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        cascadingSlides.setPower(Math.abs(speed));
+
+        // Reset the timeout time
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+
+        // Loop until a condition is met
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeoutS) && (cascadingSlides.isBusy())) {
+            // Display it for the driver.
+            opMode.telemetry.addData("Path1",  "Running to %7d", newDistanceTarget);
+            opMode.telemetry.addData("Path2",  "Running at %7d", cascadingSlides.getCurrentPosition());
+            opMode.telemetry.update();
+        }
+
+        // Stop all motion
+        cascadingSlides.setPower(0);
+
+        // Turn off RUN_TO_POSITION
+        cascadingSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        cascadingSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
 
     /**
      * Inits the acquirer rotation servo to fit inside the sizing cube.

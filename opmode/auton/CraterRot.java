@@ -130,7 +130,7 @@ public class CraterRot extends LinearOpMode {
                  * Rotate 90 degrees; Robot faces backwards for the marker mechanism.
                  */
                 case TURN_90:
-                    robot.turn90();
+                    robot.turnToSample();
                     telemetry.addData("Robot rotates 90", "");
                     telemetry.update();
                     step = Steps.State.ALIGN_TO_GOLD;

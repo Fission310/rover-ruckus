@@ -42,7 +42,9 @@ public class CraterMain extends LinearOpMode {
 
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
-            goldLocation = visionManager.getDoubleMineralLocation();
+            if (goldLocation == TensorFlowManager.TFLocation.NONE ) {
+                goldLocation = visionManager.getDoubleMineralLocation();
+            }
             telemetry.addData("Status", "Waiting in Init");
             telemetry.addData("Gyro Is Calibrated", robot.imuCalibrated());
             telemetry.addData("Gold location", goldLocation);
@@ -84,7 +86,7 @@ public class CraterMain extends LinearOpMode {
                 case IMU_INIT:
                     robot.drivetrain.singleImu.resetAngle();
                     ElapsedTime elapsedTime = new ElapsedTime();
-                    while(elapsedTime.seconds() < .20) ;
+                    while(elapsedTime.milliseconds() < .200) ;
                     telemetry.addData("Imu", "Initialized");
                     telemetry.update();
                     step = Steps.State.TURN_OFF_CV;
@@ -128,10 +130,10 @@ public class CraterMain extends LinearOpMode {
                     step = Steps.State.TURN_90;
                     break;
                 /**
-                 * Rotate 90 degrees; Robot faces backwards for the marker mechanism.
+                 * Rotate 90 degrees; Robot faces forwards for the marker mechanism.
                  */
                 case TURN_90:
-                    robot.turn90();
+                    robot.turnToSample(goldLocation);
                     telemetry.addData("Robot rotates 90", "");
                     telemetry.update();
                     step = Steps.State.ALIGN_TO_GOLD;
