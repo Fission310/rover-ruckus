@@ -41,14 +41,19 @@ public class Gimbal extends Mechanism {
         // Retrieve gimbal from hardware map and set to initial position
         horizontal_gimbal = hwMap.get(ServoImplEx.class, RCConfig.HORZ_PHONE_GIMBAL);
         vertical_gimbal = hwMap.get(ServoImplEx.class, RCConfig.VERT_PHONE_GIMBAL);
+        setSamplingPos();
     }
 
     /**
      * Set the gimbal to the sampling position during hang.
      */
     public void setSamplingPos() {
-        horizontal_gimbal.setPosition(.77);
-        vertical_gimbal.setPosition(.67);
+        horizontal_gimbal.setPosition(.79);
+        vertical_gimbal.setPosition(.70);
+    }
+    public void setLandedSamplingPos() {
+        horizontal_gimbal.setPosition(.69);
+        vertical_gimbal.setPosition(.50);
     }
 
     /**

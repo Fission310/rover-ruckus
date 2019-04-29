@@ -100,7 +100,7 @@ public class Drivetrain extends MecanumDriveBase {
         }
 
         // Set PID proportional value to start reducing power at about 50 degrees of rotation.
-        pidRotate = new PIDController(0.000, 0.000, 0.000);
+        pidRotate = new PIDController(0.055, 0.002, 0.00);
 
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
@@ -440,7 +440,7 @@ public class Drivetrain extends MecanumDriveBase {
      * - negative is clockwise
      * @param angle         number of degrees to turn
      */
-    public void turnPID(int angle, double inputRange) { pidDriveRotate(angle, turningPower, inputRange); }
+    public void turnPID(int angle, double inputRange) { pidDriveRotate(angle, turningPower); }
 
 
     /**
@@ -458,16 +458,14 @@ public class Drivetrain extends MecanumDriveBase {
      *
      * @param degrees Degrees to turn, + is left - is right
      * @param power  Maximum power set to the motors
-     * @param inputRange Maximum output of the controller
      */
-    private void pidDriveRotate(int degrees, double power, double inputRange) {
+    private void pidDriveRotate(int degrees, double power) {
         singleImu.resetAngle();
-
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
-        pidRotate.setInputRange(0, inputRange);
-        pidRotate.setOutputRange(.2, power);
-        pidRotate.setTolerance(.2);
+        pidRotate.setInputRange(0, 90);
+        pidRotate.setOutputRange(.05, power);
+        pidRotate.setTolerance(0.6);
         pidRotate.enable();
 
         // getAngle() returns + when rotating counter clockwise (left) and - when rotating
@@ -477,34 +475,33 @@ public class Drivetrain extends MecanumDriveBase {
 
         if (degrees < 0) { // On right turn we have to get off zero first.
             while (opMode.opModeIsActive() && singleImu.getAngle() == 0) {
-                leftFront.setPower(-power);
-                leftBack.setPower(-power);
-                rightBack.setPower(power);
-                rightFront.setPower(power);
-                opMode.sleep(100);
+                leftFront.setPower(power);
+                leftBack.setPower(power);
+                rightBack.setPower(-power);
+                rightFront.setPower(-power);
             } do {
                 power = pidRotate.performPID(singleImu.getAngle()); // power will be - on right turn.
                 leftFront.setPower(power);
                 leftBack.setPower(power);
                 rightBack.setPower(-power);
                 rightFront.setPower(-power);
+                opMode.telemetry.addData("angle", singleImu.getAngle());
+                opMode.telemetry.update();
             } while (opMode.opModeIsActive() && !pidRotate.onTarget());
         } else do { // left turn.
             power = pidRotate.performPID(singleImu.getAngle()); // power will be + on left turn.
-
             leftFront.setPower(power);
             leftBack.setPower(power);
             rightBack.setPower(-power);
             rightFront.setPower(-power);
+            opMode.telemetry.addData("angle", singleImu.getAngle());
+            opMode.telemetry.update();
         } while (opMode.opModeIsActive() && !pidRotate.onTarget());
 
         leftFront.setPower(0);
         leftBack.setPower(0);
         rightBack.setPower(0);
         rightFront.setPower(0);
-
-        // wait for rotation to stop.
-        opMode.sleep(500);
 
         // reset angle tracking on new heading.
         singleImu.resetAngle();

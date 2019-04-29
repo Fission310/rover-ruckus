@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.util.vision;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.vuforia.CameraDevice;
 
@@ -146,6 +147,36 @@ public class TensorFlowManager {
         }
     }
 
+    public String goldPos = "Bad";
+
+    public String getTensorFlow() {
+        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+        if (updatedRecognitions != null) {
+//            opMode.telemetry.addData("# Object Detected", updatedRecognitions.size());
+            for (Recognition obj : updatedRecognitions) {
+                if (obj.getLabel().equals(LABEL_GOLD_MINERAL) && obj.getTop() > 80 && obj.getConfidence()>0.3) {
+//                    opMode.telemetry.addData("label=" + obj.getLabel(),
+//                            " left=" + obj.getLeft() +
+//                                    " right=" + obj.getRight() +
+//                                    " top=" + obj.getTop() +
+//                                    " confidence=" + obj.getConfidence());
+                        if (obj.getLeft() > 600) {
+//                            opMode.telemetry.addData("position", "right");
+//                            opMode.telemetry.update();
+                            goldPos =  "RIGHT";
+                        } else {
+//                            opMode.telemetry.addData("position", "center");
+//                            opMode.telemetry.update();
+                            goldPos =  "CENTER";
+                        }
+                }
+                else{
+                    goldPos = "LEFT";
+                }
+            }
+    }
+        return goldPos;
+    }
     /**
      * Identifies mineral's location based on TensorFlow's classification.
      * Updates location in TFLocation.

@@ -51,7 +51,7 @@ public class Hopper_Drawer extends Mechanism {
         // Retrieve servos from hardware map and assign to instance vars
         drawerSlide = hwMap.get(DcMotorEx.class, RCConfig.DRAWER_SLIDES);
         hopperRotation = hwMap.get(ServoImplEx.class, RCConfig.HOPPER_ROTATION);
-        hopperRotation.setPwmRange(new PwmControl.PwmRange(800,2200));
+//        hopperRotation.setPwmRange(new PwmControl.PwmRange(800,2200));
 
         // Set braking behavior
         drawerSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -84,14 +84,16 @@ public class Hopper_Drawer extends Mechanism {
         drawerSlide.setTargetPosition((int)(33 / Constants.INCHES_PER_TICK_HOPPER));
         drawerSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         ElapsedTime elapsedTime = new ElapsedTime();
-        while(opMode.opModeIsActive() && drawerSlide.isBusy() && elapsedTime.milliseconds() < time){ drawerSlide.setPower(.9); }
+        while(opMode.opModeIsActive() && drawerSlide.isBusy() && elapsedTime.milliseconds() < time){ drawerSlide.setPower(1); }
+        drawerSlide.setPower(0);
     }
 
-    public  void setDrawerSlideDown(double time){
+    public void setDrawerSlideDown(double time){
         drawerSlide.setTargetPosition(0);
         drawerSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         ElapsedTime elapsedTime = new ElapsedTime();
-        while(opMode.opModeIsActive() && drawerSlide.isBusy() && elapsedTime.milliseconds() < time){ drawerSlide.setPower(-.8); }
+        while(opMode.opModeIsActive() && drawerSlide.isBusy() && elapsedTime.milliseconds() < time){ drawerSlide.setPower(-1); }
+        drawerSlide.setPower(0);
     }
 
     public double getPositions() {

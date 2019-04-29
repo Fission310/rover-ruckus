@@ -37,8 +37,8 @@ public class SingleIMU {
 
     public void init(ExpansionHubEx hub, HardwareMap hwMap, AxesOrder axesOrder, double heading) {
         this.axesOrder = axesOrder;
-        this.imu = LynxOptimizedI2cFactory.createLynxEmbeddedImu(hub.getStandardModule(), 0);
-//        this.imu = hwMap.get(BNO055IMU.class, "imu");
+//        this.imu = LynxOptimizedI2cFactory.createLynxEmbeddedImu(hub.getStandardModule(), 0);
+        this.imu = hwMap.get(BNO055IMU.class, "imu");
         this.init_heading = heading;
 
         /**

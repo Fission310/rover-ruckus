@@ -23,12 +23,12 @@ public class LiftConstants {
     /**
      * Ticks per Leadscrew
      */
-    public static final double TICKS_PER_LEADSCREW = TICKS_PER_MOTOR * MOTOR_T0_LEADSCREW;
+    public static final double TICKS_PER_LEADSCREW = TICKS_PER_MOTOR * MOTOR_T0_LEADSCREW; // 560
 
     /**
      * Liner Distance per rotation of leadscrew  in inches.
      */
-    public static final double LINEAR_TRAVEL_PER_ROTATION_INCH = (1.0 / 25.4) * 8.0; // MM to INCH
+    public static final double LINEAR_TRAVEL_PER_ROTATION_INCH = (25.4); // MM to INCH
 
     /**
      * Ticks per revolution of linear lift
@@ -53,5 +53,5 @@ public class LiftConstants {
     /**
      * Extended position in encoder ticks
      */
-    public static final int EXTENDED_POSITION = (int)(TOTAL_STROKE_TICKS - LINEAR_TRAVEL_PER_ROTATION_INCH * 3.6);
+    public static final int EXTENDED_POSITION = (int)(TOTAL_STROKE_TICKS - LINEAR_TRAVEL_PER_ROTATION_INCH / 3.6);
 }

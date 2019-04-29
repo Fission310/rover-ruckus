@@ -30,6 +30,7 @@ public class DriveStraightTest extends LinearOpMode {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
         robot.imuInit(hardwareMap);
+        robot.drivetrain.singleImu.setStartingAngle();
 
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
@@ -43,21 +44,22 @@ public class DriveStraightTest extends LinearOpMode {
         while (opModeIsActive()) {
             switch (step) {
                 case 0:
-                    robot.drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE * 1.5, 5);
+                    robot.drivetrain.turnPID(-90, 90);
+//                    robot.drivetrain.driveToPos(.5, -FieldConstants.FLOOR_TILE * 1.5, 5);
                     telemetry.addData("Step 0", "Robot Drive one floor tile");
                     telemetry.update();
                     step++;
                     break;
                 case 1:
                     sleep(1000);
-                    robot.drivetrain.driveToPos(.5, FieldConstants.FLOOR_TILE * 1.5, 5);
+//                    robot.drivetrain.turnPID(90, 90);
                     telemetry.addData("Step 0", "Robot Drive one floor tile negative speed");
                     telemetry.update();
                     step++;
                     break;
                 case 2:
-                    sleep(3000);
-                    robot.drivetrain.driveToPositionIMU(FieldConstants.FLOOR_TILE * 1.5, .5);
+//                    sleep(3000);
+                    robot.drivetrain.turnPID((int)robot.drivetrain.singleImu.getDeltaStartingAngle(), (int)robot.drivetrain.singleImu.getDeltaStartingAngle());
                     telemetry.addData("Step 0", "Robot Drive one floor tile negative speed");
                     telemetry.update();
                     step++;

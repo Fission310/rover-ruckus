@@ -19,7 +19,7 @@ public class Lift extends Mechanism {
     /* CONSTANTS */
 
     /* Hardware members */
-    private DcMotorEx liftMotor;
+    public DcMotorEx liftMotor;
 
     /**
      * Default constructor for Acquirer_Slides.
@@ -104,7 +104,7 @@ public class Lift extends Mechanism {
         int target;
 
         // Determine new target position, and pass to motor controller
-        target = liftMotor.getCurrentPosition() + (int)(inches * LiftConstants.TICKS_PER_LINEAR_LIFT_INCH);
+        target = liftMotor.getCurrentPosition() + (int)(inches / LiftConstants.TICKS_PER_LINEAR_LIFT_INCH);
 
         liftMotor.setTargetPosition(target);
 
@@ -112,8 +112,8 @@ public class Lift extends Mechanism {
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Reset the timeout time
-        ElapsedTime runtime = new ElapsedTime();
-        runtime.reset();
+        //ElapsedTime runtime = new ElapsedTime();
+        //runtime.reset();
 
         // Loop until a condition is met
         while (opMode.opModeIsActive() && liftMotor.isBusy()) {
@@ -123,6 +123,7 @@ public class Lift extends Mechanism {
 
             // Display info for the driver.
             opMode.telemetry.addData("Path1", "Running to %7d", target);
+            opMode.telemetry.addData("current", liftMotor.getCurrentPosition());
             opMode.telemetry.update();
         }
 
@@ -131,6 +132,28 @@ public class Lift extends Mechanism {
 
         // Turn off RUN_TO_POSITION
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void liftToPosJank(){
+        liftMotor.setTargetPosition(12020);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setPower(1);
+        int current;
+        int past = -10000;
+        while(opMode.opModeIsActive() && liftMotor.isBusy()){
+            current = liftMotor.getCurrentPosition();
+            if (current == past) break;
+        }
+        liftMotor.setPower(0);
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public void dropoPosJank(){
+        liftMotor.setTargetPosition(9000);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setPower(-1);
+        while(opMode.opModeIsActive() && liftMotor.isBusy());
+        liftMotor.setPower(0);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 

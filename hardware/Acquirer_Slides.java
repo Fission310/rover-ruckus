@@ -26,7 +26,8 @@ public class Acquirer_Slides extends Mechanism {
 
     /* Hardware members */
     private DcMotorEx cascadingSlides;
-    private DcMotorEx intakeMotor;
+//    private DcMotorEx intakeMotor;
+    private  CRServo intakeMotor;
     public ServoImplEx acquirerRotation;
 
     /**
@@ -50,9 +51,10 @@ public class Acquirer_Slides extends Mechanism {
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
         cascadingSlides = hwMap.get(DcMotorEx.class, RCConfig.CASCADING_SLIDES);
-        intakeMotor = hwMap.get(DcMotorEx.class, RCConfig.INTAKE_MOTOR);
-        acquirerRotation = hwMap.get(ServoImplEx.class,RCConfig.ACQUIRER_ROTATION);
-        acquirerRotation.setPwmRange(new PwmControl.PwmRange(880,2200));
+//        intakeMotor = hwMap.get(DcMotorEx.class, RCConfig.INTAKE_MOTOR);
+        intakeMotor = hwMap.get(CRServo.class, RCConfig.INTAKE_MOTOR);
+        acquirerRotation = hwMap.get(ServoImplEx.class, RCConfig.ACQUIRER_ROTATION);
+//        acquirerRotation.setPwmRange(new PwmControl.PwmRange(880,2200));
         // Set polarity
         cascadingSlides.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -66,7 +68,7 @@ public class Acquirer_Slides extends Mechanism {
     public void encoderInit() {
         cascadingSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         cascadingSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     /**
@@ -77,7 +79,7 @@ public class Acquirer_Slides extends Mechanism {
         intakeMotor.setPower(power);
     }
 
-    public double getAcquirerIntakeTicks() { return intakeMotor.getCurrentPosition() * Constants.INCHES_PER_TICK_26; }
+//    public double getAcquirerIntakeTicks() { return intakeMotor.getCurrentPosition() * Constants.INCHES_PER_TICK_26; }
 
     public void setCascadingSlidesPower(double power) {
         cascadingSlides.setPower(power);
@@ -123,7 +125,7 @@ public class Acquirer_Slides extends Mechanism {
      */
     public void acquirerRotationDump() { acquirerRotation.setPosition(MAX_POS); }
 
-    public void acquirerRotationMid() { acquirerRotation.setPosition(MAX_POS / 2); }
+    public void acquirerRotationMid() { acquirerRotation.setPosition((MAX_POS +MIN_POS)/ 2); }
 
     /**
      * Moves the acquirer rotation servo to set angle to acquire.

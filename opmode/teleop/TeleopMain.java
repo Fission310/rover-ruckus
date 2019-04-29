@@ -161,18 +161,21 @@ public class TeleopMain extends OpMode {
          * Rotates the Acquirer via the right trigger
          */
 
-        if (gamepad2.right_bumper) {
-            if (!acquirerFlipDebounce) {
-                acquirerflipState = !acquirerflipState;
-                if (acquirerflipState) {
-                    robot.acquirer.setAcquirerRotation(1);
-                    robot.acquirer.acquirerRotation.setPwmDisable();
-                } else {
-                    robot.acquirer.acquirerRotation.setPwmEnable();
-                    robot.acquirer.setAcquirerRotation(0); }
-                acquirerFlipDebounce = true;
-            }
-        } else { acquirerFlipDebounce = false; }
+//        if (gamepad2.right_bumper) {
+//            if (!acquirerFlipDebounce) {
+//                acquirerflipState = !acquirerflipState;
+//                if (acquirerflipState) {
+//                    robot.acquirer.setAcquirerRotation(1);
+////                    robot.acquirer.acquirerRotation.setPwmDisable();
+////                    robot.acquirer.setIntakePower(1);
+//                } else {
+////                    robot.acquirer.acquirerRotation.setPwmEnable();
+//                    robot.acquirer.setAcquirerRotation(0);
+////                    robot.acquirer.setIntakePower(0);
+//                }
+//                acquirerFlipDebounce = true;
+//            }
+//        } else { acquirerFlipDebounce = false; }
 
         /**
          * Controls the Hopper slides via the left analog stick
@@ -212,7 +215,7 @@ public class TeleopMain extends OpMode {
         hopperSlidesDistance = robot.hopper.getPositions();
         liftDistance = robot.lift.getPositions();
         /* Acquirer and Hopper servo's position */
-        acquirerPosition = robot.acquirer.getAcquirerRotation();
+//        acquirerPosition = robot.acquirer.getAcquirerRotation();
         hopperPosition = robot.hopper.getHopperRotation();
         /* Gimbal's servo's position */
         verticalPosition = robot.gimbal.getVerticalPosition();
@@ -224,7 +227,7 @@ public class TeleopMain extends OpMode {
                 positions[2],
                 positions[3]);
         telemetry.addData("Lift counts", liftDistance);
-        telemetry.addData("Intake counts", robot.acquirer.getAcquirerIntakeTicks());
+//        telemetry.addData("Intake counts", robot.acquirer.getAcquirerIntakeTicks());
         telemetry.addData("Acquirer counts", acquirerSlidesDistance);
         telemetry.addData("Hopper counts", hopperSlidesDistance);
 

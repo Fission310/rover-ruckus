@@ -38,8 +38,8 @@ public class HardwareMecanum extends Mechanism {
 
     /* Constants */
     private static final int RIGHT_TURN = 90;
-    private static final int LEFT_TURN = 50;
-    private static final int RIGHT_SAMPLE_TURN = 130;
+    private static final int LEFT_TURN = 55;
+    private static final int RIGHT_SAMPLE_TURN = 150;
     private static final int DIAGONAL_TURN = 45;
     private static final double DRIVE_SPEED = .4;
     private boolean updated = false;
@@ -114,23 +114,23 @@ public class HardwareMecanum extends Mechanism {
         this.opMode = opMode;
         try { drivetrain = new Drivetrain(opMode); }
         catch (Exception e) {
-            opMode.telemetry.addData("Status", "Problem with drivetrain");
+//            opMode.telemetry.addData("Status", "Problem with drivetrain");
         }
         try { acquirer = new Acquirer_Slides(opMode); }
         catch (Exception e) {
-            opMode.telemetry.addData("Status", "Problem with acquirer");
+//            opMode.telemetry.addData("Status", "Problem with acquirer");
         }
         try { hopper = new Hopper_Drawer(opMode); }
         catch (Exception e) {
-            opMode.telemetry.addData("Status", "Problem with hopper");
+//            opMode.telemetry.addData("Status", "Problem with hopper");
         }
         try { lift = new Lift(opMode); }
         catch (Exception e) {
-            opMode.telemetry.addData("Status", "Problem with lift");
+//            opMode.telemetry.addData("Status", "Problem with lift");
         }
         try { gimbal = new Gimbal(opMode); }
         catch (Exception e) {
-            opMode.telemetry.addData("Status", "Problem with gimbal");
+//            opMode.telemetry.addData("Status", "Problem with gimbal");
         }
 //        try { sensors = new Sensors(opMode); }
 //        catch (Exception e) {
@@ -147,23 +147,23 @@ public class HardwareMecanum extends Mechanism {
             drivetrain.init(hwMap);
             drivetrain.encoderInit();
         } catch (Exception e) {
-            opMode.telemetry.addData("Status", "problem initializing drivetrain");
+//            opMode.telemetry.addData("Status", "problem initializing drivetrain");
         }
         try { acquirer.init(hwMap); }
         catch (Exception e) {
-            opMode.telemetry.addData("Status", "problem initializing acquirer");
+//            opMode.telemetry.addData("Status", "problem initializing acquirer");
         }
         try { hopper.init(hwMap); }
         catch (Exception e) {
-            opMode.telemetry.addData("Status", "problem initializing hopper");
+//            opMode.telemetry.addData("Status", "problem initializing hopper");
         }
         try { lift.init(hwMap); }
         catch (Exception e) {
-            opMode.telemetry.addData("Status", "problem initializing lift");
+//            opMode.telemetry.addData("Status", "problem initializing lift");
         }
         try { gimbal.init(hwMap); }
         catch (Exception e) {
-            opMode.telemetry.addData("Status", "problem initializing gimbal");
+//            opMode.telemetry.addData("Status", "problem initializing gimbal");
         }
 //        try { sensors.init(hwMap); }
 //        catch (Exception e) {
@@ -177,14 +177,14 @@ public class HardwareMecanum extends Mechanism {
                     hwMap.get(DcMotorController.class, "Expansion Hub 1"),
                     hwMap.get(LynxModuleIntf.class, "Expansion Hub 1"));
         } catch (Exception e) {
-            opMode.telemetry.addData("Status", "problem with hub1");
+//            opMode.telemetry.addData("Status", "problem with hub1");
         }
         try {
             hubs.put(
                     hwMap.get(DcMotorController.class, "Expansion Hub 2"),
                     hwMap.get(LynxModuleIntf.class, "Expansion Hub 2"));
         } catch (Exception e) {
-            opMode.telemetry.addData("Status", "problem with hub2");
+//            opMode.telemetry.addData("Status", "problem with hub2");
         }
     }
 
@@ -215,7 +215,7 @@ public class HardwareMecanum extends Mechanism {
                 updated = false;
             }
         }
-        opMode.telemetry.addData("REV Hubs Updated:", updated);
+        //opMode.telemetry.addData("REV Hubs Updated:", updated);
     }
 
     /**
@@ -258,24 +258,37 @@ public class HardwareMecanum extends Mechanism {
      */
     public void land() {
         if (opMode.opModeIsActive()) {
-            lift.liftToPos(1, LiftConstants.EXTENDED_POSITION); // 10 inch
+//            lift.liftToPos(1, 4); // 10 inch
+            lift.liftToPosJank();
         }
     }
 
     //strafe RIGHT out of Lander
     public void strafeOutOfLander() {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(.4, -2, 1.5);
+            drivetrain.turnPID(-3,4);
+            drivetrain.turnPID(-3,4);
+            drivetrain.driveToPos(.4,-8, 3);
+            ElapsedTime time = new ElapsedTime();
+            while (time.milliseconds() < .700) {
+                drivetrain.strafe(.5);
+            }
+            drivetrain.strafe(0);
+            drivetrain.driveToPos(.4,4, 3);
+            lift.dropoPosJank();
+
         }
     }
 
     //turn 90 degrees counter clockwise
-    public void turnToSample(TensorFlowManager.TFLocation location) {
-        int degreesToRotate = 90;
+    public void turnToSample(String location) {
+//        drivetrain.turnPID(-90,90);
         if (opMode.opModeIsActive()) {
-            if (location == TensorFlowManager.TFLocation.CENTER) { degreesToRotate = 90; }
-            else if (location == TensorFlowManager.TFLocation.LEFT) { degreesToRotate = LEFT_TURN; }
-            else if (location == TensorFlowManager.TFLocation.RIGHT) { degreesToRotate = RIGHT_SAMPLE_TURN; }
+//            int degreesToRotate = 90 - (int)drivetrain.singleImu.getDeltaStartingAngle();
+            int degreesToRotate = 90;
+            if (location.equals( "CENTER")) { degreesToRotate = 90; }
+            else if (location.equals("LEFT")) { degreesToRotate = LEFT_TURN; }
+            else if (location.equals("RIGHT")) { degreesToRotate = RIGHT_SAMPLE_TURN; }
             drivetrain.turnPID(-degreesToRotate, degreesToRotate);
         }
     }
@@ -293,7 +306,7 @@ public class HardwareMecanum extends Mechanism {
             } else if (location == TensorFlowManager.TFLocation.RIGHT){
 //                drivetrain.strafeToPos(.4,-FieldConstants.TILE_HYPOTENUSE / 2.0,4);
             } else if (location == TensorFlowManager.TFLocation.NONE){
-                opMode.telemetry.addData("Detected None", "Robot will take center path");
+//                opMode.telemetry.addData("Detected None", "Robot will take center path");
             }
         }
     }
@@ -313,7 +326,7 @@ public class HardwareMecanum extends Mechanism {
                 //turn left
                 drivetrain.turnPID(RIGHT_TURN, 90);
             } else if (location == TensorFlowManager.TFLocation.NONE){
-                opMode.telemetry.addData("Detected None", "Robot will take center path");
+//                opMode.telemetry.addData("Detected None", "Robot will take center path");
             }
         }
     }
@@ -325,25 +338,25 @@ public class HardwareMecanum extends Mechanism {
      *
      *  @param location    location holds the TFLocation detected
      */
-    public void tfDepotSamplePID(TensorFlowManager.TFLocation location) {
+    public void tfCraterSamplePID(TensorFlowManager.TFLocation location) {
         if (opMode.opModeIsActive()) {
-            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE + 6, 4);
-            if (location == TensorFlowManager.TFLocation.LEFT){
-                opMode.telemetry.addData("Sampling from", "left");
-                //back
-                drivetrain.turnPID(-DIAGONAL_TURN, 45);
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 4);
-            } else if (location == TensorFlowManager.TFLocation.CENTER || location == TensorFlowManager.TFLocation.NONE){
-                drivetrain.turnPID(-DIAGONAL_TURN, 45);
-                opMode.telemetry.addData("Sampling from", "center");
-            } else if (location == TensorFlowManager.TFLocation.RIGHT){
-                drivetrain.turnPID(DIAGONAL_TURN, 45);
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 4);
-                drivetrain.turnPID(-RIGHT_TURN, 90);
-                opMode.telemetry.addData("Sampling from", "right");
-            }
-            opMode.telemetry.update();
-//            drivetrain.strafeToPos(.3,6, 3);
+//            acquirer.acquirerSlideToPos(.4, FieldConstants.TILE_HYPOTENUSE, 6);
+//            acquirer.acquirerSlideToPos(.4, -FieldConstants.TILE_HYPOTENUSE, 6);
+//            hopper.setDrawerSlideUp(2500);
+//            hopper.setHopperRotation(0.5);
+//            opMode.sleep(1500);
+//            hopper.hopperRotation.setPwmDisable();
+//            hopper.setDrawerSlideDown(2500);
+
+            int rotateToWall = 0;
+            if (location == TensorFlowManager.TFLocation.LEFT) { rotateToWall = -LEFT_TURN;}
+            else if (location == TensorFlowManager.TFLocation.CENTER || location == TensorFlowManager.TFLocation.NONE) { rotateToWall = 0;}
+            else if (location == TensorFlowManager.TFLocation.RIGHT) { rotateToWall = -RIGHT_SAMPLE_TURN;}
+            drivetrain.turnPID(rotateToWall, rotateToWall);
+            drivetrain.turnPID(-45, 45);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 2.0, 6);
+            drivetrain.turnPID(90, 90);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 4.0, 6);
         }
     }
 
@@ -353,7 +366,7 @@ public class HardwareMecanum extends Mechanism {
      * depending on where the gold location was, strafe right a certain number of units
      * @param location location of gold cube
      */
-    public void tfCraterSamplePID(TensorFlowManager.TFLocation location) {
+    public void tfDepotSamplePID(String location) {
         if (opMode.opModeIsActive()) {
 //            //hit sample by moving forward 8 inches
 //            drivetrain.driveToPos(DRIVE_SPEED, -6, 3);
@@ -381,27 +394,47 @@ public class HardwareMecanum extends Mechanism {
 //                drivetrain.turnPID(DIAGONAL_TURN, 45);
 //                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 4.0, 5);
 //            }
-            acquirer.acquirerSlideToPos(.4, FieldConstants.TILE_HYPOTENUSE, 6);
-            acquirer.acquirerSlideToPos(.4, -FieldConstants.TILE_HYPOTENUSE, 6);
-            hopper.setDrawerSlideUp(2500);
-            hopper.setHopperRotation(0.5);
-            opMode.sleep(1000);
-            hopper.hopperRotation.setPwmDisable();
-            hopper.setDrawerSlideDown(2500);
+//            acquirer.acquirerSlideToPos(.4, FieldConstants.TILE_HYPOTENUSE, 6);
+//            acquirer.acquirerSlideToPos(.4, -FieldConstants.TILE_HYPOTENUSE, 6);
+//            hopper.setDrawerSlideUp(2500);
+//            hopper.setHopperRotation(0.5);
+//            opMode.sleep(1000);
+//            hopper.hopperRotation.setPwmDisable();
+//            hopper.setDrawerSlideDown(2500);
 
-            int rotateToWall = 45;
-            if (location == TensorFlowManager.TFLocation.LEFT) { rotateToWall = LEFT_TURN;}
-            else if (location == TensorFlowManager.TFLocation.CENTER) { rotateToWall = 90;}
-            else if (location == TensorFlowManager.TFLocation.RIGHT) { rotateToWall = RIGHT_SAMPLE_TURN;}
-            drivetrain.turnPID(rotateToWall, rotateToWall);
-            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 2.0, 6);
-            drivetrain.turnPID(90, 90);
-            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 2.0, 6);
+            drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE, 6);
+            drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE - 6, 6);
+            int rotateToWall = 90;
+            if (location.equals( "CENTER")) {
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE * 2, 6);
+                drivetrain.turnPID(-45,  -45);
+                drivetrain.driveToPos(DRIVE_SPEED, -12, 6);
+            }
+            else if (location.equals("LEFT")) {
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE * 2, 6);
+                int angle = (int)drivetrain.singleImu.getDeltaStartingAngle();
+                drivetrain.turnPID(-angle,  -angle);
+            }
+            else if (location.equals("RIGHT")) {
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.TILE_HYPOTENUSE * 2, 6);
+                drivetrain.turnPID(45,  45);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE, 6);
+                drivetrain.turnPID(-90,  90);
+            }
+
+//            acquirer.setAcquirerRotation(.7);
+//            acquirer.acquirerRotation.setPwmDisable();
         }
     }
 
     public void dropMarker() {
-        if (opMode.opModeIsActive()) { }
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+        if (opMode.opModeIsActive() && (runtime.seconds() < 2)) {
+            acquirer.setIntakePower(-1);
+        }
+//        acquirer.acquirerRotation.setPwmEnable();
+        acquirer.setIntakePower(0);
     }
 
     //align to wall after dropping marker
@@ -411,6 +444,7 @@ public class HardwareMecanum extends Mechanism {
                 //facing crater, strafe left to align to wall
 //                drivetrain.strafeToPos(.4,-FieldConstants.FLOOR_TILE / 1.5,4);
             } else {
+//                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.TILE_HYPOTENUSE * 2.5 , 6);
 //                drivetrain.strafeToPos(.4,-16,4);
             }
         }
@@ -419,10 +453,10 @@ public class HardwareMecanum extends Mechanism {
     public void driveToCrater(boolean crater) {
         if (opMode.opModeIsActive()) {
             if (crater) {
-                drivetrain.turnPID(-180, 180);
-                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 3.5, 5);
+//                drivetrxain.turnPID(-180, 180);
+                drivetrain.driveToPos(DRIVE_SPEED, -FieldConstants.FLOOR_TILE * 4, 5);
             } else {
-                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE * 3.5, 5);
+                drivetrain.driveToPos(DRIVE_SPEED, FieldConstants.FLOOR_TILE * 4, 5);
             }
         }
     }

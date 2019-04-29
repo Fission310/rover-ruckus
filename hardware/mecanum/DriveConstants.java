@@ -22,7 +22,7 @@ public class DriveConstants {
 
     private static final MotorConfigurationType MOTOR_CONFIG =
             MotorConfigurationType.getMotorType(NeveRest20Gearmotor.class);
-    private static final double TICKS_PER_REV = Constants.TICKS_PER_MOTOR_26; //MOTOR_CONFIG.getTicksPerRev();
+    private static final double TICKS_PER_REV = Constants.TICKS_PER_INCH_26; //MOTOR_CONFIG.getTicksPerRev();
 
     public static double WHEEL_RADIUS = 2; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed

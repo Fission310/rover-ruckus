@@ -46,8 +46,8 @@ public class LinearTeleopMain extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+        //telemetry.addData("Status", "Initialized");
+        //telemetry.update();
 
         /* Robot Init */
         robot.init(hardwareMap);
@@ -72,7 +72,7 @@ public class LinearTeleopMain extends LinearOpMode {
         // Wait until we're told to go
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status", "Waiting in Init");
-            telemetry.addData("Gyro Is Calibrated", robot.imuCalibrated());
+            //telemetry.addData("Gyro Is Calibrated", robot.imuCalibrated());
             telemetry.update();
         }
 
@@ -82,7 +82,9 @@ public class LinearTeleopMain extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             /* Adds runtime data to telemetry */
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            //telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("lift", robot.lift.liftMotor.getCurrentPosition());
+            telemetry.update();
 
             /**
              * Gamepad 1
@@ -144,11 +146,12 @@ public class LinearTeleopMain extends LinearOpMode {
                 if (!acquirerFlipDebounce) {
                     acquirerflipState = !acquirerflipState;
                     if (acquirerflipState) {
-                        robot.acquirer.setAcquirerRotation(1);
-                        robot.acquirer.acquirerRotation.setPwmDisable();
+                        robot.acquirer.setAcquirerRotation(0);
                     } else {
                         robot.acquirer.acquirerRotation.setPwmEnable();
-                        robot.acquirer.setAcquirerRotation(0); }
+                         robot.acquirer.setAcquirerRotation(0.45);
+//                        robot.acquirer.acquirerRotation.setPwmDisable();
+                    }
                     acquirerFlipDebounce = true;
                 }
             } else { acquirerFlipDebounce = false; }
@@ -165,22 +168,14 @@ public class LinearTeleopMain extends LinearOpMode {
             if (gamepad2.left_bumper) {
                 if (!hopperFlipDebounce) {
                     hopperflipState = !hopperflipState;
-                    if (hopperflipState) { robot.hopper.hopperRotation.setPwmDisable(); }
+                    if (hopperflipState) { robot.hopper.hopperRotation.setPosition(0.55); }
                     else {
-                        robot.hopper.hopperRotation.setPwmEnable();
-                        robot.hopper.setHopperRotation(0.5); }
+                        robot.hopper.setHopperRotation(1); }
                     hopperFlipDebounce = true;
                 }
             } else { hopperFlipDebounce = false; }
 
-            if (gamepad2.left_stick_button) {
-                if (!hopperUpDebounce) {
-                    hopperState = !hopperState;
-                    if (hopperState) { robot.hopper.setDrawerSlideUp(2500); }
-                    else { robot.hopper.setDrawerSlideDown(2500); }
-                    hopperUpDebounce = true;
-                }
-            } else { hopperUpDebounce = false; }
+//            if (gamepad2.left_stick_button) {34aa
 
             /**
              * Telemetry
@@ -203,7 +198,7 @@ public class LinearTeleopMain extends LinearOpMode {
                     positions[2],
                     positions[3]);
             telemetry.addData("Lift counts", liftDistance);
-            telemetry.addData("Intake counts", robot.acquirer.getAcquirerIntakeTicks());
+//            telemetry.addData("Intake counts", robot.acquirer.getAcquirerIntakeTicks());
             telemetry.addData("Acquirer counts", acquirerSlidesDistance);
             telemetry.addData("Hopper counts", hopperSlidesDistance);
 
@@ -214,7 +209,7 @@ public class LinearTeleopMain extends LinearOpMode {
             stickyGamepad1.update();
             stickyGamepad2.update();
             robot.updateSubsystems();
-            telemetry.update();
+//            telemetry.update();
         }
         background.resetBackgroundColor();
     }
